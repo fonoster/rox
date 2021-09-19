@@ -19,11 +19,11 @@
  */
 import logger from '@fonos/logger'
 import { VoiceRequest, VoiceResponse, VoiceServer } from '@fonos/voice'
-import { Intent } from './@types/intents'
 import { Cerebro } from './cerebro'
 import { asr, tts } from './config'
 import { eventsServer } from './events/server'
 import IntentsAPI from './intents/dialogflow'
+import { nanoid } from 'nanoid'
 
 const voiceServer = new VoiceServer()
 voiceServer.use(asr)
@@ -52,7 +52,7 @@ voiceServer.listen(
     const cerebro = new Cerebro({
       voiceRequest,
       voiceResponse,
-      playbackId: "cerebro001",
+      playbackId: nanoid(),
       intents,
       eventsClient,
       voiceConfig: {}
