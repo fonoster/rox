@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "tsc --build ./tsconfig.json",
-    "update:webhook": "API_CONFIG_FILE=./config/fonos.json node .scripts/update_webhook.js",
+    "update:webhook": "API_CONFIG_FILE=.config/fonos.json node .scripts/update_webhook.js",
     "start": "INTENTS_ENGINE=dialogflow .scripts/start_voice.sh"
   },
   "dependencies": {

@@ -20,7 +20,7 @@ import { VoiceResponse } from '@fonos/voice'
 import { EventsClient } from '../../events/emitter'
 
 export interface EffectsManagerConfig {
-  eventsClient: EventsClient
+  eventsClient: EventsClient | null
   voice: VoiceResponse
   voiceConfig: any
   playbackId: string

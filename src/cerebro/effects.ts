@@ -57,7 +57,10 @@ export class EffectsManager {
         await this.voice.hangup()
         break
       case 'send_link':
-        await this.eventsClient.send(effect.parameters as any)
+        // Only send if client support events
+        if (this.eventsClient) {
+          await this.eventsClient.send(effect.parameters as any)
+        }
         break
       default:
         throw new Error(`received unknown effect ${effect.type}`)

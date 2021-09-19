@@ -22,7 +22,6 @@ import { VoiceRequest, VoiceResponse, VoiceServer } from '@fonos/voice'
 import { Cerebro } from './cerebro'
 import { asr, tts, intents } from './config'
 import { eventsServer } from './events/server'
-import IntentsAPI from './intents/dialogflow'
 import { nanoid } from 'nanoid'
 
 const voiceServer = new VoiceServer()
@@ -36,17 +35,10 @@ voiceServer.listen(
     if (process.env.WELCOME_INTENT) {
       const response = await intents.findIntent(process.env.WELCOME_INTENT)
       voiceResponse.say(response.effects[0].parameters['response'] as string)
-      logger.verbose('welcomeIntentResponse:' + JSON.stringify(response, null, ' '))
+      logger.verbose(`@rox/voice welcome response [response = ${JSON.stringify(response, null, ' ')}`)
     }
 
-    /*const eventsClient = eventsServer.getConnection(voiceRequest.callerNumber)
-
-    if (!eventsClient) {
-      logger.error(
-        `@rox no events connection found for ${voiceRequest.callerNumber} [aborting]`
-      )
-      return
-    }
+    const eventsClient = eventsServer.getConnection(voiceRequest.callerNumber)
 
     const cerebro = new Cerebro({
       voiceRequest,
@@ -55,9 +47,9 @@ voiceServer.listen(
       intents,
       eventsClient,
       voiceConfig: {}
-    })*/
+    })
 
     // Open for bussiness
-    //await cerebro.wake()
+    await cerebro.wake()
   }
 )

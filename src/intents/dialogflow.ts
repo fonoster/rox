@@ -70,11 +70,25 @@ export default class DialogFlow implements Intents {
       throw new Error("@rox/intents unexpect null intent")
     }
 
-    logger.verbose(
+    logger.silly(
       `@rox/intents got speech [text=${JSON.stringify(responses[0], null, ' ')}]`
     )
 
-    const effects = this.getEffects(responses[0].queryResult.fulfillmentMessages as Record<string, any>[])
+    let effects: Effect[]
+    // if (responses[0].queryResult.allRequiredParamsPresent) {
+    if (!responses[0].queryResult.fulfillmentText) {
+      effects = this.getEffects(responses[0].queryResult.fulfillmentMessages as Record<string, any>[])
+    } else {
+      if (!responses[0].queryResult.fulfillmentText) {
+        throw new Error("@rox/intents unexpect null fulfillmentText")
+      }
+      effects = [{
+        type: "say",
+        parameters: {
+          response: responses[0].queryResult.fulfillmentText
+        }
+      }]
+    }
 
     return {
       ref: responses[0].queryResult.intent.displayName,

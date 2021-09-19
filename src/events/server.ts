@@ -55,10 +55,10 @@ export class EventsServer {
     logger.info(`starting events server on port ${this.port}`)
   }
 
-  getConnection(clientId: string): EventsClient {
+  getConnection(clientId: string): EventsClient | null {
     const connection = this.clientConnections.get(clientId)
     if (!connection) {
-      throw new Error(`Connection not found for clientId ${clientId}`)
+      return null
     }
     return new EventsClient(connection)
   }

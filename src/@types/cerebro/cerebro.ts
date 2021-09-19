@@ -30,7 +30,7 @@ export interface CerebroConfig {
   intents: Intents
   playbackId: string
   voiceConfig: any
-  eventsClient: EventsClient
+  eventsClient: EventsClient | null
 }
 
 export enum CerebroStatus {
