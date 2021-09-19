@@ -1,5 +1,5 @@
 {
-  "name": "@rox/voice",
+  "name": "rox",
   "version": "0.0.3",
   "license": "MIT",
   "main": "dist/index",
@@ -8,13 +8,15 @@
   },
   "scripts": {
     "build": "tsc --build ./tsconfig.json",
-    "update:webhook": "API_CONFIG_FILE=./fonos.json node .scripts/update_webhook.js",
+    "update:webhook": "API_CONFIG_FILE=./config/fonos.json node .scripts/update_webhook.js",
     "start": ".scripts/start_voice.sh"
   },
   "dependencies": {
-    "@fonos/googleasr": "^0.1.18-alpha.0",
-    "@fonos/googletts": "^0.1.17-alpha.0",
-    "@fonos/numbers": "0.1.16-alpha.1",
+    "@fonos/googleasr": "^0.1.21",
+    "@fonos/googletts": "^0.1.21",
+    "@fonos/logger": "^0.1.21",
+    "@fonos/numbers": "^0.1.21",
+    "@fonos/voice": "^0.1.21",
     "@google-cloud/dialogflow": "^4.3.1",
     "ws": "^8.1.0"
   },

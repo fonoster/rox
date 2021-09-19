@@ -1,16 +1,31 @@
+/*
+ * Copyright (C) 2021 by Fonoster Inc (https://fonoster.com)
+ * http://github.com/fonoster/rox
+ *
+ * This file is part of Rox
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    https://opensource.org/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import logger from '@fonos/logger'
 import dialogflow, { SessionsClient } from '@google-cloud/dialogflow'
 
-import { DialogFlowConfig } from '../@types/cerebro'
-import { Intent, Intents } from '../@types/intents'
+import { DialogFlowConfig, Intent, Intents } from '../@types/intents'
 
 export default class IntentsAPI implements Intents {
   sessionClient: SessionsClient
   sessionPath: any
   config: any
   constructor(config: DialogFlowConfig) {
-    logger.verbose(`@rox config file name = ${config.keyFilename}`)
-    logger.verbose(`@rox config file config.projectId = ${config.projectId}`)
     const uuid = require('uuid')
     const sessionId = uuid.v4()
     const credentials = require(config.keyFilename)
@@ -53,12 +68,13 @@ export default class IntentsAPI implements Intents {
       `@rox/cerebro got speech [text=${responses[0].queryResult}]`
     )
 
+    const effects = []
+
     return {
-      effectId: "",
-      action: responses[0].queryResult.action || '',
+      ref: "",
+      effects,
       confidence: responses[0].queryResult.intentDetectionConfidence || 0,
       allRequiredParamsPresent: responses[0].queryResult.allRequiredParamsPresent ? true : false
     }
   }
 }
-

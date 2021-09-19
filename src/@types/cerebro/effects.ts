@@ -17,24 +17,20 @@
  * limitations under the License.
  */
 import { VoiceResponse } from '@fonos/voice'
-import { VoiceRequest } from '@fonos/voice/dist/types'
-import { EffectsManager } from '../../cerebro/effects'
 import { EventsClient } from '../../events/emitter'
-import { Intents } from '../intents'
 
-export interface CerebroConfig {
-  voiceRequest: VoiceRequest
-  voiceResponse: VoiceResponse
-  maxUnknownIntents?: number
-  activeTimeout?: number
-  intents: Intents
-  playbackId: string
-  voiceConfig: any
+export interface EffectsManagerConfig {
   eventsClient: EventsClient
+  voice: VoiceResponse
+  voiceConfig: any
+  playbackId: string
 }
 
-export enum CerebroStatus {
-  SLEEP,
-  AWAKE_ACTIVE,
-  AWAKE_PASSIVE
+export interface Effect {
+  type: 'say'
+  | 'play'
+  | 'record'
+  | 'hangup'
+  | 'send_data'
+  parameters: Record<string, unknown>
 }

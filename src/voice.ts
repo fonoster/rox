@@ -1,16 +1,29 @@
 #!/usr/bin/env node
+/*
+ * Copyright (C) 2021 by Fonoster Inc (https://fonoster.com)
+ * http://github.com/fonoster/rox
+ *
+ * This file is part of Rox
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    https://opensource.org/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import logger from '@fonos/logger'
 import { VoiceRequest, VoiceResponse, VoiceServer } from '@fonos/voice'
-
-import { CerebroStatus } from './@types/cerebro'
 import { Intent } from './@types/intents'
 import { Cerebro } from './cerebro'
-import { ACTIONS_FILE, asr, GOOGLE_CONFIG_FILE, PLAYBACK_ID, ROXANNE_CONFIG_FILE, tts } from './config'
-import { EffectsManager } from './effects'
+import { asr, tts } from './config'
 import { eventsServer } from './events/server'
-
-const roxanneConfig = require(ROXANNE_CONFIG_FILE)
-const actions = require(ACTIONS_FILE)
+import IntentsAPI from './intents/dialogflow'
 
 const voiceServer = new VoiceServer()
 voiceServer.use(asr)
@@ -20,54 +33,32 @@ voiceServer.listen(
   async (voiceRequest: VoiceRequest, voiceResponse: VoiceResponse) => {
     logger.verbose('request:' + JSON.stringify(voiceRequest, null, ' '))
 
-    const client = eventsServer.getConnection(voiceRequest.callerNumber)
-    const effects = new EffectsManager({
-      events: null,
-      voice: voiceResponse,
-      voiceConfig: {
-        playbackId: PLAYBACK_ID,
-        ssmlGender: 'FEMALE',
-        name: 'en-US-Wavenet-H',
-      },
-      actions
-    });
+    // Get welcome intent
+    
+    const eventsClient = eventsServer.getConnection(voiceRequest.callerNumber)
 
-    if (!client) {
+    if (!eventsClient) {
       logger.error(
         `@rox no events connection found for ${voiceRequest.callerNumber} [aborting]`
       )
       return
     }
 
-    //client.send({event: 'ANSWERED'})
+    const intents = new IntentsAPI({
+      projectId: "",
+      keyFilename: ""
+    })
 
     const cerebro = new Cerebro({
-      keyFilename: GOOGLE_CONFIG_FILE,
-      projectId: roxanneConfig.projectId,
       voiceRequest,
       voiceResponse,
-      playbackId: PLAYBACK_ID,
-      acceptableConfidence: 0.5,
+      playbackId: "cerebro001",
+      intents,
+      eventsClient,
+      voiceConfig: {}
     })
 
     // Open for bussiness
     await cerebro.wake()
-
-    cerebro.on('intent', async (intent: Intent) => {
-      console.log("intent:", intent)
-      await effects.invokeEffects(intent.action)
-      cerebro.resetActiveTimer()
-    })
-
-    // 'Hey rox! activates the bot'
-    cerebro.on('status_change', (status: CerebroStatus) => {
-      status === CerebroStatus.AWAKE_ACTIVE
-        ? client.send({event: 'TALKING'})
-        : client.send({event: 'TALKING_FINISHED'})
-    })
-
-    cerebro.on('error', (error: Error) => {
-      logger.error(error)
-    })
   }
 )
