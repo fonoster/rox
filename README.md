@@ -42,6 +42,45 @@ docker run -it \
   fonoster/rox
 ```
 
+## Specs for Dialogflow backend
+
+The `say` effects will randomly pick a textual response from Dialog flow and playback to the user. To fullfill this effect with Dialogflow, you must send the effect as custom payload with the following structure:
+
+
+```json
+{
+  "effect": "say",
+  "parameters": {
+    "responses": [
+      "Welcome to Peter's restaurant. How can I help you today?"
+    ]
+  }
+}
+```
+
+For the `hangup` effect you will need the following payload: 
+
+```json
+{
+  "effect": "hangup"
+}
+```
+
+For the `send_link` effect you will need the following payload: 
+
+```json
+{
+  "effect": "send_link",
+  "parameters": {
+    "type": "map",
+    "icon": "https://test.com/icons/test.gif",
+    "link": "https://maps.test.com"
+  }
+}
+```
+
+> Notice that the parameter `type` is set to map in the example, but you can send anything that makes send to the client.
+
 ## Environment Variables
 
 Environment variables are used in the entry point script to render configuration templates. You can specify the values of these variables during `docker run`, `docker-compose up`, or in Kubernetes manifests in the `env` array.
@@ -54,6 +93,7 @@ Environment variables are used in the entry point script to render configuration
 - `INTERACTION_TIMEOUT` - Timeout, in seconds, to ask again for user input. Use `-1` for no timeout. Defaults to `-1`
 - `SENDDATA_EFFECT_ENABLED` - If set to `true` it will . Defaults to `false`
 - `ACIVATION_INTENT` - Set to the desired intent if you want to have an activation command. If this is set, the `INTERACTION_TIMEOUT` will have not effects.
+- `LANGUAGE_CODE` - Sets the default language for the application. Defaults to `en-US`
 
 > The test extension is `17853178070`. Using ENABLE_TEST_ACCOUNT is not recommended in production.
 

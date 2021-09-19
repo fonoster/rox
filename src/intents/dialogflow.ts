@@ -18,24 +18,26 @@
  */
 import logger from '@fonos/logger'
 import dialogflow, { SessionsClient } from '@google-cloud/dialogflow'
+import { Effect } from '../@types/cerebro'
 
 import { DialogFlowConfig, Intent, Intents } from '../@types/intents'
+import { convertToSayEffect, convertToSendDataEffect } from './df_utils'
 
-export default class IntentsAPI implements Intents {
+export default class DialogFlow implements Intents {
   sessionClient: SessionsClient
   sessionPath: any
-  config: any
+  config: DialogFlowConfig
   constructor(config: DialogFlowConfig) {
     const uuid = require('uuid')
     const sessionId = uuid.v4()
     const credentials = require(config.keyFilename)
 
     let c = {
-			credentials: {
-				private_key: credentials.private_key,
-				client_email:  credentials.client_email,
-			}
-		}
+      credentials: {
+        private_key: credentials.private_key,
+        client_email: credentials.client_email,
+      }
+    }
 
     // Create a new session
     this.sessionClient = new dialogflow.SessionsClient(c)
@@ -43,11 +45,12 @@ export default class IntentsAPI implements Intents {
       config.projectId,
       sessionId
     )
+    this.config = config
   }
 
   async findIntent(
     txt: string
-  ): Promise<Intent | null> {
+  ): Promise<Intent> {
     const request = {
       session: this.sessionPath,
       queryInput: {
@@ -60,21 +63,44 @@ export default class IntentsAPI implements Intents {
 
     const responses = await this.sessionClient.detectIntent(request)
 
-    if (!responses || !responses[0].queryResult) {
-      return null
+    if (!responses
+      || !responses[0].queryResult
+      || !responses[0].queryResult.intent
+      || !responses[0].queryResult.intent.displayName) {
+      throw new Error("@rox/intents unexpect null intent")
     }
 
     logger.verbose(
-      `@rox/cerebro got speech [text=${responses[0].queryResult}]`
+      `@rox/intents got speech [text=${JSON.stringify(responses[0], null, ' ')}]`
     )
 
-    const effects = []
+    const effects = this.getEffects(responses[0].queryResult.fulfillmentMessages as Record<string, any>[])
 
     return {
-      ref: "",
+      ref: responses[0].queryResult.intent.displayName,
       effects,
       confidence: responses[0].queryResult.intentDetectionConfidence || 0,
       allRequiredParamsPresent: responses[0].queryResult.allRequiredParamsPresent ? true : false
     }
+  }
+
+  private getEffects(fulfillmentMessages: Record<string, any>[]): Effect[] {
+    const effects = new Array()
+    for (const f of fulfillmentMessages) {
+      switch (f.payload.fields.effect.stringValue) {
+        case "say":
+          effects.push(convertToSayEffect(f))
+          break;
+        case "send_link":
+          effects.push(convertToSendDataEffect(f))
+          break;
+        case "hangup":
+          effects.push({ type: "hangup" })
+          break;
+        default:
+          throw new Error(`unknown effect ${f.payload.fields.effect.stringValue}`)
+      }
+    }
+    return effects
   }
 }

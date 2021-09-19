@@ -28,9 +28,7 @@ export interface EffectsManagerConfig {
 
 export interface Effect {
   type: 'say'
-  | 'play'
-  | 'record'
   | 'hangup'
-  | 'send_data'
+  | 'send_link'
   parameters: Record<string, unknown>
 }

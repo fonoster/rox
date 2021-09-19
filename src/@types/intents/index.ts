@@ -26,10 +26,11 @@ export interface Intent {
 }
 
 export interface Intents {
-  findIntent: (text:string) => Promise<Intent | null>
+  findIntent: (text:string) => Promise<Intent>
 }
 
 export interface DialogFlowConfig {
   projectId: string
   keyFilename: string
+  languageCode: string
 }

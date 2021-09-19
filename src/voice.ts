@@ -20,7 +20,7 @@
 import logger from '@fonos/logger'
 import { VoiceRequest, VoiceResponse, VoiceServer } from '@fonos/voice'
 import { Cerebro } from './cerebro'
-import { asr, tts } from './config'
+import { asr, tts, intents } from './config'
 import { eventsServer } from './events/server'
 import IntentsAPI from './intents/dialogflow'
 import { nanoid } from 'nanoid'
@@ -33,9 +33,13 @@ voiceServer.listen(
   async (voiceRequest: VoiceRequest, voiceResponse: VoiceResponse) => {
     logger.verbose('request:' + JSON.stringify(voiceRequest, null, ' '))
 
-    // Get welcome intent
-    
-    const eventsClient = eventsServer.getConnection(voiceRequest.callerNumber)
+    if (process.env.WELCOME_INTENT) {
+      const response = await intents.findIntent(process.env.WELCOME_INTENT)
+      voiceResponse.say(response.effects[0].parameters['response'] as string)
+      logger.verbose('welcomeIntentResponse:' + JSON.stringify(response, null, ' '))
+    }
+
+    /*const eventsClient = eventsServer.getConnection(voiceRequest.callerNumber)
 
     if (!eventsClient) {
       logger.error(
@@ -44,11 +48,6 @@ voiceServer.listen(
       return
     }
 
-    const intents = new IntentsAPI({
-      projectId: "",
-      keyFilename: ""
-    })
-
     const cerebro = new Cerebro({
       voiceRequest,
       voiceResponse,
@@ -56,9 +55,9 @@ voiceServer.listen(
       intents,
       eventsClient,
       voiceConfig: {}
-    })
+    })*/
 
     // Open for bussiness
-    await cerebro.wake()
+    //await cerebro.wake()
   }
 )

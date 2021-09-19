@@ -22,6 +22,7 @@
     "strictPropertyInitialization": false,
     "target": "esnext",
     "outDir": "./dist",
+    "rootDir": "."
   },
   "exclude": [
     "**/node_modules",

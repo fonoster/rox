@@ -19,30 +19,63 @@
 import GoogleASR from '@fonos/googleasr'
 import GoogleTTS from '@fonos/googletts'
 import path from 'path'
+import DialogFlow from './intents/dialogflow'
+import { Intents } from "./@types/intents"
+import { 
+  assertASREngineIsSupported, 
+  assertConfigExist, 
+  assertEnvExist, 
+  assertIntentsEngineIsSupported, 
+  assertTTSEngineIsSupported 
+} from './assertions'
 
 export const GOOGLE_CONFIG_FILE =
   process.env.GOOGLE_CONFIG || path.join(require("os").homedir(), ".fonos", "google.json")
-export const ROXANNE_CONFIG_FILE =
-  process.env.ROXANNE_CONFIG || path.join(require("os").homedir(), ".fonos", "roxanne.json")
-export const ACTIONS_FILE =
-  process.env.ACTIONS || path.join(require("os").homedir(), ".fonos", "actions.json")
+export const WATSON_CONFIG_FILE =
+  process.env.WATSON_CONFIG || path.join(require("os").homedir(), ".fonos", "watson.json")
+export const ROX_CONFIG_FILE =
+  process.env.ROX_CONFIG || path.join(require("os").homedir(), ".fonos", "rox.json")
 
-try {
-  require(GOOGLE_CONFIG_FILE)
-  require(ROXANNE_CONFIG_FILE)
-  require(ACTIONS_FILE)
-} catch (e) {
-  console.error(
-    'the files google.json,roxanne.json, and actions.json are required; one or more is missing'
-  )
-  process.exit(1)
+assertEnvExist("INTENTS_ENGINE")
+assertEnvExist("ASR_ENGINE")
+assertEnvExist("TTS_ENGINE")
+assertIntentsEngineIsSupported(process.env.INTENTS_ENGINE)
+assertTTSEngineIsSupported(process.env.TTS_ENGINE)
+assertASREngineIsSupported(process.env.ASR_ENGINE)
+
+// TODO: The requirements for the engine should be in a config 
+// file
+if (process.env.INTENTS_ENGINE === "dialogflow"
+  || process.env.TTS_ENGINE === "google"
+  || process.env.ASR_ENGINE === "google") {
+  assertConfigExist(GOOGLE_CONFIG_FILE)
+}
+
+if (process.env.INTENTS_ENGINE === "watson") {
+  assertConfigExist(WATSON_CONFIG_FILE)
+}
+
+assertConfigExist(ROX_CONFIG_FILE)
+
+let intentsEngine
+
+if (process.env.INTENTS_ENGINE === "dialogflow") {
+  const config = require(GOOGLE_CONFIG_FILE)
+  intentsEngine = new DialogFlow({
+    projectId: config.project_id,
+    keyFilename: GOOGLE_CONFIG_FILE,
+    languageCode: process.env.LANGUAGE_CODE || 'en-US'
+  })
+} else {
+  // intentsEngine = new WatsonAssistant()
 }
 
 // WARNING: Harcoded value
 const googleCredentials = {
   keyFilename: GOOGLE_CONFIG_FILE,
-  languageCode: 'en-US',
+  languageCode: process.env.LANGUAGE_CODE || 'en-US',
 }
 
+export const intents:Intents = intentsEngine
 export const asr = new GoogleASR(googleCredentials)
 export const tts = new GoogleTTS(googleCredentials)

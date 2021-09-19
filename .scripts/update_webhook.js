@@ -1,6 +1,6 @@
 #!/usr/bin/node
 const Numbers = require("@fonos/numbers");
-const config = "../roxanne.json";
+const config = "../config/rox.json";
 let roxanneConfig;
 
 try {

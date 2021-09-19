@@ -53,16 +53,10 @@ export class EffectsManager {
       case 'say':
         await this.voice.say(effect.parameters['response'] as string, this.voiceConfig)
         break
-      case 'play':
-        await this.voice.play(effect.parameters['sound'] as string, this.voiceConfig)
-        break
-      case 'record':
-        await this.voice.record(effect.parameters['options'] as any)
-        break
       case 'hangup':
         await this.voice.hangup()
         break
-      case 'send_data':
+      case 'send_link':
         await this.eventsClient.send(effect.parameters as any)
         break
       default:

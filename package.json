@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc --build ./tsconfig.json",
     "update:webhook": "API_CONFIG_FILE=./config/fonos.json node .scripts/update_webhook.js",
-    "start": ".scripts/start_voice.sh"
+    "start": "INTENTS_ENGINE=dialogflow .scripts/start_voice.sh"
   },
   "dependencies": {
     "@fonos/googleasr": "^0.1.21",
