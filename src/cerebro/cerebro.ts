@@ -95,10 +95,12 @@ export class Cerebro {
           this.status,
           async () => {
             await this.stopPlayback()
-            if (this.status === CerebroStatus.AWAKE_ACTIVE) {
-              this.resetActiveTimer()
-            } else {
-              this.startActiveTimer()
+            if (this.config.activationIntent) {
+              if (this.status === CerebroStatus.AWAKE_ACTIVE) {
+                this.resetActiveTimer()
+              } else {
+                this.startActiveTimer()
+              }
             }
           })
 

@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "composite": true,
     "declaration": true,
     "declarationMap": true,
     "downlevelIteration": true,
@@ -14,7 +13,6 @@
     "noImplicitAny": false,
     "noImplicitReturns": false,
     "pretty": true,
-    "removeComments": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
@@ -22,7 +20,8 @@
     "strictPropertyInitialization": false,
     "target": "esnext",
     "outDir": "./dist",
-    "rootDir": "."
+    "rootDir": "src",
+    "incremental": false
   },
   "exclude": [
     "**/node_modules",

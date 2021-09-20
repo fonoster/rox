@@ -1,6 +1,6 @@
 {
-  "name": "rox",
-  "version": "0.0.3",
+  "name": "@rox/voice",
+  "version": "0.0.4",
   "license": "MIT",
   "main": "dist/index",
   "bin": {

@@ -4,24 +4,24 @@ networks:
   fonos:
 
 services:
-  roxanne:
-    image: fonoster/roxanne:latest
+  rox:
+    build:
+      context: .  
+    image: fonoster/rox:latest
     # Be sure to remove this while in production 
     ports:
       - 3000:3000
       - 3001:3001
     environment:
-      # WARNING: This is a working around to Dialogflow not working
-      # in the same way as the other apis(tts,asr, etc)
-      GOOGLE_APPLICATION_CREDENTIALS: "/home/fonos/.fonos/google.json"
+      - EVENTS_ENABLED
+      - WELCOME_INTENT
+      - INTENTS_ENGINE
+      - TTS_ENGINE
+      - ASR_ENGINE
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.roxanne.entrypoints=websecure"
       - "traefik.http.services.roxanne.loadbalancer.server.port=3001"
       - "traefik.http.routers.roxanne.rule=PathPrefix(`/roxanne-events`)"    
     volumes:
-      - ${CONFIG}/roxanne.json:/home/fonos/.fonos/roxanne.json
       - ${CONFIG}/google.json:/home/fonos/.fonos/google.json
-      - ${CONFIG}/roxanne_actions.json:/home/fonos/.fonos/actions.json
-    networks:
-      fonos:
