@@ -52,7 +52,11 @@ voiceServer.listen(
       playbackId: nanoid(),
       intents,
       eventsClient,
-      voiceConfig: {}
+      voiceConfig: {},
+      activationIntent: process.env.ACTIVATION_INTENT,
+      activationTimeout: process.env.ACTIVATION_TIMEOUT 
+        ? parseInt(process.env.ACTIVATION_TIMEOUT)
+        : 15000
     })
 
     // Open for bussiness

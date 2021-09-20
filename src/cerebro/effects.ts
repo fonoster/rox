@@ -16,28 +16,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import logger from '@fonos/logger'
 import { VoiceResponse } from '@fonos/voice'
 import { CerebroStatus, Effect, EffectsManagerConfig } from '../@types/cerebro'
 import { Intent } from '../@types/intents'
 
 export class EffectsManager {
   voice: VoiceResponse
-  eventsClient: any
-  voiceConfig: any
-  playbackId: string
+  config: EffectsManagerConfig
   constructor(config: EffectsManagerConfig) {
     this.voice = config.voice
-    this.eventsClient = config.eventsClient
-    this.voiceConfig = config.voiceConfig
-    this.playbackId = config.playbackId
+    this.config = config
   }
 
   async invokeEffects(intent: Intent,
-     status: CerebroStatus, activateCallback: Function) {
-    if (process.env.ACTIVATION_INTENT === intent.ref) {
-      activateCallback()
+    status: CerebroStatus, activateCallback: Function) {
+    activateCallback()
+    if (this.config.activationIntent === intent.ref) {
+      logger.verbose("@rox fired activation intent")
       return;
-    } else if (process.env.ACTIVATION_INTENT && status != CerebroStatus.AWAKE_ACTIVE) {
+    } else if (this.config.activationIntent
+      && status != CerebroStatus.AWAKE_ACTIVE) {
+      logger.verbose("@rox got an intent but cerebro is not awake")
       // If we have activation intent cerebro needs and active status
       // before we can have any effects
       return
@@ -51,15 +51,15 @@ export class EffectsManager {
   async run(effect: Effect) {
     switch (effect.type) {
       case 'say':
-        await this.voice.say(effect.parameters['response'] as string, this.voiceConfig)
+        await this.voice.say(effect.parameters['response'] as string, this.config.voiceConfig)
         break
       case 'hangup':
         await this.voice.hangup()
         break
       case 'send_link':
         // Only send if client support events
-        if (this.eventsClient) {
-          await this.eventsClient.send(effect.parameters as any)
+        if (this.config.eventsClient) {
+          this.config.eventsClient.send(effect.parameters as any)
         }
         break
       default:

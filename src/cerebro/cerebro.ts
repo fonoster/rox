@@ -37,7 +37,7 @@ export class Cerebro {
   cerebroEvents: Events
   voiceRequest: VoiceRequest
   status: CerebroStatus
-  activeTimeout: number
+  activationTimeout: number
   activeTimer: NodeJS.Timer
   intents: Intents
   stream: SGatherStream
@@ -49,13 +49,14 @@ export class Cerebro {
     this.voiceRequest = config.voiceRequest
     this.cerebroEvents = new Events()
     this.status = CerebroStatus.SLEEP
-    this.activeTimeout = config.activeTimeout || 15000
+    this.activationTimeout = config.activationTimeout || 15000
     this.intents = config.intents
     this.effects = new EffectsManager({
       playbackId: config.playbackId,
       eventsClient: config.eventsClient,
       voice: config.voiceResponse,
-      voiceConfig: config.voiceConfig
+      voiceConfig: config.voiceConfig,
+      activationIntent: config.activationIntent
     })
     this.config = config
   }
@@ -126,10 +127,13 @@ export class Cerebro {
     this.status = CerebroStatus.AWAKE_ACTIVE
     this.activeTimer = setTimeout(() => {
       this.status = CerebroStatus.AWAKE_PASSIVE
-    }, this.activeTimeout)
+      logger.verbose("@rox/cerebro awake [status = passive]")
+    }, this.activationTimeout)
+    logger.verbose("@rox/cerebro awake [status = active]")
   }
 
   resetActiveTimer(): void {
+    logger.verbose("@rox/cerebro reseting awake status")
     clearTimeout(this.activeTimer)
     this.startActiveTimer()
   }

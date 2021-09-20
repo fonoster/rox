@@ -74,11 +74,9 @@ export default class DialogFlow implements Intents {
       `@rox/intents got speech [text=${JSON.stringify(responses[0], null, ' ')}]`
     )
 
-    let effects: Effect[]
-    // if (responses[0].queryResult.allRequiredParamsPresent) {
-    if (!responses[0].queryResult.fulfillmentText) {
-      effects = this.getEffects(responses[0].queryResult.fulfillmentMessages as Record<string, any>[])
-    } else {
+    let effects: Effect[] = []
+
+    if (responses[0].queryResult.fulfillmentText) {
       if (!responses[0].queryResult.fulfillmentText) {
         throw new Error("@rox/intents unexpect null fulfillmentText")
       }
@@ -88,6 +86,8 @@ export default class DialogFlow implements Intents {
           response: responses[0].queryResult.fulfillmentText
         }
       }]
+    } else if(responses[0].queryResult.fulfillmentMessages) {
+      effects = this.getEffects(responses[0].queryResult.fulfillmentMessages as Record<string, any>[])
     }
 
     return {
@@ -101,6 +101,7 @@ export default class DialogFlow implements Intents {
   private getEffects(fulfillmentMessages: Record<string, any>[]): Effect[] {
     const effects = new Array()
     for (const f of fulfillmentMessages) {
+      if (!f.payload) continue
       switch (f.payload.fields.effect.stringValue) {
         case "say":
           effects.push(convertToSayEffect(f))

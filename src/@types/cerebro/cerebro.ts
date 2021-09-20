@@ -26,11 +26,12 @@ export interface CerebroConfig {
   voiceRequest: VoiceRequest
   voiceResponse: VoiceResponse
   maxUnknownIntents?: number
-  activeTimeout?: number
+  activationTimeout?: number
   intents: Intents
   playbackId: string
   voiceConfig: any
   eventsClient: EventsClient | null
+  activationIntent?: string
 }
 
 export enum CerebroStatus {

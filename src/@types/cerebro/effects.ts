@@ -22,7 +22,8 @@ import { EventsClient } from '../../events/emitter'
 export interface EffectsManagerConfig {
   eventsClient: EventsClient | null
   voice: VoiceResponse
-  voiceConfig: any
+  voiceConfig: Record<string,unknown>
+  activationIntent?: string,
   playbackId: string
 }
 
