@@ -38,7 +38,6 @@ voiceServer.listen(
 
     if (process.env.WELCOME_INTENT) {
       const response = await intents.findIntent(process.env.WELCOME_INTENT)
-      logger.verbose(`@rox/voice welcome response [response = ${JSON.stringify(response, null, ' ')}`)
       await voiceResponse.say(response.effects[0].parameters['response'] as string)
     }
 

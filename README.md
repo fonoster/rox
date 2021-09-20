@@ -100,12 +100,12 @@ To allow for seamless integration between Dialogflow and Rox, we introduced the 
 `send_link` 
 
 </td>
-<td> Use this Effect to refer client to a link. Note that this only works with clients that subscribe for events. The map field, can be an arbitrary value to correctly display the link to the user </td>
+<td> Use this Effect send arbitrary data to the client. Note that this only works with clients that subscribe for events</td>
 <td>
 
 ```json
 {
-  "effect": "send_link",
+  "effect": "send_data",
   "parameters": {
     "type": "map",
     "icon": "https://freeicons.net/icons/map.png",
@@ -137,8 +137,6 @@ To allow for seamless integration between Dialogflow and Rox, we introduced the 
 </td>
 </tr>
 </table>
-
-
 
 > Notes: The parameter `type` is set to map in the example, but you can send anything that makes send to the client. If the parameter `allRequiredParamsPresent` is set to true, the fulfillmentText will be take presedence over the custom effects.
 

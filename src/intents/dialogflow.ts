@@ -19,9 +19,8 @@
 import logger from '@fonos/logger'
 import dialogflow, { SessionsClient } from '@google-cloud/dialogflow'
 import { Effect } from '../@types/cerebro'
-
-import { DialogFlowConfig, Intent, Intents } from '../@types/intents'
-import { convertToSayEffect, convertToSendDataEffect } from './df_utils'
+import { DialogFlowConfig, Intents, Intent } from '../@types/intents'
+import { transformPayloadToEffect } from './df_utils'
 
 export default class DialogFlow implements Intents {
   sessionClient: SessionsClient
@@ -101,20 +100,10 @@ export default class DialogFlow implements Intents {
   private getEffects(fulfillmentMessages: Record<string, any>[]): Effect[] {
     const effects = new Array()
     for (const f of fulfillmentMessages) {
-      if (!f.payload) continue
-      switch (f.payload.fields.effect.stringValue) {
-        case "say":
-          effects.push(convertToSayEffect(f))
-          break;
-        case "send_link":
-          effects.push(convertToSendDataEffect(f))
-          break;
-        case "hangup":
-          effects.push({ type: "hangup" })
-          break;
-        default:
-          throw new Error(`unknown effect ${f.payload.fields.effect.stringValue}`)
+      if (!f.payload) {
+        continue
       }
+      effects.push(transformPayloadToEffect(f.payload))
     }
     return effects
   }

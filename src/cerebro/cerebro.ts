@@ -88,17 +88,8 @@ export class Cerebro {
         const intent = await this.intents.findIntent(data.transcript)
 
         logger.verbose(
-          `@rox/cerebro intent [transcriot = '${data.transcript}', ref: ${intent.ref}, confidence: ${intent.confidence}}]`
+          `@rox/cerebro intent [transcript = '${data.transcript}', ref: ${intent.ref}, confidence: ${intent.confidence}}]`
         )
-
-        /*if (this.lastIntent
-          && intent.ref === this.lastIntent.ref
-          && intent.confidence === this.lastIntent.confidence) {
-          logger.verbose('@rox/cerebro ingoring duplicate intent')
-          // Resets the duplicate intent check
-          this.lastIntent = null
-          return
-        }*/
 
         await this.effects.invokeEffects(intent,
           this.status,

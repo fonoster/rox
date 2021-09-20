@@ -30,6 +30,7 @@ export interface EffectsManagerConfig {
 export interface Effect {
   type: 'say'
   | 'hangup'
-  | 'send_link'
+  | 'send_data'
+  | 'transfer'
   parameters: Record<string, unknown>
 }

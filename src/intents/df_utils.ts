@@ -1,5 +1,3 @@
-import { Effect } from "../@types/cerebro"
-
 /*
  * Copyright (C) 2021 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
@@ -18,31 +16,37 @@ import { Effect } from "../@types/cerebro"
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Effect } from "../@types/cerebro"
+
+function deserializePayload(object: Record<string, any>): any {
+  let outputMessage = Array.isArray(object) ? [] : {};
+  Object.entries(object).forEach(([key, value]) => {
+    if (value.kind == 'structValue') {
+      outputMessage[key] = deserializePayload(value.structValue.fields);
+    } else if (value.kind == 'listValue') {
+      outputMessage[key] = deserializePayload(value.listValue.values);
+    } else if (value.kind == 'stringValue') {
+      outputMessage[key] = value.stringValue;
+    } else if (value.kind == 'boolValue') {
+      outputMessage[key] = value.boolValue;
+    } else {
+      outputMessage[key] = value;
+    }
+  });
+  return outputMessage as any
+}
+
 export function getRamdomValue(values: Record<string, string>[]) {
   return values[Math.floor(Math.random() * values.length)]
 }
 
-export function convertToSayEffect(rawEffect: Record<string, any>): Effect {
-  const r = getRamdomValue(
-    rawEffect.payload.fields
-      .parameters.structValue.fields.responses.listValue.values)
+export function transformPayloadToEffect(payload: Record<string, any>): Effect {
+  const o = deserializePayload(payload.fields)
+  const parameters = o.effect === 'say'
+    ? { response: getRamdomValue(o.parameters.responses) }
+    : o.parameters
   return {
-    type: rawEffect.payload.fields.effect.stringValue,
-    parameters: {
-      response: r.stringValue
-    }
-  }
-}
-
-export function convertToSendDataEffect(rawEffect: Record<string, any>): Effect {
-  const fields =  rawEffect.payload.fields.parameters.structValue.fields
-  const parameters = {
-    type: fields.type.stringValue,
-    icon: fields.icon.stringValue,
-    link: fields.link.stringValue
-  }
-  return {
-    type: rawEffect.payload.fields.effect.stringValue,
+    type: o.effect,
     parameters
   }
 }

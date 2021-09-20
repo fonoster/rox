@@ -1,5 +1,6 @@
 #!/bin/bash
-ACTIVATION_INTENT="bot.activate" \
+# ACTIVATION_INTENT="bot.activate" \
+EVENTS_ENABLED="true" \
 WELCOME_INTENT="welcome" \
 TTS_ENGINE="google" \
 ASR_ENGINE="google" \
