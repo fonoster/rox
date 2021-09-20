@@ -38,6 +38,7 @@ docker run -it \
   -e INTENTS_ENGINE="watson" \
   -e ASR_ENGINE="google" \
   -e TTS_ENGINE="google" \
+  -e TTS_VOICE="en-US-Wavenet-F" \
   -e ACTIVATION_INTENT="bot.activate" \
   fonoster/rox
 ```
@@ -97,7 +98,7 @@ To allow for seamless integration between Dialogflow and Rox, we introduced the 
 <tr>
 <td> 
 
-`send_link` 
+`send_data` 
 
 </td>
 <td> Use this Effect send arbitrary data to the client. Note that this only works with clients that subscribe for events</td>
@@ -138,6 +139,8 @@ To allow for seamless integration between Dialogflow and Rox, we introduced the 
 </tr>
 </table>
 
+> Notes: The parameter `type` is set to map in the example, but you can send anything that makes send to the client. If the parameter `allRequiredParamsPresent` is set to true, the fulfillmentText will be take presedence over the custom effects.
+
 ## Environment Variables
 
 Environment variables are used in the entry point script to render configuration templates. You can specify the values of these variables during `docker run`, `docker-compose up`, or in Kubernetes manifests in the `env` array.
@@ -145,6 +148,7 @@ Environment variables are used in the entry point script to render configuration
 - `INTENTS_ENGINE` - Use to select the intents engine. Accepts `watson` or `dialogflow`. **Required**
 - `ASR_ENGINE` - Use to select the ASR engine. Accepts `google`. **Required**
 - `TTS_ENGINE` - Use to select the TTS engine. Accepts `google`. **Required**
+- `TTS_VOICE` - Name of the voice. Check https://cloud.google.com/text-to-speech/docs/voices for a list of Google TTS voices. **Required**
 - `INITIAL_DTMF` - Set if you want to send a DTMF at the begining of the call
 - `WELCOME_INTENT` - Set if you want to ask the backend for a welcome intent
 - `INTERACTION_TIMEOUT` - Timeout, in seconds, to ask again for user input. Use `-1` for no timeout. Defaults to `-1`
@@ -167,7 +171,7 @@ Environment variables are used in the entry point script to render configuration
 
 ## TODO
 
-- [ ] Add authentication to secure the events port
+- Add authentication to secure the events port
 
 ## Contributing
 
