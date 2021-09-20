@@ -167,7 +167,7 @@ Environment variables are used in the entry point script to render configuration
 
 ## TODO
 
-- Add authentication to secure the events port
+- [ ] Add authentication to secure the events port
 
 ## Contributing
 
