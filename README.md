@@ -98,7 +98,7 @@ To allow for seamless integration between Dialogflow and Rox, we introduced the 
 <tr>
 <td> 
 
-`send_link` 
+`send_data` 
 
 </td>
 <td> Use this Effect send arbitrary data to the client. Note that this only works with clients that subscribe for events</td>
