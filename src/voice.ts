@@ -46,13 +46,16 @@ voiceServer.listen(
       ? eventsServer.getConnection(voiceRequest.callerNumber)
       : null
 
+    const playbackId = nanoid()
     const cerebro = new Cerebro({
       voiceRequest,
       voiceResponse,
-      playbackId: nanoid(),
+      playbackId,
       intents,
       eventsClient,
-      voiceConfig: {},
+      voiceConfig: {
+        playbackId
+      },
       activationIntent: process.env.ACTIVATION_INTENT,
       activationTimeout: process.env.ACTIVATION_TIMEOUT 
         ? parseInt(process.env.ACTIVATION_TIMEOUT)

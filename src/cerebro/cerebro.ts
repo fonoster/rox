@@ -88,7 +88,7 @@ export class Cerebro {
         const intent = await this.intents.findIntent(data.transcript)
 
         logger.verbose(
-          `@rox/cerebro intent [ref: ${intent.ref}, confidence: ${intent.confidence}}]`
+          `@rox/cerebro intent [transcriot = '${data.transcript}', ref: ${intent.ref}, confidence: ${intent.confidence}}]`
         )
 
         /*if (this.lastIntent

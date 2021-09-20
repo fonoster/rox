@@ -79,8 +79,7 @@ For the `send_link` effect you will need the following payload:
 }
 ```
 
-> Note #1: The parameter `type` is set to map in the example, but you can send anything that makes send to the client.
-> Note #2: If the parameter `allRequiredParamsPresent` is set to true, the fulfillmentText will be take presedence over the custom effects.
+> Notes: The parameter `type` is set to map in the example, but you can send anything that makes send to the client. If the parameter `allRequiredParamsPresent` is set to true, the fulfillmentText will be take presedence over the custom effects.
 
 ## Environment Variables
 
