@@ -1,7 +1,7 @@
 FROM fonoster/base
 COPY . /scripts
 RUN apk add --no-cache --update npm; \
-  npm i \
+  npm install; \
   npm run build
 RUN ./install.sh
 USER fonos

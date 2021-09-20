@@ -1,5 +1,5 @@
 {
-  "name": "@rox/voice",
+  "name": "rox",
   "version": "0.0.4",
   "license": "MIT",
   "main": "dist/index",
