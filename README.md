@@ -46,6 +46,8 @@ docker run -it \
 
 To allow for seamless integration between Dialogflow and Rox, we introduced the concept of Effects. Effects are actions sent from Dialogflow to Rox so you don't have to programm the behavior everytime. All you need to do is send the Effect's payload and Rox will react accordingly.
 
+> You can send multiple responses from Dialogflow. The Effects will run in sequence.
+
 <table>
 <tr>
 <td> Effect ID </td> <td> Description </td> <td> Payload Example </td>
@@ -56,7 +58,7 @@ To allow for seamless integration between Dialogflow and Rox, we introduced the 
 `say` 
 
 </td>
-<td> The `say` effects will randomly pick a textual response and playback to the user</td>
+<td> The Effect will randomly pick a textual response and play it back to the user </td>
 <td>
   
 ```json
@@ -81,7 +83,7 @@ To allow for seamless integration between Dialogflow and Rox, we introduced the 
 `hangup` 
 
 </td>
-<td> The hangup effect will close the phone call </td>
+<td> The hangup Effect will close the call </td>
 <td>
 
 ```json
@@ -98,7 +100,7 @@ To allow for seamless integration between Dialogflow and Rox, we introduced the 
 `send_link` 
 
 </td>
-<td> Use this Effect to refer client to a link. Note that this only works with clients that subscribe for events. The map field, can be an arbitrary value to correctly display the link to the client </td>
+<td> Use this Effect to refer client to a link. Note that this only works with clients that subscribe for events. The map field, can be an arbitrary value to correctly display the link to the user </td>
 <td>
 
 ```json
@@ -120,7 +122,7 @@ To allow for seamless integration between Dialogflow and Rox, we introduced the 
 `transfer` 
 
 </td>
-<td> Forward client to another endpoint. </td>
+<td> Forward call to a different endpoint </td>
 <td>
 
 ```json
