@@ -40,6 +40,7 @@ export const WATSON_CONFIG_FILE =
 assertEnvExist("INTENTS_ENGINE")
 assertEnvExist("ASR_ENGINE")
 assertEnvExist("TTS_ENGINE")
+assertEnvExist("TTS_VOICE")
 assertIntentsEngineIsSupported(process.env.INTENTS_ENGINE)
 assertTTSEngineIsSupported(process.env.TTS_ENGINE)
 assertASREngineIsSupported(process.env.ASR_ENGINE)

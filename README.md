@@ -38,6 +38,7 @@ docker run -it \
   -e INTENTS_ENGINE="watson" \
   -e ASR_ENGINE="google" \
   -e TTS_ENGINE="google" \
+  -e TTS_VOICE="en-US-Wavenet-F" \
   -e ACTIVATION_INTENT="bot.activate" \
   fonoster/rox
 ```
@@ -147,6 +148,7 @@ Environment variables are used in the entry point script to render configuration
 - `INTENTS_ENGINE` - Use to select the intents engine. Accepts `watson` or `dialogflow`. **Required**
 - `ASR_ENGINE` - Use to select the ASR engine. Accepts `google`. **Required**
 - `TTS_ENGINE` - Use to select the TTS engine. Accepts `google`. **Required**
+- `TTS_VOICE` - Name of the voice. Check https://cloud.google.com/text-to-speech/docs/voices for a list of Google TTS voices. **Required**
 - `INITIAL_DTMF` - Set if you want to send a DTMF at the begining of the call
 - `WELCOME_INTENT` - Set if you want to ask the backend for a welcome intent
 - `INTERACTION_TIMEOUT` - Timeout, in seconds, to ask again for user input. Use `-1` for no timeout. Defaults to `-1`

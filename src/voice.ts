@@ -31,6 +31,11 @@ voiceServer.use(tts)
 voiceServer.listen(
   async (voiceRequest: VoiceRequest, voiceResponse: VoiceResponse) => {
     logger.verbose('request:' + JSON.stringify(voiceRequest, null, ' '))
+    const playbackId = nanoid()
+    const voiceConfig ={
+      name: process.env.TTS_VOICE,
+      playbackId
+    }
 
     if (process.env.INITIAL_DTMF) {
       await voiceResponse.dtmf({dtmf: process.env.INITIAL_DTMF})
@@ -38,23 +43,20 @@ voiceServer.listen(
 
     if (process.env.WELCOME_INTENT) {
       const response = await intents.findIntent(process.env.WELCOME_INTENT)
-      await voiceResponse.say(response.effects[0].parameters['response'] as string)
+      await voiceResponse.say(response.effects[0].parameters['response'] as string, voiceConfig)
     }
 
     const eventsClient = process.env.EVENTS_ENABLED === "true" 
       ? eventsServer.getConnection(voiceRequest.callerNumber)
       : null
 
-    const playbackId = nanoid()
     const cerebro = new Cerebro({
       voiceRequest,
       voiceResponse,
       playbackId,
       intents,
       eventsClient,
-      voiceConfig: {
-        playbackId
-      },
+      voiceConfig,
       activationIntent: process.env.ACTIVATION_INTENT,
       activationTimeout: process.env.ACTIVATION_TIMEOUT 
         ? parseInt(process.env.ACTIVATION_TIMEOUT)
