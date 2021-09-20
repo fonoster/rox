@@ -44,21 +44,35 @@ docker run -it \
 
 ## Specs for Dialogflow backend
 
-The `say` effects will randomly pick a textual response from Dialog flow and playback to the user. To fullfill this effect with Dialogflow, you must send the effect as custom payload with the following structure:
-
-
+<table>
+<tr>
+<td> Effect ID </td> <td> Description </td> <td> Payload Example </td>
+</tr>
+<tr>
+<td> `say` </td>
+<td> The `say` effects will randomly pick a textual response and playback to the user</td>
+<td>
+  
 ```json
 {
   "effect": "say",
   "parameters": {
     "responses": [
-      "Welcome to Peter's restaurant. How can I help you today?"
+      "Goodbye!",
+      "Talk later",
+      "Bye!",
+      "Have a good one!"
     ]
   }
 }
 ```
 
-For the `hangup` effect you will need the following payload: 
+</td>
+</tr>
+<tr>
+<td> `hangup` </td>
+<td> The hangup effect will close the phone call </td>
+<td>
 
 ```json
 {
@@ -66,18 +80,11 @@ For the `hangup` effect you will need the following payload:
 }
 ```
 
-For the `send_link` effect you will need the following payload: 
+</td>
+</tr>
+</table>
 
-```json
-{
-  "effect": "send_link",
-  "parameters": {
-    "type": "map",
-    "icon": "https://test.com/icons/test.gif",
-    "link": "https://maps.test.com"
-  }
-}
-```
+
 
 > Notes: The parameter `type` is set to map in the example, but you can send anything that makes send to the client. If the parameter `allRequiredParamsPresent` is set to true, the fulfillmentText will be take presedence over the custom effects.
 
