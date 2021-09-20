@@ -32,13 +32,19 @@ voiceServer.listen(
   async (voiceRequest: VoiceRequest, voiceResponse: VoiceResponse) => {
     logger.verbose('request:' + JSON.stringify(voiceRequest, null, ' '))
 
-    if (process.env.WELCOME_INTENT) {
-      const response = await intents.findIntent(process.env.WELCOME_INTENT)
-      voiceResponse.say(response.effects[0].parameters['response'] as string)
-      logger.verbose(`@rox/voice welcome response [response = ${JSON.stringify(response, null, ' ')}`)
+    if (process.env.INITIAL_DTMF) {
+      await voiceResponse.dtmf({dtmf: process.env.INITIAL_DTMF})
     }
 
-    const eventsClient = eventsServer.getConnection(voiceRequest.callerNumber)
+    if (process.env.WELCOME_INTENT) {
+      const response = await intents.findIntent(process.env.WELCOME_INTENT)
+      logger.verbose(`@rox/voice welcome response [response = ${JSON.stringify(response, null, ' ')}`)
+      await voiceResponse.say(response.effects[0].parameters['response'] as string)
+    }
+
+    const eventsClient = process.env.EVENTS_ENABLED === "true" 
+      ? eventsServer.getConnection(voiceRequest.callerNumber)
+      : null
 
     const cerebro = new Cerebro({
       voiceRequest,

@@ -79,7 +79,8 @@ For the `send_link` effect you will need the following payload:
 }
 ```
 
-> Notice that the parameter `type` is set to map in the example, but you can send anything that makes send to the client.
+> Note #1: The parameter `type` is set to map in the example, but you can send anything that makes send to the client.
+> Note #2: If the parameter `allRequiredParamsPresent` is set to true, the fulfillmentText will be take presedence over the custom effects.
 
 ## Environment Variables
 
@@ -91,7 +92,7 @@ Environment variables are used in the entry point script to render configuration
 - `INITIAL_DTMF` - Set if you want to send a DTMF at the begining of the call
 - `WELCOME_INTENT` - Set if you want to ask the backend for a welcome intent
 - `INTERACTION_TIMEOUT` - Timeout, in seconds, to ask again for user input. Use `-1` for no timeout. Defaults to `-1`
-- `SENDDATA_EFFECT_ENABLED` - If set to `true` it will . Defaults to `false`
+- `EVENTS_ENABLED` - If set to `true` it will send events to ws clients subscribed to events. Defaults to `false`
 - `ACIVATION_INTENT` - Set to the desired intent if you want to have an activation command. If this is set, the `INTERACTION_TIMEOUT` will have not effects.
 - `LANGUAGE_CODE` - Sets the default language for the application. Defaults to `en-US`
 
