@@ -44,12 +44,18 @@ docker run -it \
 
 ## Specs for Dialogflow backend
 
+To allow for seamless integration between Dialogflow and Rox, we introduced the concept of Effects. Effects are actions sent from Dialogflow to Rox so you don't have to programm the behavior everytime. All you need to do is send the Effect's payload and Rox will react accordingly.
+
 <table>
 <tr>
 <td> Effect ID </td> <td> Description </td> <td> Payload Example </td>
 </tr>
 <tr>
-<td> `say` </td>
+<td> 
+
+`say` 
+
+</td>
 <td> The `say` effects will randomly pick a textual response and playback to the user</td>
 <td>
   
@@ -70,13 +76,59 @@ docker run -it \
 </td>
 </tr>
 <tr>
-<td> `hangup` </td>
+<td> 
+
+`hangup` 
+
+</td>
 <td> The hangup effect will close the phone call </td>
 <td>
 
 ```json
 {
   "effect": "hangup"
+}
+```
+
+</td>
+</tr>
+<tr>
+<td> 
+
+`send_link` 
+
+</td>
+<td> Use this Effect to refer client to a link. Note that this only works with clients that subscribe for events. The map field, can be an arbitrary value to correctly display the link to the client </td>
+<td>
+
+```json
+{
+  "effect": "send_link",
+  "parameters": {
+    "type": "map",
+    "icon": "https://freeicons.net/icons/map.png",
+    "link": "https://goo.gl/maps/YTum2VeZSQwNB4ik6"
+  }
+}
+```
+
+</td>
+</tr>
+<tr>
+<td> 
+
+`transfer` 
+
+</td>
+<td> Forward client to another endpoint. </td>
+<td>
+
+```json
+{
+  "effect": "transfer",
+  "parameters": {
+    "endpoint": "sip:17853178070@acme.fonoster.io"
+  }
 }
 ```
 
