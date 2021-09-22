@@ -114,6 +114,7 @@ export class Cerebro {
   async sleep() {
     await this.voiceResponse.closeMediaPipe()
     this.stream.close()
+    this.status = CerebroStatus.SLEEP
   }
 
   startActiveTimer(): void {

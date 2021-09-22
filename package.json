@@ -12,13 +12,14 @@
     "start": "INTENTS_ENGINE=dialogflow .scripts/start_voice.sh"
   },
   "dependencies": {
-    "@fonos/googleasr": "^0.1.21",
+    "@fonos/googleasr": "^0.1.22",
     "@fonos/googletts": "^0.1.21",
     "@fonos/logger": "^0.1.21",
     "@fonos/numbers": "^0.1.21",
-    "@fonos/voice": "^0.1.21",
+    "@fonos/voice": "^0.1.22",
     "@google-cloud/dialogflow": "^4.3.1",
     "nanoid": "^3.1.25",
+    "uuid": "^8.3.2",
     "ws": "^8.1.0"
   },
   "devDependencies": {
