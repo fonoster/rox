@@ -1,6 +1,6 @@
 # Rox AI
 
-> Voicebot built on top of Project Fonos with support for Dialogflow and Watson Assistant.
+> Voicebot built on top of Project Fonos with support for Dialogflow.
 
 ![publish to docker](https://github.com/fonoster/rox/workflows/publish%20to%20docker%20hub/badge.svg)
 
@@ -35,7 +35,7 @@ The following is a basic example of using this image.
 docker run -it \
   -p 3000:3000 \
   -e WELCOME_INTENT="welcome"
-  -e INTENTS_ENGINE="watson" \
+  -e INTENTS_ENGINE="dialogflow" \
   -e ASR_ENGINE="google" \
   -e TTS_ENGINE="google" \
   -e TTS_VOICE="en-US-Wavenet-F" \
@@ -145,9 +145,9 @@ To allow for seamless integration between Dialogflow and Rox, we introduced the 
 
 Environment variables are used in the entry point script to render configuration templates. You can specify the values of these variables during `docker run`, `docker-compose up`, or in Kubernetes manifests in the `env` array.
 
-- `INTENTS_ENGINE` - Use to select the intents engine. Accepts `watson` or `dialogflow`. **Required**
-- `ASR_ENGINE` - Use to select the ASR engine. Accepts `google`. **Required**
-- `TTS_ENGINE` - Use to select the TTS engine. Accepts `google`. **Required**
+- `INTENTS_ENGINE` - Use to select the intents engine. Accepts `[dialogflow]`. **Required**
+- `ASR_ENGINE` - Use to select the ASR engine. Accepts `[google]`. **Required**
+- `TTS_ENGINE` - Use to select the TTS engine. Accepts `[google]`. **Required**
 - `TTS_VOICE` - Name of the voice. Check https://cloud.google.com/text-to-speech/docs/voices for a list of Google TTS voices. **Required**
 - `INITIAL_DTMF` - Set if you want to send a DTMF at the begining of the call
 - `WELCOME_INTENT` - Set if you want to ask the backend for a welcome intent
@@ -167,7 +167,6 @@ Environment variables are used in the entry point script to render configuration
 ## Volumes
 
 - `/etc/rox/google.json` - This must exist if `INTENTS_ENGINE=dialogflow`, or `ASR_ENGINE=google`, or `TTS_ENGINE=google`
-- `/etc/rox/watson.json` - This must exist if `INTENTS_ENGINE=watson`
 
 ## TODO
 

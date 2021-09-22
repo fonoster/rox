@@ -31,8 +31,6 @@ import {
 
 export const GOOGLE_CONFIG_FILE =
   process.env.GOOGLE_CONFIG || path.join(require("os").homedir(), ".fonos", "google.json")
-export const WATSON_CONFIG_FILE =
-  process.env.WATSON_CONFIG || path.join(require("os").homedir(), ".fonos", "watson.json")
 
 // export const ROX_CONFIG_FILE =
 //  process.env.ROX_CONFIG || path.join(require("os").homedir(), ".fonos", "rox.json")
@@ -53,12 +51,6 @@ if (process.env.INTENTS_ENGINE === "dialogflow"
   assertConfigExist(GOOGLE_CONFIG_FILE)
 }
 
-if (process.env.INTENTS_ENGINE === "watson") {
-  assertConfigExist(WATSON_CONFIG_FILE)
-}
-
-// assertConfigExist(ROX_CONFIG_FILE)
-
 let intentsEngine
 
 if (process.env.INTENTS_ENGINE === "dialogflow") {
@@ -68,8 +60,6 @@ if (process.env.INTENTS_ENGINE === "dialogflow") {
     keyFilename: GOOGLE_CONFIG_FILE,
     languageCode: process.env.LANGUAGE_CODE || 'en-US'
   })
-} else {
-  // intentsEngine = new WatsonAssistant()
 }
 
 // WARNING: Harcoded value
