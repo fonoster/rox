@@ -32,9 +32,6 @@ import {
 export const GOOGLE_CONFIG_FILE =
   process.env.GOOGLE_CONFIG || path.join(require("os").homedir(), ".fonos", "google.json")
 
-// export const ROX_CONFIG_FILE =
-//  process.env.ROX_CONFIG || path.join(require("os").homedir(), ".fonos", "rox.json")
-
 assertEnvExist("INTENTS_ENGINE")
 assertEnvExist("ASR_ENGINE")
 assertEnvExist("TTS_ENGINE")
@@ -43,8 +40,7 @@ assertIntentsEngineIsSupported(process.env.INTENTS_ENGINE)
 assertTTSEngineIsSupported(process.env.TTS_ENGINE)
 assertASREngineIsSupported(process.env.ASR_ENGINE)
 
-// TODO: The requirements for the engine should be in a config 
-// file
+// TODO: The requirements for the engine should be in a config file
 if (process.env.INTENTS_ENGINE === "dialogflow"
   || process.env.TTS_ENGINE === "google"
   || process.env.ASR_ENGINE === "google") {
@@ -62,7 +58,6 @@ if (process.env.INTENTS_ENGINE === "dialogflow") {
   })
 }
 
-// WARNING: Harcoded value
 const googleCredentials = {
   keyFilename: GOOGLE_CONFIG_FILE,
   languageCode: process.env.LANGUAGE_CODE || 'en-US',
