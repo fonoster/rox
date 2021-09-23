@@ -31,6 +31,9 @@ voiceServer.use(tts)
 voiceServer.listen(
   async (voiceRequest: VoiceRequest, voiceResponse: VoiceResponse) => {
     logger.verbose('request:' + JSON.stringify(voiceRequest, null, ' '))
+
+    await voiceResponse.answer()
+
     const playbackId = nanoid()
     const voiceConfig ={
       name: process.env.TTS_VOICE,
