@@ -35,11 +35,11 @@ The following is a basic example of using this image.
 docker run -it \
   -p 3000:3000 \
   -e WELCOME_INTENT="welcome"
+  -e ACTIVATION_INTENT="bot.activate" \  
   -e INTENTS_ENGINE="dialogflow" \
   -e ASR_ENGINE="google" \
   -e TTS_ENGINE="google" \
   -e TTS_VOICE="en-US-Wavenet-F" \
-  -e ACTIVATION_INTENT="bot.activate" \
   fonoster/rox
 ```
 
