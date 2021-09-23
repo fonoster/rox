@@ -151,13 +151,11 @@ Environment variables are used in the entry point script to render configuration
 - `TTS_VOICE` - Name of the voice. Check https://cloud.google.com/text-to-speech/docs/voices for a list of Google TTS voices. **Required**
 - `INITIAL_DTMF` - Set if you want to send a DTMF at the begining of the call
 - `WELCOME_INTENT` - Set if you want to ask the backend for a welcome intent
+- `ACTIVATION_INTENT` - Set to the desired intent if you want to have an activation command. If this is set, the `INTERACTION_TIMEOUT` will have not effects. 
 - `INTERACTION_TIMEOUT` - Timeout, in seconds, to ask again for user input. Use `-1` for no timeout. Defaults to `-1`
 - `EVENTS_ENABLED` - If set to `true` it will send events to ws clients subscribed to events. Defaults to `false`
-- `ACTIVATION_INTENT` - Set to the desired intent if you want to have an activation command. If this is set, the `INTERACTION_TIMEOUT` will have not effects.
 - `ACTIVATION_TIMEOUT` - Time in seconds for the duration of the `AWAKE_ACTIVE` state, set for the activation command. After this time the bot will return to `AWAKE_PASSIVE` and new intents will be ignored. Defaults to `15000`
 - `LANGUAGE_CODE` - Sets the default language for the application. Defaults to `en-US`
-
-> The test extension is `17853178070`. Using ENABLE_TEST_ACCOUNT is not recommended in production.
 
 ## Exposed ports
 
