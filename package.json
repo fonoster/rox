@@ -9,15 +9,16 @@
   "scripts": {
     "build": "tsc --build ./tsconfig.json",
     "update:webhook": "API_CONFIG_FILE=.config/fonos.json node .scripts/update_webhook.js",
-    "start": "INTENTS_ENGINE=dialogflow .scripts/start_voice.sh"
+    "start": ".scripts/start_voice.sh"
   },
   "dependencies": {
-    "@fonos/googleasr": "^0.1.22",
-    "@fonos/googletts": "^0.1.21",
-    "@fonos/logger": "^0.1.21",
-    "@fonos/numbers": "^0.1.21",
-    "@fonos/voice": "^0.1.23",
+    "@fonos/googleasr": "^0.1.24",
+    "@fonos/googletts": "^0.1.24",
+    "@fonos/logger": "^0.1.24",
+    "@fonos/numbers": "^0.1.24",
+    "@fonos/voice": "^0.1.24",
     "@google-cloud/dialogflow": "^4.3.1",
+    "@google-cloud/dialogflow-cx": "^2.13.0",
     "nanoid": "^3.1.25",
     "uuid": "^8.3.2",
     "ws": "^8.1.0"

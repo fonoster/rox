@@ -34,7 +34,7 @@ The following is a basic example of using this image.
 ```
 docker run -it \
   -p 3000:3000 \
-  -e WELCOME_INTENT="welcome"
+  -e WELCOME_INTENT_TRIGGER="hi!"
   -e ACTIVATION_INTENT="bot.activate" \  
   -e INTENTS_ENGINE="dialogflow" \
   -e ASR_ENGINE="google" \
@@ -130,7 +130,8 @@ To allow for seamless integration between Dialogflow and Rox, we introduced the 
 {
   "effect": "transfer",
   "parameters": {
-    "endpoint": "sip:17853178070@acme.fonoster.io"
+    "destination": "17853178070",
+    "record": true
   }
 }
 ```
@@ -145,12 +146,14 @@ To allow for seamless integration between Dialogflow and Rox, we introduced the 
 
 Environment variables are used in the entry point script to render configuration templates. You can specify the values of these variables during `docker run`, `docker-compose up`, or in Kubernetes manifests in the `env` array.
 
-- `INTENTS_ENGINE` - Use to select the intents engine. Accepts `[dialogflow]`. **Required**
+- `INTENTS_ENGINE` - Use to select the intents engine. Accepts `[dialogflow.es, dialogflow.cx]`. **Required**
+- `INTENTS_ENGINE_AGENT` - Intents Agent identifier.  **Required for `dialogflow.cx`**
+- `INTENTS_ENGINE_LOCATION` - Region where the bot was deployed.  **Required for `dialogflow.cx`**
 - `ASR_ENGINE` - Use to select the ASR engine. Accepts `[google]`. **Required**
 - `TTS_ENGINE` - Use to select the TTS engine. Accepts `[google]`. **Required**
 - `TTS_VOICE` - Name of the voice. Check https://cloud.google.com/text-to-speech/docs/voices for a list of Google TTS voices. **Required**
 - `INITIAL_DTMF` - Set if you want to send a DTMF at the begining of the call
-- `WELCOME_INTENT` - Set if you want to ask the backend for a welcome intent
+- `WELCOME_INTENT_TRIGGER` - Set if you want to ask the backend for a welcome intent
 - `ACTIVATION_INTENT` - Set to the desired intent if you want to have an activation command. If this is set, the `INTERACTION_TIMEOUT` will have not effects
 - `INTERACTION_TIMEOUT` - Timeout, in seconds, to ask again for user input. Use `-1` for no timeout. Defaults to `-1`
 - `EVENTS_ENABLED` - If set to `true` it will send events to ws clients subscribed to events. Defaults to `false`

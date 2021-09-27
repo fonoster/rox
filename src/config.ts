@@ -19,7 +19,8 @@
 import GoogleASR from '@fonos/googleasr'
 import GoogleTTS from '@fonos/googletts'
 import path from 'path'
-import DialogFlow from './intents/dialogflow'
+import DialogFlowES from './intents/dialogflow_es'
+import DialogFlowCX from './intents/dialogflow_cx'
 import { Intents } from "./@types/intents"
 import { 
   assertASREngineIsSupported, 
@@ -41,7 +42,8 @@ assertTTSEngineIsSupported(process.env.TTS_ENGINE)
 assertASREngineIsSupported(process.env.ASR_ENGINE)
 
 // TODO: The requirements for the engine should be in a config file
-if (process.env.INTENTS_ENGINE === "dialogflow"
+if (process.env.INTENTS_ENGINE === "dialogflow.es"
+  || process.env.INTENTS_ENGINE === "dialogflow.cx"
   || process.env.TTS_ENGINE === "google"
   || process.env.ASR_ENGINE === "google") {
   assertConfigExist(GOOGLE_CONFIG_FILE)
@@ -49,9 +51,20 @@ if (process.env.INTENTS_ENGINE === "dialogflow"
 
 let intentsEngine
 
-if (process.env.INTENTS_ENGINE === "dialogflow") {
+if (process.env.INTENTS_ENGINE === "dialogflow.es") {
   const config = require(GOOGLE_CONFIG_FILE)
-  intentsEngine = new DialogFlow({
+  intentsEngine = new DialogFlowES({
+    projectId: config.project_id,
+    keyFilename: GOOGLE_CONFIG_FILE,
+    languageCode: process.env.LANGUAGE_CODE || 'en-US'
+  })
+}
+
+if (process.env.INTENTS_ENGINE === "dialogflow.cx") {
+  assertEnvExist("INTENTS_ENGINE_AGENT")
+  assertEnvExist("INTENTS_ENGINE_LOCATION")
+  const config = require(GOOGLE_CONFIG_FILE)
+  intentsEngine = new DialogFlowCX({
     projectId: config.project_id,
     keyFilename: GOOGLE_CONFIG_FILE,
     languageCode: process.env.LANGUAGE_CODE || 'en-US'

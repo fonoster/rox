@@ -18,7 +18,7 @@
  */
 const SUPPORTED_TTS_ENGINES = ["google"]
 const SUPPORTED_ASR_ENGINES = ["google"]
-const SUPPORTED_INTENTS_ENGINES = ["dialogflow"]
+const SUPPORTED_INTENTS_ENGINES = ["dialogflow.es", "dialogflow.cx"]
 
 export const assertConfigExist = (path: string) => {
   try {

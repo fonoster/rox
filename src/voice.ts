@@ -44,8 +44,8 @@ voiceServer.listen(
       await voiceResponse.dtmf({dtmf: process.env.INITIAL_DTMF})
     }
 
-    if (process.env.WELCOME_INTENT) {
-      const response = await intents.findIntent(process.env.WELCOME_INTENT)
+    if (process.env.WELCOME_INTENT_TRIGGER) {
+      const response = await intents.findIntent(process.env.WELCOME_INTENT_TRIGGER)
       await voiceResponse.say(response.effects[0].parameters['response'] as string, voiceConfig)
     }
 

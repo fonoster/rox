@@ -57,7 +57,10 @@ export class EffectsManager {
         await this.voice.hangup()
         break
       case 'transfer':
-        throw new Error("Not yet implemented")
+        await this.voice.transfer(effect.parameters['destination'] as string,
+          {
+            record: effect.parameters['record'] as boolean
+          })
       case 'send_data':
         // Only send if client support events
         if (this.config.eventsClient) {

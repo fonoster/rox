@@ -17,12 +17,12 @@
  * limitations under the License.
  */
 import logger from '@fonos/logger'
-import dialogflow, { SessionsClient } from '@google-cloud/dialogflow'
+import dialogflow, { SessionsClient } from '@google-cloud/dialogflow-cx'
 import { Effect } from '../@types/cerebro'
 import { DialogFlowConfig, Intents, Intent } from '../@types/intents'
 import { transformPayloadToEffect } from './df_utils'
 
-export default class DialogFlow implements Intents {
+export default class DialogFlowCX implements Intents {
   sessionClient: SessionsClient
   sessionPath: any
   config: DialogFlowConfig
@@ -32,6 +32,7 @@ export default class DialogFlow implements Intents {
     const credentials = require(config.keyFilename)
 
     let c = {
+      apiEndpoint: `${process.env.INTENTS_ENGINE_LOCATION}-dialogflow.googleapis.com`,
       credentials: {
         private_key: credentials.private_key,
         client_email: credentials.client_email,
@@ -40,8 +41,10 @@ export default class DialogFlow implements Intents {
 
     // Create a new session
     this.sessionClient = new dialogflow.SessionsClient(c)
-    this.sessionPath = this.sessionClient.projectAgentSessionPath(
+    this.sessionPath = this.sessionClient.projectLocationAgentSessionPath(
       config.projectId,
+      process.env.INTENTS_ENGINE_LOCATION as string,
+      process.env.INTENTS_ENGINE_AGENT as string,
       sessionId
     )
     this.config = config
@@ -55,55 +58,54 @@ export default class DialogFlow implements Intents {
       queryInput: {
         text: {
           text: txt,
-          languageCode: this.config.languageCode,
         },
+        languageCode: this.config.languageCode,
       },
     }
 
     const responses = await this.sessionClient.detectIntent(request)
 
+    logger.silly(
+      `@rox/intents got speech [text=${JSON.stringify(responses, null, ' ')}]`
+    )
+
     if (!responses
       || !responses[0].queryResult
-      || !responses[0].queryResult.intent
-      || !responses[0].queryResult.intent.displayName) {
+      || !responses[0].queryResult.responseMessages) {
       throw new Error("@rox/intents unexpect null intent")
     }
 
-    logger.silly(
-      `@rox/intents got speech [text=${JSON.stringify(responses[0], null, ' ')}]`
-    )
+    const effects: Effect[] = this
+      .getEffects(
+        responses[0].queryResult.responseMessages as Record<string, any>[])
 
-    let effects: Effect[] = []
-
-    if (responses[0].queryResult.fulfillmentText) {
-      if (!responses[0].queryResult.fulfillmentText) {
-        throw new Error("@rox/intents unexpect null fulfillmentText")
-      }
-      effects = [{
-        type: "say",
-        parameters: {
-          response: responses[0].queryResult.fulfillmentText
-        }
-      }]
-    } else if(responses[0].queryResult.fulfillmentMessages) {
-      effects = this.getEffects(responses[0].queryResult.fulfillmentMessages as Record<string, any>[])
-    }
+    const ref = responses[0].queryResult.intent
+      ? responses[0].queryResult.intent.displayName || "unknown"
+      : "unknown"
 
     return {
-      ref: responses[0].queryResult.intent.displayName,
+      ref,
       effects,
       confidence: responses[0].queryResult.intentDetectionConfidence || 0,
-      allRequiredParamsPresent: responses[0].queryResult.allRequiredParamsPresent ? true : false
+      allRequiredParamsPresent: responses[0].queryResult.text ? true : false
     }
   }
 
-  private getEffects(fulfillmentMessages: Record<string, any>[]): Effect[] {
+  private getEffects(responseMessages: Record<string, any>[]): Effect[] {
     const effects = new Array()
-    for (const f of fulfillmentMessages) {
-      if (!f.payload) {
+    for (const r of responseMessages) {
+      if (r.message === "text") {
+        effects.push({
+          type: "say",
+          parameters: {
+            response: r.text.text[0]
+          }
+        })
+        continue;
+      } else if (!r.payload) {
         continue
       }
-      effects.push(transformPayloadToEffect(f.payload))
+      effects.push(transformPayloadToEffect(r.payload))
     }
     return effects
   }
