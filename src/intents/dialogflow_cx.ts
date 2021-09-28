@@ -66,7 +66,7 @@ export default class DialogFlowCX implements Intents {
     const responses = await this.sessionClient.detectIntent(request)
 
     logger.silly(
-      `@rox/intents got speech [text=${JSON.stringify(responses, null, ' ')}]`
+      `@rox/intents got speech [intent response => ${JSON.stringify(responses, null, ' ')}]`
     )
 
     if (!responses

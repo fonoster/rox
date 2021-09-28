@@ -64,7 +64,6 @@ export class Cerebro {
   // Subscribe to events
   async wake() {
     this.status = CerebroStatus.AWAKE_PASSIVE
-    await this.voiceResponse.openMediaPipe()
 
     const readable = new Stream.Readable({
       // The read logic is omitted since the data is pushed to the socket
@@ -88,7 +87,7 @@ export class Cerebro {
         const intent = await this.intents.findIntent(data.transcript)
 
         logger.verbose(
-          `@rox/cerebro intent [transcript = '${data.transcript}', ref: ${intent.ref}, confidence: ${intent.confidence}}]`
+          `@rox/cerebro intent [text = '${data.transcript}', ref: ${intent.ref}, confidence: ${intent.confidence}}]`
         )
 
         await this.effects.invokeEffects(intent,
@@ -112,6 +111,7 @@ export class Cerebro {
 
   // Unsubscribe from events
   async sleep() {
+    logger.verbose('@rox/cerebro is going to sleep')
     await this.voiceResponse.closeMediaPipe()
     this.stream.close()
     this.status = CerebroStatus.SLEEP
@@ -142,7 +142,9 @@ export class Cerebro {
           `@rox pausing playback [playbackId = ${this.config.playbackId}]`
         )
         await playbackControl.pause()
-      } catch (e) { }
+      } catch (e) { 
+        logger.error(`@rox/cerebro e => [${e}]`)
+      }
     }
   }
 }

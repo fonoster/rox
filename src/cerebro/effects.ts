@@ -44,6 +44,7 @@ export class EffectsManager {
     }
 
     for (let e of intent.effects) {
+      logger.verbose(`@rox/cerebro/effects running effect [type = ${e.type}]`)
       await this.run(e)
     }
   }
