@@ -134,16 +134,17 @@ export class Cerebro {
 
   async stopPlayback() {
     if (this.config.playbackId) {
-      const playbackControl: PlaybackControl = this.voiceResponse.playback(
-        this.config.playbackId
-      )
       try {
-        logger.verbose(
-          `@rox pausing playback [playbackId = ${this.config.playbackId}]`
+        const playbackControl: PlaybackControl = this.voiceResponse.playback(
+          this.config.playbackId
         )
-        await playbackControl.pause()
+
+        logger.verbose(
+          `@rox/cerebro stoping playback [playbackId = ${this.config.playbackId}]`
+        )
+        await playbackControl.stop();
       } catch (e) { 
-        logger.error(`@rox/cerebro e => [${e}]`)
+         logger.error(`@rox/cerebro e => [${e}]`)
       }
     }
   }

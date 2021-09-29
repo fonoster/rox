@@ -33,11 +33,11 @@ export class EffectsManager {
     status: CerebroStatus, activateCallback: Function) {
     activateCallback()
     if (this.config.activationIntent === intent.ref) {
-      logger.verbose("@rox fired activation intent")
+      logger.verbose("@rox/cerebro/effects fired activation intent")
       return;
     } else if (this.config.activationIntent
       && status != CerebroStatus.AWAKE_ACTIVE) {
-      logger.verbose("@rox got an intent but cerebro is not awake")
+      logger.verbose("@rox/cerebro/effects got an intent but cerebro is not awake")
       // If we have activation intent cerebro needs and active status
       // before we can have any effects
       return
@@ -62,6 +62,7 @@ export class EffectsManager {
           {
             record: effect.parameters['record'] as boolean
           })
+        break
       case 'send_data':
         // Only send if client support events
         if (this.config.eventsClient) {
@@ -69,7 +70,7 @@ export class EffectsManager {
         }
         break
       default:
-        throw new Error(`received unknown effect ${effect.type}`)
+        throw new Error(`@rox/cerebro/effects received unknown effect ${effect.type}`)
     }
   }
 }

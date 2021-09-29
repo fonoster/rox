@@ -101,7 +101,7 @@ export default class DialogFlowCX implements Intents {
             response: r.text.text[0]
           }
         })
-        continue;
+        continue
       } else if (!r.payload) {
         continue
       }
