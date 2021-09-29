@@ -1,4 +1,4 @@
-# Rox AI
+# Rox AI 🤖
 
 > Voicebot built on top of Project Fonos with support for Dialogflow.
 
