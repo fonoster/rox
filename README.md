@@ -36,7 +36,7 @@ docker run -it \
   -p 3000:3000 \
   -e WELCOME_INTENT_TRIGGER="hi!"
   -e ACTIVATION_INTENT="bot.activate" \  
-  -e INTENTS_ENGINE="dialogflow" \
+  -e INTENTS_ENGINE="dialogflow.cx" \
   -e ASR_ENGINE="google" \
   -e TTS_ENGINE="google" \
   -e TTS_VOICE="en-US-Wavenet-F" \
