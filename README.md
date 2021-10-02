@@ -163,7 +163,7 @@ Environment variables are used in the entry point script to render configuration
 ## Exposed ports
 
 - `3000` - Port to start a session request
-- `3001` - Port to subscribe to `sendData` effects
+- `3001` - Port to subscribe for `send_data` effects
 
 ## Volumes
 
