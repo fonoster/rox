@@ -160,7 +160,7 @@ Environment variables are used in the entry point script to render configuration
 - `ACTIVATION_TIMEOUT` - Time in seconds for the duration of the `AWAKE_ACTIVE` state, set for the activation command. After this time the bot will return to `AWAKE_PASSIVE` and new intents will be ignored. Defaults to `15000`
 - `LANGUAGE_CODE` - Sets the default language for the application. Defaults to `en-US`
 
-## Exposed ports
+## Exposed Ports
 
 - `3000` - Port to start a session request
 - `3001` - Port to subscribe for `send_data` effects
