@@ -4,7 +4,7 @@
 
 ![publish to docker](https://github.com/fonoster/rox/workflows/publish%20to%20docker%20hub/badge.svg)
 
-This repository contains a dockerized distribution of Rox AI.
+This repository contains a dockerized distribution of Rox AI. Also see [Project Fonos](https://github.com/fonoster/rox).
 
 ## Youtube Demo
 
