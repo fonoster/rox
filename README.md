@@ -6,6 +6,12 @@
 
 This repository contains a dockerized distribution of Rox AI.
 
+## Youtube Demo
+
+<div align="center">
+  <a href="https://www.youtube.com/embed/41Rx8KPb5GU"><img src="https://img.youtube.com/vi/41Rx8KPb5GU/0.jpg" alt="IMAGE ALT TEXT"></a>
+</div>
+
 ## Available Versions
 
 You can see all images available to pull from Docker Hub via the [Tags](https://hub.docker.com/repository/docker/fonoster/rox/tags?page=1) page. Docker tag names that begin with a "change type" word such as task, bug, or feature are available for testing and may be removed at any time.
