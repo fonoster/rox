@@ -8,8 +8,10 @@ This repository contains a dockerized distribution of Rox AI.
 
 ## Youtube Demo
 
-<div align="center">
-  <a href="https://www.youtube.com/embed/41Rx8KPb5GU"><img src="https://img.youtube.com/vi/41Rx8KPb5GU/0.jpg" alt="Demo of Rox AI"></a>
+See a Car Rental demo using Rox AI
+
+<div align="left">
+  <a href="https://www.youtube.com/embed/41Rx8KPb5GU"><img width="400" src="https://cdn.worldvectorlogo.com/logos/youtube-3.svg" alt="Demo of Rox AI"></a>
 </div>
 
 ## Available Versions
