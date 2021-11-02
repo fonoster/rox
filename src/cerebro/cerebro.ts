@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import logger from '@fonos/logger'
+import logger from '@fonoster/logger'
 import Events from 'events'
 import Stream from 'stream'
 import { EffectsManager } from './effects'
@@ -26,7 +26,7 @@ import {
   SGatherStream,
   VoiceRequest,
   VoiceResponse,
-} from '@fonos/voice'
+} from '@fonoster/voice'
 import {
   CerebroConfig,
   CerebroStatus

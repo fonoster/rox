@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { VoiceResponse } from '@fonos/voice'
+import { VoiceResponse } from '@fonoster/voice'
 import { EventsClient } from '../../events/emitter'
 
 export interface EffectsManagerConfig {

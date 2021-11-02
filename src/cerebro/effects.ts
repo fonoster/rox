@@ -16,8 +16,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import logger from '@fonos/logger'
-import { VoiceResponse } from '@fonos/voice'
+import logger from '@fonoster/logger'
+import { VoiceResponse } from '@fonoster/voice'
 import { CerebroStatus, Effect, EffectsManagerConfig } from '../@types/cerebro'
 import { Intent } from '../@types/intents'
 

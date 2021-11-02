@@ -17,8 +17,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import logger from '@fonos/logger'
-import { VoiceRequest, VoiceResponse, VoiceServer } from '@fonos/voice'
+import logger from '@fonoster/logger'
+import { VoiceRequest, VoiceResponse, VoiceServer } from '@fonoster/voice'
 import { Cerebro } from './cerebro'
 import { asr, tts, intents } from './config'
 import { eventsServer } from './events/server'

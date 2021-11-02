@@ -1,5 +1,5 @@
 #!/usr/bin/node
-const Numbers = require("@fonos/numbers");
+const Numbers = require("@fonoster/numbers");
 const config = "../.config/rox.json";
 let roxanneConfig;
 

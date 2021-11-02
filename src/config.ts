@@ -16,8 +16,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import GoogleASR from '@fonos/googleasr'
-import GoogleTTS from '@fonos/googletts'
+import GoogleASR from '@fonoster/googleasr'
+import GoogleTTS from '@fonoster/googletts'
 import path from 'path'
 import DialogFlowES from './intents/dialogflow_es'
 import DialogFlowCX from './intents/dialogflow_cx'
@@ -31,7 +31,7 @@ import {
 } from './assertions'
 
 export const GOOGLE_CONFIG_FILE =
-  process.env.GOOGLE_CONFIG || path.join(require("os").homedir(), ".fonos", "google.json")
+  process.env.GOOGLE_CONFIG || path.join(require("os").homedir(), ".fonoster", "google.json")
 
 assertEnvExist("INTENTS_ENGINE")
 assertEnvExist("ASR_ENGINE")

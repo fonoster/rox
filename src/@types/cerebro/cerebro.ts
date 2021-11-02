@@ -16,8 +16,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { VoiceResponse } from '@fonos/voice'
-import { VoiceRequest } from '@fonos/voice/dist/types'
+import { VoiceResponse } from '@fonoster/voice'
+import { VoiceRequest } from '@fonoster/voice/dist/types'
 import { EffectsManager } from '../../cerebro/effects'
 import { EventsClient } from '../../events/emitter'
 import { Intents } from '../intents'

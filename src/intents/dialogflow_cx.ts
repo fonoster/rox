@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import logger from '@fonos/logger'
+import logger from '@fonoster/logger'
 import dialogflow, { SessionsClient } from '@google-cloud/dialogflow-cx'
 import { Effect } from '../@types/cerebro'
 import { DialogFlowConfig, Intents, Intent } from '../@types/intents'

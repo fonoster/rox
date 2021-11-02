@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 import WebSocket = require('ws')
-import logger from '@fonos/logger'
+import logger from '@fonoster/logger'
 
 import { EventsClient } from './emitter'
 

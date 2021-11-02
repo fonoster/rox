@@ -4,7 +4,7 @@ RUN apk add --no-cache --update npm; \
   npm install; \
   npm run build
 RUN ./install.sh
-USER fonos
+USER fonoster
 EXPOSE 3000/tcp
 EXPOSE 3001/tcp
 
