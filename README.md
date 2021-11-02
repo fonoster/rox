@@ -1,10 +1,10 @@
 # Rox AI 🤖
 
-> Rox AI is a tool that connects Project Fonos with Dialogflow ES/CX
+> Rox AI is a tool that connects Fonoster with Dialogflow ES/CX
 
 ![publish to docker](https://github.com/fonoster/rox/workflows/publish%20to%20docker%20hub/badge.svg)
 
-This repository contains a dockerized distribution of Rox AI. Also see [Project Fonos](https://github.com/fonoster/rox).
+This repository contains a dockerized distribution of Rox AI. Also see [Fonoster](https://github.com/fonoster/fonoster).
 
 ## Youtube Demo
 
