@@ -58,10 +58,8 @@ export class EffectsManager {
         await this.voice.hangup()
         break
       case 'transfer':
-        await this.voice.transfer(effect.parameters['destination'] as string,
-          {
-            record: effect.parameters['record'] as boolean
-          })
+        // TODO: Add record effect
+        await this.voice.dial(effect.parameters['destination'] as string)
         break
       case 'send_data':
         // Only send if client support events
