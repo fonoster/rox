@@ -1,27 +1,26 @@
 version: '3.3'
 
-networks:
-  fonoster:
-
 services:
   rox:
     build:
       context: .  
     image: fonoster/rox:latest
-    # Be sure to remove this while in production 
     ports:
       - 3000:3000
       - 3001:3001
     environment:
-      - EVENTS_ENABLED
-      - WELCOME_INTENT
       - INTENTS_ENGINE
-      - TTS_ENGINE
+      - INTENTS_ENGINE_AGENT
+      - INTENTS_ENGINE_LOCATION
       - ASR_ENGINE
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.roxanne.entrypoints=websecure"
-      - "traefik.http.services.roxanne.loadbalancer.server.port=3001"
-      - "traefik.http.routers.roxanne.rule=PathPrefix(`/roxanne-events`)"    
+      - TTS_ENGINE
+      - TTS_VOICE
+      - INITIAL_DTMF
+      - WELCOME_INTENT_TRIGGER
+      - ACTIVATION_INTENT
+      - INTERACTION_TIMEOUT
+      - EVENTS_ENABLED
+      - ACTIVATION_TIMEOUT
+      - LANGUAGE_CODE  
     volumes:
       - ${CONFIG}/google.json:/home/fonoster/.fonoster/google.json
