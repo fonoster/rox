@@ -4,6 +4,7 @@ RUN apk add --no-cache --update npm; \
   npm install; \
   npm run build
 RUN ./install.sh
+RUN link /usr/bin/rox /usr/bin/run
 USER fonoster
 EXPOSE 3000/tcp
 EXPOSE 3001/tcp

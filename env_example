@@ -1,0 +1,6 @@
+# This must be a full path
+GOOGLE_CONFIG=/Users/pedrosanders/Projects/rox/google.json
+INTENTS_ENGINE=dialogflow.es
+ASR_ENGINE=google
+TTS_ENGINE=google
+TTS_VOICE=en-US-Standard-C

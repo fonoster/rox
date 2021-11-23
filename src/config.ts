@@ -16,6 +16,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import dotenv from 'dotenv';
+const result = dotenv.config();
+if (result.error) {
+  console.log('failed to load .env');
+  process.exit(1);
+}
+
 import GoogleASR from '@fonoster/googleasr'
 import GoogleTTS from '@fonoster/googletts'
 import path from 'path'

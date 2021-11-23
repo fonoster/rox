@@ -4,7 +4,7 @@
   "license": "MIT",
   "main": "dist/index",
   "bin": {
-    "run": "./dist/voice.js"
+    "rox": "./dist/voice.js"
   },
   "scripts": {
     "build": "tsc --build ./tsconfig.json",
@@ -19,11 +19,13 @@
     "@fonoster/voice": "^0.2.14",
     "@google-cloud/dialogflow": "^4.3.1",
     "@google-cloud/dialogflow-cx": "^2.13.0",
+    "dotenv": "^10.0.0",
     "nanoid": "^3.1.25",
     "uuid": "^8.3.2",
     "ws": "^8.1.0"
   },
   "devDependencies": {
+    "@types/node": "^16.11.10",
     "@types/ws": "^7.4.7",
     "typescript": "^4.4.2"
   }

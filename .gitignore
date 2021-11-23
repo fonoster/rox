@@ -3,3 +3,4 @@ dist
 .config
 tsconfig.tsbuildinfo
 .env
+google.json
