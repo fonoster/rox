@@ -57,7 +57,7 @@ class Rox extends Command {
     const configFromEnv = getConfigFromEnv()
     const configFromFlags = getConfigFromFlags(flags)
     const roxConfig = merge(configFromEnv, configFromFlags)
-
+    
     assertEverything(roxConfig)
 
     const intentsEngine = getIntentsEngine(roxConfig)

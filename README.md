@@ -180,6 +180,9 @@ Environment variables are used in the entry point script to render configuration
 ## TODO
 
 - Add authentication to secure the events port
+- Include a `--log-level` flag
+- Include a `--app-port` so we can change the default voice application port
+- Include a `--events-port` so we can change the default events port
 
 ## Contributing
 
@@ -194,4 +197,3 @@ See also the list of contributors who [participated](https://github.com/fonoster
 ## License
 
 Copyright (C) 2021 by Fonoster Inc. MIT License (see [LICENSE](https://github.com/fonoster/rox/blob/main/LICENSE) for details).
-
