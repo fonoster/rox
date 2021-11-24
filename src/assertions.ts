@@ -79,10 +79,10 @@ export const assertASREngineIsSupported = (name?: string) => {
 }
 
 export const assertEverything = (config: RoxConfig) => {
-  assertParameterNotNull("intentsEngine", config.intentsEngine)
-  assertParameterNotNull("asrEngine", config.asrEngine)
-  assertParameterNotNull("ttsEngine", config.ttsEngine)
-  assertParameterNotNull("ttsVoice", config.ttsVoice)
+  assertParameterNotNull("intents-engine", config.intentsEngine)
+  assertParameterNotNull("asr-engine", config.asrEngine)
+  assertParameterNotNull("tts-engine", config.ttsEngine)
+  assertParameterNotNull("tts-voice", config.ttsVoice)
   assertIntentsEngineIsSupported(config.intentsEngine)
   assertTTSEngineIsSupported(config.ttsEngine)
   assertASREngineIsSupported(config.asrEngine)
@@ -95,7 +95,7 @@ export const assertEverything = (config: RoxConfig) => {
   }
 
   if (config.intentsEngine === "dialogflow.cx") {
-    assertParameterNotNull("intentsEngineAgent", config.intentsEngineAgent)
-    assertParameterNotNull("intentsEngineLocation", config.intentsEngineLocation)
+    assertParameterNotNull("intents-engine-gent", config.intentsEngineAgent)
+    assertParameterNotNull("intents-engine-location", config.intentsEngineLocation)
   }
 }
