@@ -1,3 +1,7 @@
+import GoogleASR from "@fonoster/googleasr";
+import GoogleTTS from "@fonoster/googletts";
+import { Intents } from "./intents";
+
 /*
  * Copyright (C) 2021 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
@@ -16,29 +20,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Effect } from "../cerebro";
-
-export interface Intent {
-  ref: string
-  effects: Effect[]
-  confidence: number
-  allRequiredParamsPresent: boolean
+export interface RoxConfig {
+  ttsVoice: string;
+  ttsEngine: string;
+  asrEngine: string;
+  intentsEngine: string;
+  languageCode: string;
+  googleConfigFile: string;
+  intentsEngineAgent?: string;
+  intentsEngineLocation?: string;
+  initialDtmf?: string;
+  welcomeIntentTrigger?: string;
+  enableEvents?: boolean;
+  activationTimeout?: number;
+  activationIntent?: string;
+  interactionTimeout?: number;
 }
 
-export interface Intents {
-  findIntent: (text:string) => Promise<Intent>
-}
-
-export interface DialogFlowESConfig {
-  projectId: string
-  keyFilename: string
-  languageCode: string
-}
-
-export interface DialogFlowCXConfig {
-  projectId: string
-  keyFilename: string
-  languageCode: string
-  location: string
-  agent: string
+export interface VoiceConfig {
+  roxConfig: RoxConfig
+  asr: GoogleASR
+  tts: GoogleTTS
+  intents: Intents
 }

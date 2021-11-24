@@ -1,3 +1,5 @@
+import { RoxConfig } from "./@types/rox"
+
 /*
  * Copyright (C) 2021 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
@@ -40,6 +42,15 @@ export const assertEnvExist = (name: string) => {
   }
 }
 
+export const assertParameterNotNull = (name: string, parameter?: string) => {
+  if (!parameter) {
+    console.error(
+      `the parameter ${name} is required but is missing`
+    )
+    process.exit(1)
+  }
+}
+
 export const assertIntentsEngineIsSupported = (name?: string) => {
   if (!name || !SUPPORTED_INTENTS_ENGINES.includes(name)) {
     console.error(
@@ -67,3 +78,24 @@ export const assertASREngineIsSupported = (name?: string) => {
   }
 }
 
+export const assertEverything = (config: RoxConfig) => {
+  assertParameterNotNull("intentsEngine", config.intentsEngine)
+  assertParameterNotNull("asrEngine", config.asrEngine)
+  assertParameterNotNull("ttsEngine", config.ttsEngine)
+  assertParameterNotNull("ttsVoice", config.ttsVoice)
+  assertIntentsEngineIsSupported(config.intentsEngine)
+  assertTTSEngineIsSupported(config.ttsEngine)
+  assertASREngineIsSupported(config.asrEngine)
+
+  if (config.intentsEngine === "dialogflow.es"
+    || config.intentsEngine === "dialogflow.cx"
+    || config.ttsEngine === "google"
+    || config.asrEngine === "google") {
+    assertConfigExist(config.googleConfigFile || "")
+  }
+
+  if (config.intentsEngine === "dialogflow.cx") {
+    assertParameterNotNull("intentsEngineAgent", config.intentsEngineAgent)
+    assertParameterNotNull("intentsEngineLocation", config.intentsEngineLocation)
+  }
+}

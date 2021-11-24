@@ -70,4 +70,4 @@ export class EventsServer {
 
 // Starting events server
 export const eventsServer = new EventsServer(new Map())
-eventsServer.start()
+

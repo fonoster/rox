@@ -19,14 +19,14 @@
 import logger from '@fonoster/logger'
 import dialogflow, { SessionsClient } from '@google-cloud/dialogflow'
 import { Effect } from '../@types/cerebro'
-import { DialogFlowConfig, Intents, Intent } from '../@types/intents'
+import { Intents, Intent, DialogFlowESConfig } from '../@types/intents'
 import { transformPayloadToEffect } from './df_utils'
 
 export default class DialogFlow implements Intents {
   sessionClient: SessionsClient
   sessionPath: any
-  config: DialogFlowConfig
-  constructor(config: DialogFlowConfig) {
+  config: DialogFlowESConfig
+  constructor(config: DialogFlowESConfig) {
     const uuid = require('uuid')
     const sessionId = uuid.v4()
     const credentials = require(config.keyFilename)
