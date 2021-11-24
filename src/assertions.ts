@@ -4,7 +4,7 @@ import { RoxConfig } from "./@types/rox"
  * Copyright (C) 2021 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
  *
- * This file is part of Rox
+ * This file is part of Rox AI
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with
