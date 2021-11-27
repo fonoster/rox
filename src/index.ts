@@ -28,6 +28,7 @@ import { voice } from './voice'
 import logger from '@fonoster/logger'
 import ngrok from 'ngrok'
 import merge from "deepmerge"
+import { RoxConfig } from './@types/rox'
 
 class Rox extends Command {
   static description = 'starts a new Rox AI instance'
@@ -56,7 +57,13 @@ class Rox extends Command {
     const { flags } = this.parse(Rox)
     const configFromEnv = getConfigFromEnv()
     const configFromFlags = getConfigFromFlags(flags)
-    const roxConfig = merge(configFromEnv, configFromFlags)
+    const roxConfig = merge.all([
+      {
+        languageCode: "en-US"
+      },
+      configFromEnv, 
+      configFromFlags,
+    ]) as RoxConfig
     
     assertEverything(roxConfig)
 

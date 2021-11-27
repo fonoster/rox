@@ -18,11 +18,11 @@
     "version": "oclif-dev readme && git add README.md"
   },
   "dependencies": {
-    "@fonoster/googleasr": "^0.2.14",
-    "@fonoster/googletts": "^0.2.14",
-    "@fonoster/logger": "^0.2.14",
-    "@fonoster/numbers": "^0.2.14",
-    "@fonoster/voice": "^0.2.14",
+    "@fonoster/googleasr": "^0.2.21",
+    "@fonoster/googletts": "^0.2.23",
+    "@fonoster/logger": "^0.2.21",
+    "@fonoster/numbers": "^0.2.21",
+    "@fonoster/voice": "^0.2.23",
     "@google-cloud/dialogflow": "^4.3.1",
     "@google-cloud/dialogflow-cx": "^2.13.0",
     "@oclif/command": "^1",
