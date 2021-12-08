@@ -69,8 +69,6 @@ export default class DialogFlow implements Intents {
       }
     }
 
-    console.log(JSON.stringify(request))
-
     const responses = await this.sessionClient.detectIntent(request)
 
     logger.silly(

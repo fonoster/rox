@@ -18,10 +18,9 @@
     "version": "oclif-dev readme && git add README.md"
   },
   "dependencies": {
-    "@fonoster/googleasr": "^0.2.21",
-    "@fonoster/googletts": "^0.2.23",
+    "@fonoster/googleasr": "^0.2.25",
+    "@fonoster/googletts": "^0.2.27",
     "@fonoster/logger": "^0.2.21",
-    "@fonoster/numbers": "^0.2.21",
     "@fonoster/voice": "^0.2.23",
     "@google-cloud/dialogflow": "^4.3.1",
     "@google-cloud/dialogflow-cx": "^2.13.0",
@@ -34,6 +33,7 @@
     "dotenv": "^10.0.0",
     "nanoid": "^3.1.25",
     "ngrok": "^4.2.2",
+    "pb-util": "^1.0.2",
     "tslib": "^1",
     "uuid": "^8.3.2",
     "ws": "^8.1.0"
