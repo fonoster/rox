@@ -21,6 +21,7 @@ import dialogflow, { SessionsClient } from '@google-cloud/dialogflow'
 import { Effect } from '../@types/cerebro'
 import { Intents, Intent, DialogFlowESConfig } from '../@types/intents'
 import { transformPayloadToEffect } from './df_utils'
+import { struct } from 'pb-util'
 
 export default class DialogFlow implements Intents {
   sessionClient: SessionsClient
@@ -48,10 +49,12 @@ export default class DialogFlow implements Intents {
   }
 
   async findIntent(
-    txt: string
+    txt: string,
+    payload?: Record<string, string>
   ): Promise<Intent> {
     const request = {
       session: this.sessionPath,
+      queryParams: {},
       queryInput: {
         text: {
           text: txt,
@@ -59,6 +62,14 @@ export default class DialogFlow implements Intents {
         },
       },
     }
+
+    if (payload) {
+      request.queryParams = {
+        payload: struct.encode(payload)
+      }
+    }
+
+    console.log(JSON.stringify(request))
 
     const responses = await this.sessionClient.detectIntent(request)
 

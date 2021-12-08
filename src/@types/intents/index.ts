@@ -26,7 +26,7 @@ export interface Intent {
 }
 
 export interface Intents {
-  findIntent: (text:string) => Promise<Intent>
+  findIntent: (text:string, payload?: Record<string, any>) => Promise<Intent>
 }
 
 export interface DialogFlowESConfig {

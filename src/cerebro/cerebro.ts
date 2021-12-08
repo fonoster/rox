@@ -84,7 +84,12 @@ export class Cerebro {
 
     this.stream.on('transcript', async data => {
       if (data.isFinal) {
-        const intent = await this.intents.findIntent(data.transcript)
+        const intent = await this.intents.findIntent(data.transcript, 
+          {
+            telephony: {
+              caller_id: this.voiceRequest.callerNumber
+            }
+          })
 
         logger.verbose(
           `@rox/cerebro intent [text = '${data.transcript}', ref: ${intent.ref}, confidence: ${intent.confidence}}]`

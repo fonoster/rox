@@ -42,17 +42,24 @@ export function voice(config: VoiceConfig) {
       await voiceResponse.answer()
 
       const playbackId = nanoid()
-      const voiceConfig ={
+      const voiceConfig = {
         name: config.roxConfig.ttsVoice,
         playbackId
       }
 
       if (config.roxConfig.initialDtmf) {
-        await voiceResponse.dtmf({dtmf: config.roxConfig.initialDtmf})
+        await voiceResponse.dtmf({ dtmf: config.roxConfig.initialDtmf })
       }
 
       if (config.roxConfig.welcomeIntentTrigger) {
-        const response = await config.intents.findIntent(config.roxConfig.welcomeIntentTrigger)
+        const response = await config.intents.findIntent(
+          config.roxConfig.welcomeIntentTrigger,
+          {
+            telephony: {
+              caller_id: voiceRequest.callerNumber
+            }
+          }
+        )
         await voiceResponse.say(response.effects[0].parameters['response'] as string, voiceConfig)
       }
 
