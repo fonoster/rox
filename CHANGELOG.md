@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.0.6
+
+- Now including telephony payload for Dialogflow ES
+
 # 0.0.5
 
 - Added the ability to start an ngrok tunnel
