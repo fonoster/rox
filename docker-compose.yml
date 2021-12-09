@@ -1,10 +1,14 @@
-version: '3.3'
+version: '3.7'
+
+networks:
+  fonoster:
 
 services:
   rox:
     build:
       context: .  
     image: fonoster/rox:latest
+    restart: ${RESTART_POLICY}
     ports:
       - 3000:3000
       - 3001:3001
@@ -24,3 +28,7 @@ services:
       - LANGUAGE_CODE  
     volumes:
       - ${CONFIG}/google.json:/home/fonoster/.fonoster/google.json
+    networks:
+      fonoster:
+        aliases: 
+          - ${ROX_HOST}

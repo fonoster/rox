@@ -3,7 +3,7 @@ COPY . /scripts
 RUN apk add --no-cache --update npm; \
   npm install; \
   npm run build
-RUN ./install.sh
+RUN ./install.sh && apk add --no-cache --update curl
 USER fonoster
 EXPOSE 3000/tcp
 EXPOSE 3001/tcp
