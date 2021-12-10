@@ -50,7 +50,11 @@ class Rox extends Command {
     "welcome-intent-trigger": flags.string({ description: 'phrase that will trigger the welcome intent' }),
     "activation-intent": flags.string({ description: 'intent that will "wake" the bot' }),
     "activation-timeout": flags.string({ description: 'wake timeout' }),
-    "interaction-timeout": flags.string({ description: 'wating time for next voice command' })
+    "otl-exporter-jaeger-url": flags.string({ description: 'if set will send telemetry to Jaeger' }),
+    "otl-exporter-zipkin-url": flags.string({ description: 'if set will send telemetry to Zipkin' }),
+    "otl-exporter-prometheus-port": flags.string({ description: 'if set will send telemetry to Prometheus' }),
+    "otl-exporter-prometheus-endpoint": flags.string({ description: 'if set will send telemetry to Prometheus' }),
+    "otl-exporter-gcp-enabled": flags.boolean({ char: 'g', description: 'if set it will send telemetry to GCP' }),
   }
 
   async run() {

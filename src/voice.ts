@@ -23,11 +23,23 @@ import { Cerebro } from './cerebro'
 import { eventsServer } from './events/server'
 import { nanoid } from 'nanoid'
 import { VoiceConfig } from './@types/rox'
+import { getSpanExporters, getMeterProvider } from './telemetry'
 const { version } = require('../package.json')
 
 export function voice(config: VoiceConfig) {
   logger.info(`rox ai ${version}`)
-  const voiceServer = new VoiceServer()
+
+  const otlSpanExporters = getSpanExporters({
+    jaegerUrl: config.roxConfig.otlExporterJaegerUrl,
+    zipkinUrl: config.roxConfig.otlExporterZipkinUrl,
+    gcpEnabled: config.roxConfig.otlExporterGCPEnabled,
+    gcpKeyfile: config.roxConfig.googleConfigFile
+  })
+
+  const voiceServer = new VoiceServer({
+    otlSpanExporters
+  })
+
   voiceServer.use(config.asr)
   voiceServer.use(config.tts)
 
@@ -35,51 +47,64 @@ export function voice(config: VoiceConfig) {
     eventsServer.start()
   }
 
+  const meterProvider = getMeterProvider({
+    prometheusPort: config.roxConfig.otlExporterPrometheusPort,
+    prometheusEndpoint: config.roxConfig.otlExporterPrometheusEndpoint,
+  })
+
+  const meter = meterProvider?.getMeter("rox_metrics")
+  const callCounter = meter?.createCounter("call_counter")
+
   voiceServer.listen(
     async (voiceRequest: VoiceRequest, voiceResponse: VoiceResponse) => {
-      logger.verbose('request:' + JSON.stringify(voiceRequest, null, ' '))
+      try {
+        logger.verbose('request:' + JSON.stringify(voiceRequest, null, ' '))
+        callCounter?.add(1)
 
-      await voiceResponse.answer()
+        await voiceResponse.answer()
 
-      const playbackId = nanoid()
-      const voiceConfig = {
-        name: config.roxConfig.ttsVoice,
-        playbackId
-      }
+        const playbackId = nanoid()
+        const voiceConfig = {
+          name: config.roxConfig.ttsVoice,
+          playbackId
+        }
 
-      if (config.roxConfig.initialDtmf) {
-        await voiceResponse.dtmf({ dtmf: config.roxConfig.initialDtmf })
-      }
+        if (config.roxConfig.initialDtmf) {
+          await voiceResponse.dtmf({ dtmf: config.roxConfig.initialDtmf })
+        }
 
-      if (config.roxConfig.welcomeIntentTrigger) {
-        const response = await config.intents.findIntent(
-          config.roxConfig.welcomeIntentTrigger,
-          {
-            telephony: {
-              caller_id: voiceRequest.callerNumber
+        if (config.roxConfig.welcomeIntentTrigger) {
+          const response = await config.intents.findIntent(
+            config.roxConfig.welcomeIntentTrigger,
+            {
+              telephony: {
+                caller_id: voiceRequest.callerNumber
+              }
             }
-          }
-        )
-        await voiceResponse.say(response.effects[0].parameters['response'] as string, voiceConfig)
+          )
+          await voiceResponse.say(response.effects[0].parameters['response'] as string, voiceConfig)
+        }
+
+        const eventsClient = config.roxConfig.enableEvents
+          ? eventsServer.getConnection(voiceRequest.callerNumber)
+          : null
+
+        const cerebro = new Cerebro({
+          voiceRequest,
+          voiceResponse,
+          playbackId,
+          intents: config.intents,
+          eventsClient,
+          voiceConfig,
+          activationIntent: config.roxConfig.activationIntent,
+          activationTimeout: config.roxConfig.activationTimeout,
+        })
+
+        // Open for bussiness
+        await cerebro.wake()
+      } catch (e) {
+        logger.error('@fonoster/rox unexpected error')
       }
-
-      const eventsClient = config.roxConfig.enableEvents
-        ? eventsServer.getConnection(voiceRequest.callerNumber)
-        : null
-
-      const cerebro = new Cerebro({
-        voiceRequest,
-        voiceResponse,
-        playbackId,
-        intents: config.intents,
-        eventsClient,
-        voiceConfig,
-        activationIntent: config.roxConfig.activationIntent,
-        activationTimeout: config.roxConfig.activationTimeout
-      })
-
-      // Open for bussiness
-      await cerebro.wake()
     }
   )
 }

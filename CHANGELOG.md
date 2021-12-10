@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.0.7
+
+- Added support for opentelemetry
+
 # 0.0.6
 
 - Now including telephony payload for Dialogflow ES

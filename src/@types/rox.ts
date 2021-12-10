@@ -1,14 +1,12 @@
-import GoogleASR from "@fonoster/googleasr";
-import GoogleTTS from "@fonoster/googletts";
-import { Intents } from "./intents";
-
+import GoogleASR from "@fonoster/googleasr"
+import GoogleTTS from "@fonoster/googletts"
 /*
  * Copyright (C) 2021 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
  *
  * This file is part of Rox AI
  *
- * Licensed under the MIT License (the "License");
+ * Licensed under the MIT License (the "License")
  * you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -20,21 +18,28 @@ import { Intents } from "./intents";
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Intents } from "./intents"
+
 export interface RoxConfig {
-  ttsVoice: string;
-  ttsEngine: string;
-  asrEngine: string;
-  intentsEngine: string;
-  languageCode: string;
-  googleConfigFile: string;
-  intentsEngineAgent?: string;
-  intentsEngineLocation?: string;
-  initialDtmf?: string;
-  welcomeIntentTrigger?: string;
-  enableEvents?: boolean;
-  activationTimeout?: number;
-  activationIntent?: string;
-  interactionTimeout?: number;
+  ttsVoice: string
+  ttsEngine: string
+  asrEngine: string
+  intentsEngine: string
+  languageCode: string
+  googleConfigFile: string
+  intentsEngineAgent?: string
+  intentsEngineLocation?: string
+  initialDtmf?: string
+  welcomeIntentTrigger?: string
+  enableEvents?: boolean
+  activationTimeout?: number
+  activationIntent?: string
+  interactionTimeout?: number
+  otlExporterJaegerUrl?: string
+  otlExporterZipkinUrl?: string
+  otlExporterPrometheusEndpoint?: string
+  otlExporterPrometheusPort?: number,
+  otlExporterGCPEnabled: boolean
 }
 
 export interface VoiceConfig {

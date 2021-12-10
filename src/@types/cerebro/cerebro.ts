@@ -18,7 +18,6 @@
  */
 import { VoiceResponse } from '@fonoster/voice'
 import { VoiceRequest } from '@fonoster/voice/dist/types'
-import { EffectsManager } from '../../cerebro/effects'
 import { EventsClient } from '../../events/emitter'
 import { Intents } from '../intents'
 

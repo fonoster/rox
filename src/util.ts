@@ -32,6 +32,14 @@ export function getConfigFromEnv(): RoxConfig {
     ? parseInt(process.env.INTERACTION_TIMEOUT)
     : -1
 
+  const otlExporterPrometheusPort = process.env.OTL_EXPORTER_PROMETHEUS_PORT
+    ? parseInt(process.env.OTL_EXPORTER_PROMETHEUS_PORT)
+    : -1
+
+  const otlExporterGCPEnabled = process.env.OTL_EXPORTER_GCP_ENABLED
+    ? process.env.OTL_EXPORTER_GCP_ENABLED.toLowerCase() === "true"
+    : false
+
   const enableEvents = process.env.ENABLE_EVENTS
     ? process.env.ENABLE_EVENTS.toLowerCase() === "true"
     : false
@@ -42,12 +50,17 @@ export function getConfigFromEnv(): RoxConfig {
     asrEngine: process.env.ASR_ENGINE as string,
     intentsEngine: process.env.INTENTS_ENGINE as string,
     languageCode: process.env.LANGUAGE_CODE as string,
-    googleConfigFile: process.env.GOOGLE_CONFIG || path.join(require("os").homedir(), ".fonoster", "google.json"),
+    googleConfigFile: process.env.GOOGLE_CONFIG_FILE || path.join(require("os").homedir(), ".fonoster", "google.json"),
     intentsEngineAgent: process.env.INTENTS_ENGINE_AGENT,
     intentsEngineLocation: process.env.INTENTS_ENGINE_LOCATION,
     initialDtmf: process.env.INITIAL_DTMF,
     welcomeIntentTrigger: process.env.WELCOME_INTENT_TRIGGER,
     activationIntent: process.env.ACTIVATION_INTENT,
+    otlExporterJaegerUrl: process.env.OTL_EXPORTER_JAEGER_URL,
+    otlExporterZipkinUrl: process.env.OTL_EXPORTER_ZIPKIN_URL,
+    otlExporterPrometheusEndpoint: process.env.OTL_EXPORTER_PROMETHEUS_ENDPOINT,
+    otlExporterPrometheusPort,
+    otlExporterGCPEnabled,
     enableEvents,
     activationTimeout,
     interactionTimeout
@@ -57,7 +70,7 @@ export function getConfigFromEnv(): RoxConfig {
 }
 
 export function getConfigFromFlags(flags: any): RoxConfig {
-  const activationTimeout =flags["activation-timeout"]
+  const activationTimeout = flags["activation-timeout"]
     ? flags["activation-timeout"]
     : 15000
 
@@ -65,9 +78,9 @@ export function getConfigFromFlags(flags: any): RoxConfig {
     ? flags["interaction-timeout"]
     : -1
 
-  const config = {
+  const config:RoxConfig = {
     ttsVoice: flags["tts-voice"],
-    ttsEngine: flags["tts-engine"] || void(1),
+    ttsEngine: flags["tts-engine"] || void (1),
     asrEngine: flags["asr-engine"],
     intentsEngine: flags["intents-engine"],
     languageCode: flags["language-code"],
@@ -78,6 +91,11 @@ export function getConfigFromFlags(flags: any): RoxConfig {
     welcomeIntentTrigger: flags["welcome-intent-trigger"],
     activationIntent: flags["activation-intent"],
     enableEvents: flags["enable-events"],
+    otlExporterJaegerUrl: flags["otl-exporter-jaeger-url"],
+    otlExporterZipkinUrl: flags["otl-exporter-zipkin-url"],
+    otlExporterPrometheusEndpoint: flags["otl-exporter-promethus-endpoint"],
+    otlExporterPrometheusPort: flags["otl-exporter-promethus-port"],
+    otlExporterGCPEnabled: flags["otl-exporter-gcp-enabled"],
     activationTimeout,
     interactionTimeout
   }
@@ -93,4 +111,3 @@ const removeEmpty = (obj) => {
   });
   return newObj;
 };
-
