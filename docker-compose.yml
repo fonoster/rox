@@ -8,7 +8,6 @@ services:
     build:
       context: .  
     image: fonoster/rox:latest
-    command: ['rox']
     restart: ${RESTART_POLICY}
     ports:
       - 3000:3000
