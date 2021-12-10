@@ -21,7 +21,6 @@ import { ZipkinExporter } from '@opentelemetry/exporter-zipkin'
 import { TraceExporter } from '@google-cloud/opentelemetry-cloud-trace-exporter'
 import { PrometheusExporter } from '@opentelemetry/exporter-prometheus'
 import { MeterProvider } from '@opentelemetry/sdk-metrics-base'
-import { SpanExporter } from '@opentelemetry/sdk-trace-base'
 import logger from '@fonoster/logger'
 
 interface RoxTelmetryConfig {

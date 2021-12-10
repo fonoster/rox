@@ -8,6 +8,7 @@ services:
     build:
       context: .  
     image: fonoster/rox:latest
+    command: ['rox']
     restart: ${RESTART_POLICY}
     ports:
       - 3000:3000
@@ -25,7 +26,11 @@ services:
       - INTERACTION_TIMEOUT
       - EVENTS_ENABLED
       - ACTIVATION_TIMEOUT
-      - LANGUAGE_CODE  
+      - LANGUAGE_CODE
+      - OTL_EXPORTER_ZIPKIN_URL
+      - OTL_EXPORTER_JAEGER_URL
+      - OTL_EXPORTER_PROMETHEUS_PORT
+      - OTL_EXPORTER_GCP_ENABLED
     volumes:
       - ${CONFIG}/google.json:/home/fonoster/.fonoster/google.json
     networks:
