@@ -43,6 +43,6 @@ async function testIntent(text) {
   return await sessionClient.detectIntent(request2)
 }
 
-testIntent("goodbye")
+testIntent("Yeah, I ordered something and it was supposed to be here while ago and I'm like one block from you")
   .then(responses => console.log(JSON.stringify(responses), null, ' '))
   .catch(console.error)
