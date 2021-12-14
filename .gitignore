@@ -4,3 +4,4 @@ dist
 tsconfig.tsbuildinfo
 .env
 google.json
+intent_test.js
