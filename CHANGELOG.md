@@ -2,6 +2,8 @@
 
 # 0.0.8
 
+- Now starting Prometheus by default
+- Added configuration parameter to select Dialogflow Platform (Telephony, or Unspecified)
 
 # 0.0.7
 
