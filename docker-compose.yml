@@ -12,6 +12,7 @@ services:
     ports:
       - 3000:3000
       - 3001:3001
+      - 9090:9090
     environment:
       - INTENTS_ENGINE
       - INTENTS_ENGINE_AGENT

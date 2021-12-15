@@ -66,24 +66,20 @@ export function getSpanExporters(config: RoxTelmetryConfig): Array<any> {
 }
 
 export function getMeterProvider(config: RoxMetricConfig): MeterProvider | undefined {
-  if (config.prometheusPort || config.prometheusEndpoint) {
-    config.prometheusPort = config.prometheusPort || PrometheusExporter.DEFAULT_OPTIONS.port
-    config.prometheusEndpoint = config.prometheusEndpoint || PrometheusExporter.DEFAULT_OPTIONS.endpoint
+  config.prometheusPort = config.prometheusPort || PrometheusExporter.DEFAULT_OPTIONS.port
+  config.prometheusEndpoint = config.prometheusEndpoint || PrometheusExporter.DEFAULT_OPTIONS.endpoint
 
-    const options = {
-      port: config.prometheusPort,
-      endpoint: config.prometheusEndpoint,
-      startServer: true,
-    };
+  const options = {
+    port: config.prometheusPort,
+    endpoint: config.prometheusEndpoint,
+    startServer: true,
+  };
 
-    // Register the exporter
-    return new MeterProvider({
-      exporter: new PrometheusExporter(options, () => {
-        logger.info(`prometheus scrape endpoint: http://localhost:${config.prometheusPort}${config.prometheusEndpoint}`)
-      }),
-      interval: 1000,
-    })
-  }
-
-  return
+  // Register the exporter
+  return new MeterProvider({
+    exporter: new PrometheusExporter(options, () => {
+      logger.info(`prometheus scrape endpoint: http://localhost:${config.prometheusPort}${config.prometheusEndpoint}`)
+    }),
+    interval: 1000,
+  })
 }

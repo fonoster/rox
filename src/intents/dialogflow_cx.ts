@@ -102,10 +102,9 @@ export default class DialogFlowCX implements Intents {
           }
         })
         continue
-      } else if (!r.payload) {
-        continue
+      } else if (r.payload) {
+        effects.push(transformPayloadToEffect(r.payload))
       }
-      effects.push(transformPayloadToEffect(r.payload))
     }
     return effects
   }

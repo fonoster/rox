@@ -17,14 +17,14 @@
  * limitations under the License.
  */
 import logger from '@fonoster/logger'
-import dialogflow, { SessionsClient } from '@google-cloud/dialogflow'
+import * as dialogflow from '@google-cloud/dialogflow'
 import { Effect } from '../@types/cerebro'
 import { Intents, Intent, DialogFlowESConfig } from '../@types/intents'
 import { transformPayloadToEffect } from './df_utils'
 import { struct } from 'pb-util'
 
 export default class DialogFlow implements Intents {
-  sessionClient: SessionsClient
+  sessionClient: dialogflow.v2beta1.SessionsClient
   sessionPath: any
   config: DialogFlowESConfig
   constructor(config: DialogFlowESConfig) {
@@ -40,7 +40,7 @@ export default class DialogFlow implements Intents {
     }
 
     // Create a new session
-    this.sessionClient = new dialogflow.SessionsClient(c)
+    this.sessionClient = new dialogflow.v2beta1.SessionsClient(c)
     this.sessionPath = this.sessionClient.projectAgentSessionPath(
       config.projectId,
       sessionId
@@ -84,15 +84,16 @@ export default class DialogFlow implements Intents {
 
     let effects: Effect[] = []
 
-    if (responses[0].queryResult.fulfillmentText) {
+    if (responses[0].queryResult.fulfillmentMessages) {
+      const messages = responses[0].queryResult.fulfillmentMessages.filter(f => f.platform === this.config.platform)
+      effects = this.getEffects(messages as Record<string, any>[])
+    } else if (responses[0].queryResult.fulfillmentText) {
       effects = [{
         type: "say",
         parameters: {
           response: responses[0].queryResult.fulfillmentText
         }
       }]
-    } else if(responses[0].queryResult.fulfillmentMessages) {
-      effects = this.getEffects(responses[0].queryResult.fulfillmentMessages as Record<string, any>[])
     }
 
     return {
@@ -106,10 +107,30 @@ export default class DialogFlow implements Intents {
   private getEffects(fulfillmentMessages: Record<string, any>[]): Effect[] {
     const effects = new Array()
     for (const f of fulfillmentMessages) {
-      if (!f.payload) {
-        continue
+      if (f.payload) {
+        effects.push(transformPayloadToEffect(f.payload))
+      } else if (f.telephonySynthesizeSpeech) {
+        effects.push({
+          type: "say",
+          parameters: {
+            response: f.telephonySynthesizeSpeech.text || f.telephonySynthesizeSpeech.ssml
+          }
+        })
+      } else if (f.telephonyTransferCall) {
+        effects.push({
+          type: "transfer",
+          parameters: {
+            destination: f.telephonyTransferCall.phoneNumber
+          }
+        })
+      } else if (f.text) {
+        effects.push({
+          type: "say",
+          parameters: {
+            response: f.text.text[0]
+          }
+        })
       }
-      effects.push(transformPayloadToEffect(f.payload))
     }
     return effects
   }

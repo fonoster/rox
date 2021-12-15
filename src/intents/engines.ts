@@ -38,5 +38,6 @@ export function getIntentsEngine(roxConfig: RoxConfig): Intents {
     projectId: googleConfig.project_id,
     keyFilename: roxConfig.googleConfigFile,
     languageCode: roxConfig.languageCode,
+    platform: roxConfig.intentsEnginePlatform
   })
 }

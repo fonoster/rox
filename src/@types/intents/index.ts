@@ -33,6 +33,7 @@ export interface DialogFlowESConfig {
   projectId: string
   keyFilename: string
   languageCode: string
+  platform: string
 }
 
 export interface DialogFlowCXConfig {

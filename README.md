@@ -157,6 +157,7 @@ Environment variables are used in the entry point script to render configuration
 - `INTENTS_ENGINE` - Use to select the intents engine. Accepts `[dialogflow.es, dialogflow.cx]`. **Required**
 - `INTENTS_ENGINE_AGENT` - Intents Agent identifier.  **Required for `dialogflow.cx`**
 - `INTENTS_ENGINE_LOCATION` - Region where the bot was deployed.  **Required for `dialogflow.cx`**
+- `INTENTS_ENGINE_PLATFORM` - If set to "TELEPHONY" it will emulate Dialogflow's Phone Gateway behavior
 - `ASR_ENGINE` - Use to select the ASR engine. Accepts `[google]`. **Required**
 - `TTS_ENGINE` - Use to select the TTS engine. Accepts `[google]`. **Required**
 - `TTS_VOICE` - Name of the voice. Check https://cloud.google.com/text-to-speech/docs/voices for a list of Google TTS voices. **Required**
@@ -167,11 +168,18 @@ Environment variables are used in the entry point script to render configuration
 - `ENABLE_EVENTS` - If set to `true` it will send events to ws clients subscribed to events. Defaults to `false`
 - `ACTIVATION_TIMEOUT` - Time in seconds for the duration of the `AWAKE_ACTIVE` state, set for the activation command. After this time the bot will return to `AWAKE_PASSIVE` and new intents will be ignored. Defaults to `15000`
 - `LANGUAGE_CODE` - Sets the default language for the application. Defaults to `en-US`
+- `GOOGLE_CONFIG_FILE` - The file containing the Service Account with access to Google Speech APIs and Dialogflow
+- `OTL_EXPORTER_PROMETHEUS_PORT` - Sets Prometheus port. Defaults to `9090`
+- `OTL_EXPORTER_PROMETHEUS_ENDPOINT` - Sets Prometheus endpount. Defaults to `/metrics`
+- `OTL_EXPORTER_JAEGER_URL` - If set, it will send traces to Jaeger
+- `OTL_EXPORTER_GCP_ENABLED` - If set, it will send traces to GCP
+- `OTL_EXPORTER_ZIPKIN_URL` - If set, it will send traces to Zipkin
 
 ## Exposed Ports
 
 - `3000` - Port to start a session request
 - `3001` - Port to subscribe for `send_data` effects
+- `9090` - Default Prometheus port
 
 ## Volumes
 

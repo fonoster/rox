@@ -46,14 +46,15 @@ class Rox extends Command {
     "google-config-file": flags.string({ description: 'config file with google credentials' }),
     "intents-engine-agent": flags.string({ description: 'agent for dialogflow cx bots' }),
     "intents-engine-location": flags.string({ description: 'location for dialogflow cx bots' }),
+    "intents-engine-platform": flags.string({ description: 'sets the platform for dialogflow cx/es bots (i.e "TELEPHONY")' }),
     "initial-dtmf": flags.string({ description: 'optional initial dtmf' }),
     "welcome-intent-trigger": flags.string({ description: 'phrase that will trigger the welcome intent' }),
-    "activation-intent": flags.string({ description: 'intent that will "wake" the bot' }),
+    "activation-intent": flags.string({ description: 'intent that will wake the bot; similar to "alexa!" or "hey google!' }),
     "activation-timeout": flags.string({ description: 'wake timeout' }),
     "otl-exporter-jaeger-url": flags.string({ description: 'if set will send telemetry to Jaeger' }),
     "otl-exporter-zipkin-url": flags.string({ description: 'if set will send telemetry to Zipkin' }),
-    "otl-exporter-prometheus-port": flags.string({ description: 'if set will send telemetry to Prometheus' }),
-    "otl-exporter-prometheus-endpoint": flags.string({ description: 'if set will send telemetry to Prometheus' }),
+    "otl-exporter-prometheus-port": flags.string({ description: 'sets Prometheus port. Defaults to 9090' }),
+    "otl-exporter-prometheus-endpoint": flags.string({ description: 'sets Prometheus endpoint. Defaults to "/metrics"' }),
     "otl-exporter-gcp-enabled": flags.boolean({ char: 'g', description: 'if set it will send telemetry to GCP' }),
   }
 
@@ -63,7 +64,8 @@ class Rox extends Command {
     const configFromFlags = getConfigFromFlags(flags)
     const roxConfig = merge.all([
       {
-        languageCode: "en-US"
+        languageCode: "en-US",
+        intentsEnginePlatform: "PLATFORM_UNSPECIFIED"
       },
       configFromEnv, 
       configFromFlags,

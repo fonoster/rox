@@ -34,7 +34,7 @@ export function getConfigFromEnv(): RoxConfig {
 
   const otlExporterPrometheusPort = process.env.OTL_EXPORTER_PROMETHEUS_PORT
     ? parseInt(process.env.OTL_EXPORTER_PROMETHEUS_PORT)
-    : -1
+    : 9090
 
   const otlExporterGCPEnabled = process.env.OTL_EXPORTER_GCP_ENABLED
     ? process.env.OTL_EXPORTER_GCP_ENABLED.toLowerCase() === "true"
@@ -53,6 +53,7 @@ export function getConfigFromEnv(): RoxConfig {
     googleConfigFile: process.env.GOOGLE_CONFIG_FILE || path.join(require("os").homedir(), ".fonoster", "google.json"),
     intentsEngineAgent: process.env.INTENTS_ENGINE_AGENT,
     intentsEngineLocation: process.env.INTENTS_ENGINE_LOCATION,
+    intentsEnginePlatform: process.env.INTENTS_ENGINE_PLATFORM,
     initialDtmf: process.env.INITIAL_DTMF,
     welcomeIntentTrigger: process.env.WELCOME_INTENT_TRIGGER,
     activationIntent: process.env.ACTIVATION_INTENT,
@@ -78,7 +79,7 @@ export function getConfigFromFlags(flags: any): RoxConfig {
     ? flags["interaction-timeout"]
     : -1
 
-  const config:RoxConfig = {
+  const config: RoxConfig = {
     ttsVoice: flags["tts-voice"],
     ttsEngine: flags["tts-engine"] || void (1),
     asrEngine: flags["asr-engine"],
@@ -87,6 +88,7 @@ export function getConfigFromFlags(flags: any): RoxConfig {
     googleConfigFile: flags["google-config-file"],
     intentsEngineAgent: flags["intents-engine-agent"],
     intentsEngineLocation: flags["intents-engine-location"],
+    intentsEnginePlatform: flags["intents-engine-platform"],
     initialDtmf: flags["initial-dtmf"],
     welcomeIntentTrigger: flags["welcome-intent-trigger"],
     activationIntent: flags["activation-intent"],

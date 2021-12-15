@@ -29,6 +29,7 @@ export interface RoxConfig {
   googleConfigFile: string
   intentsEngineAgent?: string
   intentsEngineLocation?: string
+  intentsEnginePlatform: string
   initialDtmf?: string
   welcomeIntentTrigger?: string
   enableEvents?: boolean

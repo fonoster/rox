@@ -21,6 +21,7 @@ import { RoxConfig } from "./@types/rox"
 const SUPPORTED_TTS_ENGINES = ["google"]
 const SUPPORTED_ASR_ENGINES = ["google"]
 const SUPPORTED_INTENTS_ENGINES = ["dialogflow.es", "dialogflow.cx"]
+const SUPPORTED_INTENTS_ENGINES_PLATFORM = ["TELEPHONY", "PLATFORM_UNSPECIFIED"]
 
 export const assertConfigExist = (path: string) => {
   try {
@@ -60,6 +61,15 @@ export const assertIntentsEngineIsSupported = (name?: string) => {
   }
 }
 
+export const assertIntentsEnginePlatformIsSupported = (name?: string) => {
+  if (!name || !SUPPORTED_INTENTS_ENGINES_PLATFORM.includes(name)) {
+    console.error(
+      `the intents engine platform ${name} is not currently supported`
+    )
+    process.exit(1)
+  }
+}
+
 export const assertTTSEngineIsSupported = (name?: string) => {
   if (!name || !SUPPORTED_TTS_ENGINES.includes(name)) {
     console.error(
@@ -84,6 +94,7 @@ export const assertEverything = (config: RoxConfig) => {
   assertParameterNotNull("tts-engine", config.ttsEngine)
   assertParameterNotNull("tts-voice", config.ttsVoice)
   assertIntentsEngineIsSupported(config.intentsEngine)
+  assertIntentsEnginePlatformIsSupported(config.intentsEnginePlatform)
   assertTTSEngineIsSupported(config.ttsEngine)
   assertASREngineIsSupported(config.asrEngine)
 
