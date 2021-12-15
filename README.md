@@ -152,7 +152,7 @@ You can set multiple responses in Dialogflow. The Effects will run in sequence.
 
 > Notes: The parameter `type` is set to map in the example, but you can send anything that makes send to the client. If the parameter `allRequiredParamsPresent` is set to true, the fulfillmentText will take precedence over the custom effects.
 
-## Configuring Project Dynamically
+## Dynamic Project Configuration
 
 In certain scenarios, you will want to configure your bot dynamically. You can achieve this by creating an initialization endpoint that responds to HTTP requests. 
 
