@@ -26,7 +26,7 @@ export function getIntentsEngine(roxConfig: RoxConfig): Intents {
 
   if (roxConfig.intentsEngine === "dialogflow.cx") {
     return new DialogFlowCX({
-      projectId: googleConfig.project_id,
+      projectId: roxConfig.intentsEngineProjectId || googleConfig.project_id,
       keyFilename: roxConfig.googleConfigFile,
       languageCode: roxConfig.languageCode,
       agent: roxConfig.intentsEngineAgent as string,
@@ -35,7 +35,7 @@ export function getIntentsEngine(roxConfig: RoxConfig): Intents {
   }
 
   return new DialogFlowES({
-    projectId: googleConfig.project_id,
+    projectId: roxConfig.intentsEngineProjectId || googleConfig.project_id,
     keyFilename: roxConfig.googleConfigFile,
     languageCode: roxConfig.languageCode,
     platform: roxConfig.intentsEnginePlatform

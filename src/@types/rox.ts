@@ -27,6 +27,7 @@ export interface RoxConfig {
   intentsEngine: string
   languageCode: string
   googleConfigFile: string
+  intentsEngineProjectId: string
   intentsEngineAgent?: string
   intentsEngineLocation?: string
   intentsEnginePlatform: string
