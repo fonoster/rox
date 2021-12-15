@@ -49,7 +49,7 @@ class Rox extends Command {
     "intents-engine-platform": flags.string({ description: 'sets the platform for dialogflow cx/es bots (i.e "TELEPHONY")' }),
     "initial-dtmf": flags.string({ description: 'optional initial dtmf' }),
     "welcome-intent-trigger": flags.string({ description: 'phrase that will trigger the welcome intent' }),
-    "activation-intent": flags.string({ description: 'intent that will wake the bot; similar to "alexa!" or "hey google!' }),
+    "activation-intent": flags.string({ description: 'intent that will wake the bot; similar to "alexa!" or "hey google!"' }),
     "activation-timeout": flags.string({ description: 'wake timeout' }),
     "otl-exporter-jaeger-url": flags.string({ description: 'if set will send telemetry to Jaeger' }),
     "otl-exporter-zipkin-url": flags.string({ description: 'if set will send telemetry to Zipkin' }),
