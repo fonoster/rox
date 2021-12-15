@@ -22,8 +22,10 @@ import { VoiceRequest, VoiceResponse, VoiceServer } from '@fonoster/voice'
 import { Cerebro } from './cerebro'
 import { eventsServer } from './events/server'
 import { nanoid } from 'nanoid'
-import { VoiceConfig } from './@types/rox'
+import { RoxConfig, VoiceConfig } from './@types/rox'
 import { getSpanExporters, getMeterProvider } from './telemetry'
+import { getProjectConfig } from './util'
+import merge from 'deepmerge'
 const { version } = require('../package.json')
 
 export function voice(config: VoiceConfig) {
@@ -57,9 +59,23 @@ export function voice(config: VoiceConfig) {
 
   voiceServer.listen(
     async (voiceRequest: VoiceRequest, voiceResponse: VoiceResponse) => {
+      logger.verbose('request:' + JSON.stringify(voiceRequest, null, ' '))
+      // Sending metrics out to Prometheus
+      callCounter?.add(1)
+
       try {
-        logger.verbose('request:' + JSON.stringify(voiceRequest, null, ' '))
-        callCounter?.add(1)
+        // If set, we overwrite the configuration with the values obtain from the webhook
+        if (config.initEndpoint) {
+          const projecConfig = await getProjectConfig(voiceRequest, {
+            endpoint: config.initEndpoint,
+            username: config.initEndpointUsername,
+            password: config.initEndpointPassword
+          })
+          config.roxConfig = merge(config.roxConfig, projecConfig) as RoxConfig
+          if (config.roxConfig.intentsEngineProjectId) {
+            config.intents.setProjectId(config.roxConfig.intentsEngineProjectId)
+          }
+        }
 
         await voiceResponse.answer()
 
@@ -82,7 +98,11 @@ export function voice(config: VoiceConfig) {
               }
             }
           )
-          await voiceResponse.say(response.effects[0].parameters['response'] as string, voiceConfig)
+          if (response.effects.length > 0) {
+            await voiceResponse.say(response.effects[0].parameters['response'] as string, voiceConfig)
+          } else {
+            logger.warn(`no effects found for welcome intent:  trigger '${config.roxConfig.welcomeIntentTrigger}'`)
+          }
         }
 
         const eventsClient = config.roxConfig.enableEvents
@@ -103,7 +123,7 @@ export function voice(config: VoiceConfig) {
         // Open for bussiness
         await cerebro.wake()
       } catch (e) {
-        logger.error('@fonoster/rox unexpected error')
+        logger.error('@fonoster/rox unexpected error: ' + e)
       }
     }
   )

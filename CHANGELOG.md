@@ -1,5 +1,10 @@
 # Changelog
 
+# 0.0.9
+
+- Implements Dialoflog Phone Gateway behavior
+- Implements dynamic project configuration via HTTP
+
 # 0.0.8
 
 - Now starting Prometheus by default
@@ -15,7 +20,7 @@
 
 # 0.0.5
 
-- Added the ability to start an ngrok tunnel
+- Added the ability to start a ngrok tunnel
 - You can now install rox as a global command
 
 # 0.0.4

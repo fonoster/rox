@@ -4,7 +4,7 @@
  *
  * This file is part of Rox AI
  *
- * Licensed under the MIT License (the "License");
+ * Licensed under the MIT License (the "License")
  * you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -16,13 +16,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import dotenv from 'dotenv';
-import path from 'path';
-import { RoxConfig } from './@types/rox';
+import { VoiceRequest } from '@fonoster/voice'
+import dotenv from 'dotenv'
+import path from 'path'
+import fetch from 'node-fetch'
+import { InitEndpoint, ProjectConfig, RoxConfig } from './@types/rox'
 
 export function getConfigFromEnv(): RoxConfig {
   // Load parameters from the environment
-  dotenv.config();
+  dotenv.config()
 
   const activationTimeout = process.env.ACTIVATION_TIMEOUT
     ? parseInt(process.env.ACTIVATION_TIMEOUT)
@@ -61,6 +63,9 @@ export function getConfigFromEnv(): RoxConfig {
     otlExporterJaegerUrl: process.env.OTL_EXPORTER_JAEGER_URL,
     otlExporterZipkinUrl: process.env.OTL_EXPORTER_ZIPKIN_URL,
     otlExporterPrometheusEndpoint: process.env.OTL_EXPORTER_PROMETHEUS_ENDPOINT,
+    initEndpoint: process.env.INIT_ENDPOINT,
+    initEndpointUsername: process.env.INIT_ENDPOINT_USERNAME,
+    initEndpointPassword: process.env.INIT_ENDPOINT_PASSWORD,
     otlExporterPrometheusPort,
     otlExporterGCPEnabled,
     enableEvents,
@@ -100,6 +105,9 @@ export function getConfigFromFlags(flags: any): RoxConfig {
     otlExporterPrometheusEndpoint: flags["otl-exporter-promethus-endpoint"],
     otlExporterPrometheusPort: flags["otl-exporter-promethus-port"],
     otlExporterGCPEnabled: flags["otl-exporter-gcp-enabled"],
+    initEndpoint: flags["init-webhook"],
+    initEndpointUsername: flags["init-webhook-username"],
+    initEndpointPassword: flags["init-webhook-password"],
     activationTimeout,
     interactionTimeout
   }
@@ -108,10 +116,40 @@ export function getConfigFromFlags(flags: any): RoxConfig {
 }
 
 const removeEmpty = (obj) => {
-  let newObj = {};
+  let newObj = {}
   Object.keys(obj).forEach((key) => {
-    if (obj[key] === Object(obj[key])) newObj[key] = removeEmpty(obj[key]);
-    else if (obj[key] !== undefined) newObj[key] = obj[key];
-  });
-  return newObj;
-};
+    if (obj[key] === Object(obj[key])) newObj[key] = removeEmpty(obj[key])
+    else if (obj[key] !== undefined) newObj[key] = obj[key]
+  })
+  return newObj
+}
+
+const optionsToQueryString = (obj: any): string =>
+  Object.keys(obj)
+    .map((key: string) => `${key}=${obj[key].toString()}`)
+    .join("&")
+
+export async function getProjectConfig(voiceRequest: VoiceRequest, config: InitEndpoint): Promise<ProjectConfig> {
+  const params = {
+    accessKeyId: voiceRequest.accessKeyId,
+    number: voiceRequest.number,
+    callerNumber: voiceRequest.callerNumber,
+    sessionId: voiceRequest.sessionId
+  }
+  const fConfig = {
+    method: 'GET',
+    mode: 'no-cors',
+    cache: 'no-cache',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    redirect: 'follow',
+  }
+  if (config.username) {
+    fConfig.headers['Authorization'] = Buffer.from(config.username + ':' + config.password).toString('base64')
+  }
+
+  const result = await fetch(`${config.endpoint}?` + optionsToQueryString(params),
+    fConfig)
+  return result.json()
+}

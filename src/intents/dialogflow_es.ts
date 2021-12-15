@@ -27,9 +27,10 @@ export default class DialogFlow implements Intents {
   sessionClient: dialogflow.v2beta1.SessionsClient
   sessionPath: any
   config: DialogFlowESConfig
+  sessionId: string
+  projectId: string
   constructor(config: DialogFlowESConfig) {
     const uuid = require('uuid')
-    const sessionId = uuid.v4()
     const credentials = require(config.keyFilename)
 
     let c = {
@@ -41,19 +42,26 @@ export default class DialogFlow implements Intents {
 
     // Create a new session
     this.sessionClient = new dialogflow.v2beta1.SessionsClient(c)
-    this.sessionPath = this.sessionClient.projectAgentSessionPath(
-      config.projectId,
-      sessionId
-    )
+    this.sessionId = uuid.v4()
     this.config = config
+    this.projectId = config.projectId
+  }
+
+  setProjectId(projectId: string) {
+    this.projectId = projectId
   }
 
   async findIntent(
     txt: string,
     payload?: Record<string, string>
   ): Promise<Intent> {
+    const sessionPath = this.sessionClient.projectAgentSessionPath(
+      this.projectId,
+      this.sessionId
+    )
+
     const request = {
-      session: this.sessionPath,
+      session: sessionPath,
       queryParams: {},
       queryInput: {
         text: {

@@ -26,6 +26,7 @@ export interface Intent {
 }
 
 export interface Intents {
+  setProjectId: (id: string) => void
   findIntent: (text:string, payload?: Record<string, any>) => Promise<Intent>
 }
 

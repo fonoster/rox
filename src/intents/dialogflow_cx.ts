@@ -26,6 +26,10 @@ export default class DialogFlowCX implements Intents {
   sessionClient: SessionsClient
   sessionPath: any
   config: DialogFlowCXConfig
+  projectId: string
+  location: string
+  agent: string
+  sessionId: string
   constructor(config: DialogFlowCXConfig) {
     const uuid = require('uuid')
     const sessionId = uuid.v4()
@@ -41,20 +45,30 @@ export default class DialogFlowCX implements Intents {
 
     // Create a new session
     this.sessionClient = new dialogflow.SessionsClient(c)
-    this.sessionPath = this.sessionClient.projectLocationAgentSessionPath(
-      config.projectId,
-      config.location,
-      config.agent,
-      sessionId
-    )
+    this.projectId = config.projectId
+    this.location = config.location
     this.config = config
+    this.sessionId = sessionId
+    this.agent = config.agent
+  }
+
+  setProjectId(id: string) {
+    this.projectId = id
   }
 
   async findIntent(
     txt: string
   ): Promise<Intent> {
+
+    const sessionPath = this.sessionClient.projectLocationAgentSessionPath(
+      this.projectId,
+      this.location,
+      this.agent,
+      this.sessionId
+    )
+
     const request = {
-      session: this.sessionPath,
+      session: sessionPath,
       queryInput: {
         text: {
           text: txt,

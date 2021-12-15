@@ -27,7 +27,7 @@ import { Command, flags } from '@oclif/command'
 import { voice } from './voice'
 import logger from '@fonoster/logger'
 import ngrok from 'ngrok'
-import merge from "deepmerge"
+import merge from 'deepmerge'
 import { RoxConfig } from './@types/rox'
 
 class Rox extends Command {
@@ -56,6 +56,9 @@ class Rox extends Command {
     "otl-exporter-prometheus-port": flags.string({ description: 'sets Prometheus port. Defaults to 9090' }),
     "otl-exporter-prometheus-endpoint": flags.string({ description: 'sets Prometheus endpoint. Defaults to "/metrics"' }),
     "otl-exporter-gcp-enabled": flags.boolean({ char: 'g', description: 'if set it will send telemetry to GCP' }),
+    "init-endpoint": flags.string({ description: 'optional endpoint to retrieve the configuration' }),
+    "init-endpoint-username": flags.string({ description: 'optional username for the init endpoint' }),
+    "init-endpoint-password": flags.string({ description: 'optional password for the init endpoint' }),
   }
 
   async run() {
@@ -85,7 +88,10 @@ class Rox extends Command {
       roxConfig,
       asr,
       tts,
-      intents: intentsEngine
+      intents: intentsEngine,
+      initEndpoint: roxConfig.initEndpoint,
+      initEndpointUsername: roxConfig.initEndpointUsername,
+      initEndpointPassword: roxConfig.initEndpointPassword
     })
 
     if (flags["with-ngrok"]) {

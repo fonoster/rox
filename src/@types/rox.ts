@@ -1,5 +1,3 @@
-import GoogleASR from "@fonoster/googleasr"
-import GoogleTTS from "@fonoster/googletts"
 /*
  * Copyright (C) 2021 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
@@ -18,6 +16,8 @@ import GoogleTTS from "@fonoster/googletts"
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import GoogleASR from "@fonoster/googleasr"
+import GoogleTTS from "@fonoster/googletts"
 import { Intents } from "./intents"
 
 export interface RoxConfig {
@@ -40,8 +40,11 @@ export interface RoxConfig {
   otlExporterJaegerUrl?: string
   otlExporterZipkinUrl?: string
   otlExporterPrometheusEndpoint?: string
-  otlExporterPrometheusPort?: number,
+  otlExporterPrometheusPort?: number
   otlExporterGCPEnabled: boolean
+  initEndpoint?: string
+  initEndpointUsername?: string
+  initEndpointPassword?: string
 }
 
 export interface VoiceConfig {
@@ -49,4 +52,28 @@ export interface VoiceConfig {
   asr: GoogleASR
   tts: GoogleTTS
   intents: Intents
+  initEndpoint?: string
+  initEndpointUsername?: string
+  initEndpointPassword?: string
+}
+
+export interface InitEndpoint {
+  endpoint: string
+  username?: string
+  password?: string
+}
+
+export interface ProjectConfig {
+  intentsEngineProjectId: string
+  ttsVoice?: string
+  languageCode?: string
+  intentsEngineAgent?: string
+  intentsEngineLocation?: string
+  intentsEnginePlatform?: string
+  initialDtmf?: string
+  welcomeIntentTrigger?: string
+  enableEvents?: boolean
+  activationTimeout?: number
+  activationIntent?: string
+  interactionTimeout?: number
 }
