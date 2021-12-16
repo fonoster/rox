@@ -31,6 +31,12 @@ services:
       - OTL_EXPORTER_JAEGER_URL
       - OTL_EXPORTER_PROMETHEUS_PORT
       - OTL_EXPORTER_GCP_ENABLED
+      - GOOGLE_CONFIG_FILE
+      - INTENTS_ENGINE_PROJECT_ID
+      - INTENTS_ENGINE_PLATFORM
+      - INIT_ENDPOINT
+      - INIT_ENDPOINT_USERNAME
+      - INIT_ENDPOINT_PASSWORD
     volumes:
       - ${CONFIG}/google.json:/home/fonoster/.fonoster/google.json
     networks:
