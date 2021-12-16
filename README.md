@@ -152,7 +152,7 @@ You can set multiple responses in Dialogflow. The Effects will run in sequence.
 
 > Notes: The parameter `type` is set to map in the example, but you can send anything that makes send to the client. If the parameter `allRequiredParamsPresent` is set to true, the fulfillmentText will take precedence over the custom effects.
 
-## Configuring Project Dynamically
+## Dynamic Project Configuration
 
 In certain scenarios, you will want to configure your bot dynamically. You can achieve this by creating an initialization endpoint that responds to HTTP requests. 
 
@@ -192,7 +192,7 @@ Environment variables are used in the entry point script to render configuration
 - `INTENTS_ENGINE_PROJECT_ID` - If set, it will overwrite the `project_id` on Dialogflow Engine
 - `INTENTS_ENGINE_AGENT` - Intents Agent identifier.  **Required for `dialogflow.cx`**
 - `INTENTS_ENGINE_LOCATION` - Region where the bot was deployed.  **Required for `dialogflow.cx`**
-- `INTENTS_ENGINE_PLATFORM` - If set to "TELEPHONY" it will emulate Dialogflow's Phone Gateway behavior
+- `INTENTS_ENGINE_PLATFORM` - If set to `TELEPHONY` it will emulate Dialogflow's Phone Gateway behavior
 - `ASR_ENGINE` - Use to select the ASR engine. Accepts `[google]`. **Required**
 - `TTS_ENGINE` - Use to select the TTS engine. Accepts `[google]`. **Required**
 - `TTS_VOICE` - Name of the voice. Check https://cloud.google.com/text-to-speech/docs/voices for a list of Google TTS voices. **Required**
