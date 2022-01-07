@@ -56,7 +56,13 @@ export class Cerebro {
       eventsClient: config.eventsClient,
       voice: config.voiceResponse,
       voiceConfig: config.voiceConfig,
-      activationIntent: config.activationIntent
+      activationIntent: config.activationIntent,
+      transferMedia: config.transferMedia,
+      transferMediaBusy: config.transferMediaBusy,
+      transferMediaNoAnswer: config.transferMediaNoAnswer,
+      transferMessage: config.transferMessage,
+      transferMessageNoAnswer: config.transferMessageNoAnswer,
+      transferMessageBusy: config.transferMessageBusy,
     })
     this.config = config
   }

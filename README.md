@@ -182,6 +182,12 @@ The endpoint must be prepared to receive `GET` requests, and respond with JSON w
   activationTimeout: number
   activationIntent: string
   interactionTimeout: number
+  transferMedia: string
+  transferMediaBusy: string
+  transferMediaNoAnswer: string
+  transferMessage: string
+  transferMessageBusy: string
+  transferMessageNoAnswer: string
 ```
 
 ## Environment Variables
@@ -212,6 +218,12 @@ Environment variables are used in the entry point script to render configuration
 - `INIT_ENDPOINT` - Optional endpoint to obtain the project's configuration dynamically
 - `INIT_ENDPOINT_USERNAME` - Optional username for the init endpoint
 - `INIT_ENDPOINT_PASSWORD` - Optional password for the init endpoint
+- `TRANSFER_MEDIA` - Optional media to play while transfering
+- `TRANSFER_MEDIA_BUSY` - Optional media to play if callee is busy
+- `TRANSFER_MEDIA_NOANSWER` - Optional media to play if callee does not answer
+- `TRANSFER_MESSAGE` -  Optional message to play while transfering
+- `TRANSFER_MESSAGE_BUSY` - Optional message to play if callee is busy
+- `TRANSFER_MESSAGE_NOANSWER` - Optional message to play if callee does not answer
 
 ## Exposed Ports
 

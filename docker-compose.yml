@@ -37,6 +37,12 @@ services:
       - INIT_ENDPOINT
       - INIT_ENDPOINT_USERNAME
       - INIT_ENDPOINT_PASSWORD
+      - TRANSFER_MEDIA
+      - TRANSFER_MEDIA_BUSY
+      - TRANSFER_MEDIA_NOANSWER
+      - TRANSFER_MESSAGE
+      - TRANSFER_MESSAGE_BUSY
+      - TRANSFER_MESSAGE_NOANSWER
     volumes:
       - ${CONFIG}/google.json:/home/fonoster/.fonoster/google.json
     networks:

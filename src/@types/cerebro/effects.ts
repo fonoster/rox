@@ -23,8 +23,14 @@ export interface EffectsManagerConfig {
   eventsClient: EventsClient | null
   voice: VoiceResponse
   voiceConfig: Record<string,unknown>
-  activationIntent?: string,
+  activationIntent?: string
   playbackId: string
+  transferMedia?: string
+  transferMediaNoAnswer?: string
+  transferMediaBusy?: string
+  transferMessage?: string
+  transferMessageNoAnswer?: string
+  transferMessageBusy?: string
 }
 
 export interface Effect {

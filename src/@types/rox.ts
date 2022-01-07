@@ -45,6 +45,12 @@ export interface RoxConfig {
   initEndpoint?: string
   initEndpointUsername?: string
   initEndpointPassword?: string
+  transferMedia?: string
+  transferMediaNoAnswer?: string
+  transferMediaBusy?: string
+  transferMessage?: string
+  transferMessageNoAnswer?: string
+  transferMessageBusy?: string
 }
 
 export interface VoiceConfig {
@@ -76,4 +82,10 @@ export interface ProjectConfig {
   activationTimeout?: number
   activationIntent?: string
   interactionTimeout?: number
+  transferMedia?: string
+  transferMediaNoAnswer?: string
+  transferMediaBusy?: string
+  transferMessage?: string
+  transferMessageNoAnswer?: string
+  transferMessageBusy?: string
 }

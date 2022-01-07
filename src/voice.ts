@@ -118,6 +118,12 @@ export function voice(config: VoiceConfig) {
           voiceConfig,
           activationIntent: config.roxConfig.activationIntent,
           activationTimeout: config.roxConfig.activationTimeout,
+          transferMedia: config.roxConfig.transferMedia,
+          transferMediaBusy: config.roxConfig.transferMediaBusy,
+          transferMediaNoAnswer: config.roxConfig.transferMediaNoAnswer,
+          transferMessage: config.roxConfig.transferMessage,
+          transferMessageBusy: config.roxConfig.transferMessageBusy,
+          transferMessageNoAnswer: config.roxConfig.transferMessageNoAnswer,   
         })
 
         // Open for bussiness

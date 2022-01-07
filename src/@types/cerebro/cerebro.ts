@@ -31,6 +31,12 @@ export interface CerebroConfig {
   voiceConfig: any
   eventsClient: EventsClient | null
   activationIntent?: string
+  transferMedia?: string
+  transferMediaBusy?: string
+  transferMediaNoAnswer?: string
+  transferMessage?: string
+  transferMessageNoAnswer?: string
+  transferMessageBusy?: string
 }
 
 export enum CerebroStatus {

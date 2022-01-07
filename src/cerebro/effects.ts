@@ -20,6 +20,8 @@ import logger from '@fonoster/logger'
 import { VoiceResponse } from '@fonoster/voice'
 import { CerebroStatus, Effect, EffectsManagerConfig } from '../@types/cerebro'
 import { Intent } from '../@types/intents'
+import { nanoid } from 'nanoid'
+import { playBusyAndHangup, playNoAnswerAndHangup, playTransfering } from './helper'
 
 export class EffectsManager {
   voice: VoiceResponse
@@ -59,7 +61,7 @@ export class EffectsManager {
         break
       case 'transfer':
         // TODO: Add record effect
-        await this.voice.dial(effect.parameters['destination'] as string)
+        await this.transferEffect(this.voice, effect)
         break
       case 'send_data':
         // Only send if client support events
@@ -70,5 +72,27 @@ export class EffectsManager {
       default:
         throw new Error(`@rox/cerebro/effects received unknown effect ${effect.type}`)
     }
+  }
+
+  async transferEffect(voice: VoiceResponse, effect: Effect) {
+    const stream = await this.voice.dial(effect.parameters['destination'] as string)
+    const playbackId = nanoid()
+    const control = this.voice.playback(playbackId)
+
+    stream.on('answer', () => control.stop())
+
+    //stream.on('trying', async() => playTransfering(this.voice, playbackId, this.config))
+
+    stream.on('progress', async() => playTransfering(this.voice, playbackId, this.config))
+
+    stream.on('busy', () => {
+      control.stop()
+      playBusyAndHangup(this.voice, playbackId, this.config)
+    })
+
+    stream.on('noanswer', () => {
+      control.stop()
+      playNoAnswerAndHangup(this.voice, playbackId, this.config)
+    })
   }
 }

@@ -59,6 +59,12 @@ class Rox extends Command {
     "init-endpoint": flags.string({ description: 'optional endpoint to retrieve the configuration' }),
     "init-endpoint-username": flags.string({ description: 'optional username for the init endpoint' }),
     "init-endpoint-password": flags.string({ description: 'optional password for the init endpoint' }),
+    "transfer-media": flags.string({ description: 'optional media to play while transfering' }),
+    "transfer-media-busy": flags.string({ description: 'optional media to play if callee is busy' }),
+    "transfer-media-noanswer": flags.string({ description: 'optional media to play if callee does not answer' }),
+    "transfer-message": flags.string({ description: 'optional message to play while transfering' }),
+    "transfer-message-busy": flags.string({ description: 'optional message to play if callee is busy' }),
+    "transfer-message-noanswer": flags.string({ description: 'optional message to play if callee does not answer' }),
   }
 
   async run() {
