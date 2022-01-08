@@ -27,7 +27,8 @@ export interface Intent {
 
 export interface Intents {
   setProjectId: (id: string) => void
-  findIntent: (text:string, payload?: Record<string, any>) => Promise<Intent>
+  findIntent: (text: string, payload?: Record<string, unknown>) => Promise<Intent>
+  findIntentWithEvent?: (name: string, payload?: Record<string, unknown>) => Promise<Intent>
 }
 
 export interface DialogFlowESConfig {

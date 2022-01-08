@@ -42,7 +42,7 @@ The following is a basic example of using this image.
 ```
 docker run -it \
   -p 3000:3000 \
-  -e WELCOME_INTENT_TRIGGER="hi!"
+  -e WELCOME_INTENT_TRIGGER="WELCOME"
   -e ACTIVATION_INTENT="bot.activate" \  
   -e INTENTS_ENGINE="dialogflow.cx" \
   -e ASR_ENGINE="google" \
@@ -203,7 +203,7 @@ Environment variables are used in the entry point script to render configuration
 - `TTS_ENGINE` - Use to select the TTS engine. Accepts `[google]`. **Required**
 - `TTS_VOICE` - Name of the voice. Check https://cloud.google.com/text-to-speech/docs/voices for a list of Google TTS voices. **Required**
 - `INITIAL_DTMF` - Set if you want to send a DTMF at the beginning of the call
-- `WELCOME_INTENT_TRIGGER` - Set if you want to ask the backend for a welcome intent
+- `WELCOME_INTENT_TRIGGER` - Set to event name that will start the conversation
 - `ACTIVATION_INTENT` - Set to the desired intent if you want to have an activation command. If this is set, the `INTERACTION_TIMEOUT` will have no effects
 - `INTERACTION_TIMEOUT` - Timeout, in seconds, to ask again for user input. Use `-1` for no timeout. Defaults to `-1`
 - `ENABLE_EVENTS` - If set to `true` it will send events to WS clients subscribed to events. Defaults to `false`

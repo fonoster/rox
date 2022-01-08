@@ -91,8 +91,8 @@ export function voice(config: VoiceConfig) {
           await voiceResponse.dtmf({ dtmf: config.roxConfig.initialDtmf })
         }
 
-        if (config.roxConfig.welcomeIntentTrigger) {
-          const response = await intentsEngine.findIntent(
+        if (config.roxConfig.welcomeIntentTrigger && intentsEngine.findIntentWithEvent) {
+          const response = await intentsEngine.findIntentWithEvent(
             config.roxConfig.welcomeIntentTrigger,
             {
               telephony: {
@@ -103,7 +103,7 @@ export function voice(config: VoiceConfig) {
           if (response.effects.length > 0) {
             await voiceResponse.say(response.effects[0].parameters['response'] as string, voiceConfig)
           } else {
-            logger.warn(`no effects found for welcome intent:  trigger '${config.roxConfig.welcomeIntentTrigger}'`)
+            logger.warn(`@rox/voice no effects found for welcome intent: trigger '${config.roxConfig.welcomeIntentTrigger}'`)
           }
         }
 

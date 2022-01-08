@@ -54,29 +54,47 @@ export default class DialogFlow implements Intents {
     this.projectId = projectId
   }
 
-  async findIntent(
-    txt: string,
-    payload?: Record<string, string>
-  ): Promise<Intent> {
-    const sessionPath = this.sessionClient.projectAgentSessionPath(
-      this.projectId,
-      this.sessionId
-    )
-
+  async findIntentWithEvent(name: string, payload?: Record<string, unknown>) {
     const request = {
-      session: sessionPath,
-      queryParams: {},
       queryInput: {
-        text: {
-          text: txt,
+        event: {
+          name: name.toUpperCase(),
           languageCode: this.config.languageCode,
         },
       },
     }
 
+    return this.detect(request, payload)
+  }
+
+  async findIntent(
+    txt: string,
+    payload?: Record<string, unknown>
+  ): Promise<Intent> {
+    const request = {
+      queryParams: {},
+      queryInput: {
+        text: {
+          text: txt,
+          languageCode: this.config.languageCode
+        },
+      },
+    }
+
+    return this.detect(request, payload)
+  }
+
+  private async detect(request: Record<string, unknown>, payload?: Record<string, unknown>): Promise<Intent> {
+    const sessionPath = this.sessionClient.projectAgentSessionPath(
+      this.projectId,
+      this.sessionId
+    )
+
+    request.session = sessionPath
+
     if (payload) {
       request.queryParams = {
-        payload: struct.encode(payload)
+        payload: struct.encode(payload as any)
       }
     }
 
@@ -88,8 +106,7 @@ export default class DialogFlow implements Intents {
 
     if (!responses
       || !responses[0].queryResult
-      || !responses[0].queryResult.intent
-      /*|| !responses[0].queryResult.intent.displayName*/) {
+      || !responses[0].queryResult.intent) {
       throw new Error("@rox/intents unexpect null intent")
     }
 
