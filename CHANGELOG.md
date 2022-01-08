@@ -1,5 +1,11 @@
 # Changelog
 
+# 0.0.10
+
+- Now closing mediapipe for transfer effect
+- Allowing to insert media for transfer effect(transfer, busy, and noanswer)
+- Every call gets its own intents engine sessionId
+
 # 0.0.9
 
 - Implements Dialoflog Phone Gateway behavior
