@@ -75,6 +75,7 @@ export class EffectsManager {
   }
 
   async transferEffect(voice: VoiceResponse, effect: Effect) {
+    await this.voice.closeMediaPipe()
     const stream = await this.voice.dial(effect.parameters['destination'] as string)
     const playbackId = nanoid()
     const control = this.voice.playback(playbackId)
