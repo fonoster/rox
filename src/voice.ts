@@ -63,6 +63,8 @@ export function voice(config: VoiceConfig) {
       // Sending metrics out to Prometheus
       callCounter?.add(1)
 
+      const intentsEngine = config.intents()
+
       try {
         // If set, we overwrite the configuration with the values obtain from the webhook
         if (config.initEndpoint) {
@@ -73,7 +75,7 @@ export function voice(config: VoiceConfig) {
           })
           config.roxConfig = merge(config.roxConfig, projecConfig) as RoxConfig
           if (config.roxConfig.intentsEngineProjectId) {
-            config.intents.setProjectId(config.roxConfig.intentsEngineProjectId)
+            intentsEngine.setProjectId(config.roxConfig.intentsEngineProjectId)
           }
         }
 
@@ -90,7 +92,7 @@ export function voice(config: VoiceConfig) {
         }
 
         if (config.roxConfig.welcomeIntentTrigger) {
-          const response = await config.intents.findIntent(
+          const response = await intentsEngine.findIntent(
             config.roxConfig.welcomeIntentTrigger,
             {
               telephony: {
@@ -113,7 +115,7 @@ export function voice(config: VoiceConfig) {
           voiceRequest,
           voiceResponse,
           playbackId,
-          intents: config.intents,
+          intents: intentsEngine,
           eventsClient,
           voiceConfig,
           activationIntent: config.roxConfig.activationIntent,

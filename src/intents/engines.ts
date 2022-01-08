@@ -21,23 +21,25 @@ import { RoxConfig } from "../@types/rox"
 import DialogFlowCX from "./dialogflow_cx"
 import DialogFlowES from "./dialogflow_es"
 
-export function getIntentsEngine(roxConfig: RoxConfig): Intents {
+export function getIntentsEngine(roxConfig: RoxConfig) {
   const googleConfig = require(roxConfig.googleConfigFile)
 
-  if (roxConfig.intentsEngine === "dialogflow.cx") {
-    return new DialogFlowCX({
+  return function getEngine(): Intents {
+    if (roxConfig.intentsEngine === "dialogflow.cx") {
+      return new DialogFlowCX({
+        projectId: roxConfig.intentsEngineProjectId || googleConfig.project_id,
+        keyFilename: roxConfig.googleConfigFile,
+        languageCode: roxConfig.languageCode,
+        agent: roxConfig.intentsEngineAgent as string,
+        location: roxConfig.intentsEngineLocation as string
+      })
+    }
+
+    return new DialogFlowES({
       projectId: roxConfig.intentsEngineProjectId || googleConfig.project_id,
       keyFilename: roxConfig.googleConfigFile,
       languageCode: roxConfig.languageCode,
-      agent: roxConfig.intentsEngineAgent as string,
-      location: roxConfig.intentsEngineLocation as string
+      platform: roxConfig.intentsEnginePlatform
     })
   }
-
-  return new DialogFlowES({
-    projectId: roxConfig.intentsEngineProjectId || googleConfig.project_id,
-    keyFilename: roxConfig.googleConfigFile,
-    languageCode: roxConfig.languageCode,
-    platform: roxConfig.intentsEnginePlatform
-  })
 }

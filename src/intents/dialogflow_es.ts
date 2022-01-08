@@ -45,6 +45,9 @@ export default class DialogFlow implements Intents {
     this.sessionId = uuid.v4()
     this.config = config
     this.projectId = config.projectId
+    logger.verbose(
+      `@rox/intents created new dialogflow/es session [projectId=${this.projectId}, sessionId=${this.sessionId}]`
+    )
   }
 
   setProjectId(projectId: string) {

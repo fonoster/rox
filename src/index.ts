@@ -82,7 +82,6 @@ class Rox extends Command {
     
     assertEverything(roxConfig)
 
-    const intentsEngine = getIntentsEngine(roxConfig)
     const googleCredentials = {
       keyFilename: roxConfig.googleConfigFile,
       languageCode: roxConfig.languageCode,
@@ -94,7 +93,7 @@ class Rox extends Command {
       roxConfig,
       asr,
       tts,
-      intents: intentsEngine,
+      intents: getIntentsEngine(roxConfig),
       initEndpoint: roxConfig.initEndpoint,
       initEndpointUsername: roxConfig.initEndpointUsername,
       initEndpointPassword: roxConfig.initEndpointPassword

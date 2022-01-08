@@ -57,12 +57,13 @@ export interface VoiceConfig {
   roxConfig: RoxConfig
   asr: GoogleASR
   tts: GoogleTTS
-  intents: Intents
+  intents: () => Intents
   initEndpoint?: string
   initEndpointUsername?: string
   initEndpointPassword?: string
 }
 
+// TODO: Refactor to replace values inside VoiceConfig
 export interface InitEndpoint {
   endpoint: string
   username?: string
