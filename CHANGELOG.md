@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.0.12
+
+- Fixed not stopping playback
+
 # 0.0.10
 
 - Now closing mediapipe for transfer effect
