@@ -33,6 +33,11 @@ const playOrSay = async (param: {
     })
   }
   if (param.message) {
+    if (param.voiceConfig) {
+      param.voiceConfig.playbackId = param.playbackId
+    } else {
+      param.voiceConfig = { playbackId: param.playbackId }
+    }
     await param.voice.say(param.message, param.voiceConfig as SayOptions)
   }
 }

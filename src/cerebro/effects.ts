@@ -82,17 +82,15 @@ export class EffectsManager {
 
     stream.on('answer', () => control.stop())
 
-    //stream.on('trying', async() => playTransfering(this.voice, playbackId, this.config))
+    stream.on('progress', () => playTransfering(this.voice, playbackId, this.config))
 
-    stream.on('progress', async() => playTransfering(this.voice, playbackId, this.config))
-
-    stream.on('busy', () => {
-      control.stop()
+    stream.on('busy', async() => {
+      await control.stop()
       playBusyAndHangup(this.voice, playbackId, this.config)
     })
 
-    stream.on('noanswer', () => {
-      control.stop()
+    stream.on('noanswer', async() => {
+      await control.stop()
       playNoAnswerAndHangup(this.voice, playbackId, this.config)
     })
   }
