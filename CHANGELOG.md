@@ -1,6 +1,6 @@
 # Changelog
 
-# 0.0.12
+# 0.0.13
 
 - Fixed not stopping playback
 
