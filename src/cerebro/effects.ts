@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 import logger from '@fonoster/logger'
-import { VoiceResponse } from '@fonoster/voice'
+import { PlaybackControl, VoiceResponse } from '@fonoster/voice'
 import { CerebroStatus, Effect, EffectsManagerConfig } from '../@types/cerebro'
 import { Intent } from '../@types/intents'
 import { nanoid } from 'nanoid'
@@ -77,21 +77,31 @@ export class EffectsManager {
   async transferEffect(voice: VoiceResponse, effect: Effect) {
     await this.voice.closeMediaPipe()
     const stream = await this.voice.dial(effect.parameters['destination'] as string)
-    const playbackId = nanoid()
-    const control = this.voice.playback(playbackId)
+    const playbackId: string = nanoid()
+    const control: PlaybackControl = this.voice.playback(playbackId)
+    
+    let stay = true
+    const moveForward = async() => { 
+      stay = false
+      await control.stop()
+    }
 
-    stream.on('answer', () => control.stop())
-
-    stream.on('progress', () => playTransfering(this.voice, playbackId, this.config))
+    stream.on('answer', () => {
+      moveForward()
+    })
 
     stream.on('busy', async() => {
-      await control.stop()
-      playBusyAndHangup(this.voice, playbackId, this.config)
+      await moveForward()
+      await playBusyAndHangup(this.voice, playbackId, this.config)
     })
 
     stream.on('noanswer', async() => {
-      await control.stop()
-      playNoAnswerAndHangup(this.voice, playbackId, this.config)
+      await moveForward()
+      await playNoAnswerAndHangup(this.voice, playbackId, this.config)
     })
+
+    while(stay) {
+      await playTransfering(this.voice, playbackId, this.config)
+    }
   }
 }
