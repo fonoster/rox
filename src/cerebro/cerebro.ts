@@ -39,17 +39,20 @@ export class Cerebro {
   status: CerebroStatus
   activationTimeout: number
   activeTimer: NodeJS.Timer
+  interactionTimer: NodeJS.Timer
   intents: Intents
   stream: SGatherStream
   config: CerebroConfig
   lastIntent: any
   effects: EffectsManager
+  interactionTimeout: number
   constructor(config: CerebroConfig) {
     this.voiceResponse = config.voiceResponse
     this.voiceRequest = config.voiceRequest
     this.cerebroEvents = new Events()
     this.status = CerebroStatus.SLEEP
     this.activationTimeout = config.activationTimeout || 15000
+    this.interactionTimeout = config.interactionTimeout || -1
     this.intents = config.intents
     this.effects = new EffectsManager({
       playbackId: config.playbackId,
@@ -71,7 +74,7 @@ export class Cerebro {
   async wake() {
     this.status = CerebroStatus.AWAKE_PASSIVE
 
-    const readable = new Stream.Readable({
+    /*const readable = new Stream.Readable({
       // The read logic is omitted since the data is pushed to the socket
       // outside of the script's control. However, the read() function
       // must be defined.
@@ -80,7 +83,7 @@ export class Cerebro {
 
     this.voiceResponse.on('ReceivingMedia', (data: any) => {
       readable.push(data)
-    })
+    })*/
 
     this.voiceResponse.on('error', (error: Error) => {
       this.cerebroEvents.emit('error', error)
@@ -90,7 +93,7 @@ export class Cerebro {
 
     this.stream.on('transcript', async data => {
       if (data.isFinal) {
-        const intent = await this.intents.findIntent(data.transcript, 
+        const intent = await this.intents.findIntent(data.transcript,
           {
             telephony: {
               caller_id: this.voiceRequest.callerNumber
@@ -104,6 +107,7 @@ export class Cerebro {
         await this.effects.invokeEffects(intent,
           this.status,
           async () => {
+            this.stopInteractiontimer()
             await this.stopPlayback()
             if (this.config.activationIntent) {
               if (this.status === CerebroStatus.AWAKE_ACTIVE) {
@@ -112,12 +116,41 @@ export class Cerebro {
                 this.startActiveTimer()
               }
             }
-          })
+          },
+          () => {
+            if (!this.config.activationIntent && this.config.interactionTimeout != -1) {
+              this.resetInteractionTimer()
+            }
+          }
+        )
 
         // Need to save this to avoid duplicate intents
         this.lastIntent = intent
       }
     })
+
+    // We only use the timer if activation mode is off
+    if (this.config.interactionTimeout != -1
+      && !this.config.activationIntent) {
+      this.startInteractionTimer();
+    }
+  }
+
+  async stopPlayback() {
+    if (this.config.playbackId) {
+      try {
+        const playbackControl: PlaybackControl = this.voiceResponse.playback(
+          this.config.playbackId
+        )
+
+        logger.verbose(
+          `@rox/cerebro stoping playback [playbackId = ${this.config.playbackId}]`
+        )
+        await playbackControl.stop();
+      } catch (e) {
+        logger.error(`@rox/cerebro e => [${e}]`)
+      }
+    }
   }
 
   // Unsubscribe from events
@@ -126,6 +159,8 @@ export class Cerebro {
     await this.voiceResponse.closeMediaPipe()
     this.stream.close()
     this.status = CerebroStatus.SLEEP
+    clearTimeout(this.activeTimer)
+    clearTimeout(this.interactionTimer)
   }
 
   startActiveTimer(): void {
@@ -143,20 +178,40 @@ export class Cerebro {
     this.startActiveTimer()
   }
 
-  async stopPlayback() {
-    if (this.config.playbackId) {
-      try {
-        const playbackControl: PlaybackControl = this.voiceResponse.playback(
-          this.config.playbackId
-        )
+  // Checks if the person has spoken
+  startInteractionTimer(): void {
+    logger.verbose("@rox/cerebro started interaction timer")
+    this.interactionTimer = setTimeout(async () => {
+      logger.verbose("@rox/cerebro triggered interaction timeout")
+      const intent = await this.intents.findIntent("\"\"",
+        {
+          telephony: {
+            caller_id: this.voiceRequest.callerNumber
+          }
+        })
 
-        logger.verbose(
-          `@rox/cerebro stoping playback [playbackId = ${this.config.playbackId}]`
-        )
-        await playbackControl.stop();
-      } catch (e) { 
-         logger.error(`@rox/cerebro e => [${e}]`)
-      }
-    }
+      this.effects.invokeEffects(intent,
+        this.status,
+        () => { 
+          // Before effects callback
+          this.stopInteractiontimer()
+        },
+        () => {
+          // After effects callback
+          this.resetInteractionTimer()
+        }
+      )
+    }, this.interactionTimeout)
+  }
+
+  resetInteractionTimer(): void {
+    logger.verbose("@rox/cerebro is reseting interaction timer")
+    clearTimeout(this.interactionTimer)
+    this.startInteractionTimer()
+  }
+
+  stopInteractiontimer(): void {
+    logger.verbose("@rox/cerebro stopping interaction timer")
+    clearTimeout(this.interactionTimer)
   }
 }

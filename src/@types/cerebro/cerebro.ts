@@ -26,6 +26,7 @@ export interface CerebroConfig {
   voiceResponse: VoiceResponse
   maxUnknownIntents?: number
   activationTimeout?: number
+  interactionTimeout?: number
   intents: Intents
   playbackId: string
   voiceConfig: any

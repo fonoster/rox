@@ -35,7 +35,7 @@ export default class DialogFlowCX implements Intents {
     const sessionId = uuid.v4()
     const credentials = require(config.keyFilename)
 
-    let c = {
+    const c = {
       apiEndpoint: `${config.location}-dialogflow.googleapis.com`,
       credentials: {
         private_key: credentials.private_key,

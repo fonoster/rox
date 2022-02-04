@@ -118,6 +118,7 @@ export function voice(config: VoiceConfig) {
           intents: intentsEngine,
           eventsClient,
           voiceConfig,
+          interactionTimeout: config.roxConfig.interactionTimeout,
           activationIntent: config.roxConfig.activationIntent,
           activationTimeout: config.roxConfig.activationTimeout,
           transferMedia: config.roxConfig.transferMedia,
@@ -130,6 +131,10 @@ export function voice(config: VoiceConfig) {
 
         // Open for bussiness
         await cerebro.wake()
+
+        voiceResponse.on("SessionClosed", () => {
+          cerebro.sleep()
+        })
       } catch (e) {
         logger.error('@fonoster/rox unexpected error: ' + e)
       }

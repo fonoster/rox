@@ -32,8 +32,11 @@ export class EffectsManager {
   }
 
   async invokeEffects(intent: Intent,
-    status: CerebroStatus, activateCallback: Function) {
-    activateCallback()
+    status: CerebroStatus, beforeEffectsCallback: Function, affterEffectsCallback: Function) {
+    
+    logger.verbose(`@rox/cerebro/effects invoking before effects callback`)
+    beforeEffectsCallback()
+    
     if (this.config.activationIntent === intent.ref) {
       logger.verbose("@rox/cerebro/effects fired activation intent")
       return;
@@ -49,6 +52,9 @@ export class EffectsManager {
       logger.verbose(`@rox/cerebro/effects running effect [type = ${e.type}]`)
       await this.run(e)
     }
+
+    logger.verbose(`@rox/cerebro/effects invoking after effects callback`)
+    affterEffectsCallback()
   }
 
   async run(effect: Effect) {

@@ -50,7 +50,8 @@ class Rox extends Command {
     "initial-dtmf": flags.string({ description: 'optional initial dtmf' }),
     "welcome-intent-trigger": flags.string({ description: 'phrase that will trigger the welcome intent' }),
     "activation-intent": flags.string({ description: 'intent that will wake the bot; similar to "alexa!" or "hey google!"' }),
-    "activation-timeout": flags.string({ description: 'wake timeout' }),
+    "activation-timeout": flags.integer({ description: 'wake timeout' }),
+    "interaction-timeout": flags.integer({ description: 'time to wait for human interaction' }),
     "otl-exporter-jaeger-url": flags.string({ description: 'if set will send telemetry to Jaeger' }),
     "otl-exporter-zipkin-url": flags.string({ description: 'if set will send telemetry to Zipkin' }),
     "otl-exporter-prometheus-port": flags.string({ description: 'sets Prometheus port. Defaults to 9090' }),
@@ -76,7 +77,7 @@ class Rox extends Command {
         languageCode: "en-US",
         intentsEnginePlatform: "PLATFORM_UNSPECIFIED"
       },
-      configFromEnv, 
+      configFromEnv,
       configFromFlags,
     ]) as RoxConfig
     
