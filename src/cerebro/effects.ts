@@ -18,10 +18,10 @@
  */
 import logger from '@fonoster/logger'
 import { PlaybackControl, VoiceResponse } from '@fonoster/voice'
-import { CerebroStatus, Effect, EffectsManagerConfig } from '../@types/cerebro'
-import { Intent } from '../@types/intents'
+import { Intent } from '../intents/types'
 import { nanoid } from 'nanoid'
 import { playBusyAndHangup, playNoAnswerAndHangup, playTransfering } from './helper'
+import { EffectsManagerConfig, CerebroStatus, Effect } from './types'
 
 export class EffectsManager {
   voice: VoiceResponse
@@ -34,10 +34,10 @@ export class EffectsManager {
   async invokeEffects(intent: Intent,
     status: CerebroStatus, activateCallback: Function) {
     activateCallback()
-    if (this.config.activationIntent === intent.ref) {
+    if (this.config.activationIntentId === intent.ref) {
       logger.verbose("@rox/cerebro/effects fired activation intent")
       return;
-    } else if (this.config.activationIntent
+    } else if (this.config.activationIntentId
       && status != CerebroStatus.AWAKE_ACTIVE) {
       logger.verbose("@rox/cerebro/effects got an intent but cerebro is not awake")
       // If we have activation intent cerebro needs and active status

@@ -18,82 +18,73 @@
  * limitations under the License.
  */
 import logger from '@fonoster/logger'
+import Apps from '@fonoster/apps'
+import Secrets from '@fonoster/secrets'
 import { VoiceRequest, VoiceResponse, VoiceServer } from '@fonoster/voice'
 import { Cerebro } from './cerebro'
 import { eventsServer } from './events/server'
 import { nanoid } from 'nanoid'
-import { RoxConfig, VoiceConfig } from './@types/rox'
+import { VoiceConfig } from './types'
 import { getSpanExporters, getMeterProvider } from './telemetry'
-import { getProjectConfig } from './util'
-import merge from 'deepmerge'
+import { getIntentsEngine } from './intents/engines'
 const { version } = require('../package.json')
 
 export function voice(config: VoiceConfig) {
   logger.info(`rox ai ${version}`)
-
-  const otlSpanExporters = getSpanExporters({
-    jaegerUrl: config.roxConfig.otlExporterJaegerUrl,
-    zipkinUrl: config.roxConfig.otlExporterZipkinUrl,
-    gcpEnabled: config.roxConfig.otlExporterGCPEnabled,
-    gcpKeyfile: config.roxConfig.googleConfigFile
+  const meterProvider = getMeterProvider({
+    prometheusPort: config.serverConfig.otlExporterPrometheusPort,
+    prometheusEndpoint: config.serverConfig.otlExporterPrometheusEndpoint,
   })
-
+  const meter = meterProvider?.getMeter("rox_metrics")
+  const callCounter = meter?.createCounter("call_counter")
   const voiceServer = new VoiceServer({
-    otlSpanExporters
+    otlSpanExporters: getSpanExporters({
+      jaegerUrl: config.serverConfig.otlExporterJaegerUrl,
+      zipkinUrl: config.serverConfig.otlExporterZipkinUrl,
+      gcpEnabled: config.serverConfig.otlExporterGCPEnabled,
+      gcpKeyfile: config.serverConfig.googleConfigFile
+    })
   })
-
   voiceServer.use(config.asr)
   voiceServer.use(config.tts)
 
-  if (config.roxConfig.enableEvents) {
-    eventsServer.start()
-  }
-
-  const meterProvider = getMeterProvider({
-    prometheusPort: config.roxConfig.otlExporterPrometheusPort,
-    prometheusEndpoint: config.roxConfig.otlExporterPrometheusEndpoint,
-  })
-
-  const meter = meterProvider?.getMeter("rox_metrics")
-  const callCounter = meter?.createCounter("call_counter")
+  if (config.serverConfig.enableEventsServer) eventsServer.start()
 
   voiceServer.listen(
     async (voiceRequest: VoiceRequest, voiceResponse: VoiceResponse) => {
       logger.verbose('request:' + JSON.stringify(voiceRequest, null, ' '))
+
       // Sending metrics out to Prometheus
       callCounter?.add(1)
 
-      const intentsEngine = config.intents()
-
       try {
         // If set, we overwrite the configuration with the values obtain from the webhook
-        if (config.initEndpoint) {
-          const projecConfig = await getProjectConfig(voiceRequest, {
-            endpoint: config.initEndpoint,
-            username: config.initEndpointUsername,
-            password: config.initEndpointPassword
-          })
-          config.roxConfig = merge(config.roxConfig, projecConfig) as RoxConfig
-          if (config.roxConfig.intentsEngineProjectId) {
-            intentsEngine.setProjectId(config.roxConfig.intentsEngineProjectId)
-          }
+        const serviceCredentials = {
+          accessKeyId: voiceRequest.accessKeyId,
+          accessKeySecret: voiceRequest.sessionToken
+        }
+        const apps = new Apps(serviceCredentials)
+        const secrets = new Secrets(serviceCredentials)
+        const app = await apps.getApp(voiceRequest.appRef)
+        // TODO: We also need to obtain and the secrets for the Speech API.
+        const ieSecret = await secrets.getSecret(app.intentsEngineConfig.secretName)
+        const intentsEngine = 
+          getIntentsEngine(app) (JSON.parse(ieSecret.secret))
+        intentsEngine?.setProjectId(app.intentsEngineConfig.projectId)
+
+        const voiceConfig = {
+          name: app.speechConfig.voice,
+          playbackId: nanoid()
         }
 
         await voiceResponse.answer()
 
-        const playbackId = nanoid()
-        const voiceConfig = {
-          name: config.roxConfig.ttsVoice,
-          playbackId
-        }
+        if (app.initialDtmf)
+          await voiceResponse.dtmf({ dtmf: app.initialDtmf })
 
-        if (config.roxConfig.initialDtmf) {
-          await voiceResponse.dtmf({ dtmf: config.roxConfig.initialDtmf })
-        }
-
-        if (config.roxConfig.welcomeIntentTrigger && intentsEngine.findIntentWithEvent) {
+        if (app.welcomeIntentId && intentsEngine.findIntentWithEvent) {
           const response = await intentsEngine.findIntentWithEvent(
-            config.roxConfig.welcomeIntentTrigger,
+            app.welcomeIntentId,
             {
               telephony: {
                 caller_id: voiceRequest.callerNumber
@@ -103,29 +94,23 @@ export function voice(config: VoiceConfig) {
           if (response.effects.length > 0) {
             await voiceResponse.say(response.effects[0].parameters['response'] as string, voiceConfig)
           } else {
-            logger.warn(`@rox/voice no effects found for welcome intent: trigger '${config.roxConfig.welcomeIntentTrigger}'`)
+            logger.warn(`@rox/voice no effects found for welcome intent: trigger '${app.welcomeIntentId}'`)
           }
         }
 
-        const eventsClient = config.roxConfig.enableEvents
+        const eventsClient = app.enableEvents
           ? eventsServer.getConnection(voiceRequest.callerNumber)
           : null
 
         const cerebro = new Cerebro({
           voiceRequest,
           voiceResponse,
-          playbackId,
-          intents: intentsEngine,
           eventsClient,
           voiceConfig,
-          activationIntent: config.roxConfig.activationIntent,
-          activationTimeout: config.roxConfig.activationTimeout,
-          transferMedia: config.roxConfig.transferMedia,
-          transferMediaBusy: config.roxConfig.transferMediaBusy,
-          transferMediaNoAnswer: config.roxConfig.transferMediaNoAnswer,
-          transferMessage: config.roxConfig.transferMessage,
-          transferMessageBusy: config.roxConfig.transferMessageBusy,
-          transferMessageNoAnswer: config.roxConfig.transferMessageNoAnswer,   
+          intentsEngine,
+          activationIntentId: app.activationIntentId,
+          activationTimeout: app.activationTimeout,
+          transfer: app.transferConfig
         })
 
         // Open for bussiness

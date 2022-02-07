@@ -40,15 +40,7 @@ docker pull fonoster/rox:%%VERSION%%
 The following is a basic example of using this image.
 
 ```
-docker run -it \
-  -p 3000:3000 \
-  -e WELCOME_INTENT_TRIGGER="WELCOME"
-  -e ACTIVATION_INTENT="bot.activate" \  
-  -e INTENTS_ENGINE="dialogflow.cx" \
-  -e ASR_ENGINE="google" \
-  -e TTS_ENGINE="google" \
-  -e TTS_VOICE="en-US-Wavenet-F" \
-  fonoster/rox
+docker run -it -p 3000:3000 fonoster/rox
 ```
 
 ## Specs for Dialogflow backend
@@ -152,78 +144,18 @@ You can set multiple responses in Dialogflow. The Effects will run in sequence.
 
 > Notes: The parameter `type` is set to map in the example, but you can send anything that makes send to the client. If the parameter `allRequiredParamsPresent` is set to true, the fulfillmentText will take precedence over the custom effects.
 
-## Dynamic Project Configuration
-
-In certain scenarios, you will want to configure your bot dynamically. You can achieve this by creating an initialization endpoint that responds to HTTP requests. 
-
-To dynamically configure your project, you first need to set the `INIT_ENDPOINT` to the URL with your configuration. 
-
-Rox will send these query parameters:
-
-```none
-  accessKeyId: string
-  number: string
-  callerNumber: string
-  sessionId: string
-```
-
-The endpoint must be prepared to receive `GET` requests, and respond with JSON with the following parameters: 
-
-```none
-  intentsEngineProjectId: string    // This is the only mandatory parameter
-  ttsVoice: string
-  languageCode: string
-  intentsEngineAgent: string
-  intentsEngineLocation: string
-  intentsEnginePlatform?: string
-  initialDtmf: string
-  welcomeIntentTrigger: string
-  enableEvents: boolean
-  activationTimeout: number
-  activationIntent: string
-  interactionTimeout: number
-  transferMedia: string
-  transferMediaBusy: string
-  transferMediaNoAnswer: string
-  transferMessage: string
-  transferMessageBusy: string
-  transferMessageNoAnswer: string
-```
-
 ## Environment Variables
 
 Environment variables are used in the entry point script to render configuration templates. You can specify the values of these variables during `docker run`, `docker-compose up`, or in Kubernetes manifests in the `env` array.
 
-- `INTENTS_ENGINE` - Use to select the intents engine. Accepts `[dialogflow.es, dialogflow.cx]`. **Required**
-- `INTENTS_ENGINE_PROJECT_ID` - If set, it will overwrite the `project_id` on Dialogflow Engine
-- `INTENTS_ENGINE_AGENT` - Intents Agent identifier.  **Required for `dialogflow.cx`**
-- `INTENTS_ENGINE_LOCATION` - Region where the bot was deployed.  **Required for `dialogflow.cx`**
-- `INTENTS_ENGINE_PLATFORM` - If set to `TELEPHONY` it will emulate Dialogflow's Phone Gateway behavior
-- `ASR_ENGINE` - Use to select the ASR engine. Accepts `[google]`. **Required**
-- `TTS_ENGINE` - Use to select the TTS engine. Accepts `[google]`. **Required**
-- `TTS_VOICE` - Name of the voice. Check https://cloud.google.com/text-to-speech/docs/voices for a list of Google TTS voices. **Required**
-- `INITIAL_DTMF` - Set if you want to send a DTMF at the beginning of the call
-- `WELCOME_INTENT_TRIGGER` - Set to event name that will start the conversation
-- `ACTIVATION_INTENT` - Set to the desired intent if you want to have an activation command. If this is set, the `INTERACTION_TIMEOUT` will have no effects
-- `INTERACTION_TIMEOUT` - Timeout, in seconds, to ask again for user input. Use `-1` for no timeout. Defaults to `-1`
 - `ENABLE_EVENTS` - If set to `true` it will send events to WS clients subscribed to events. Defaults to `false`
-- `ACTIVATION_TIMEOUT` - Time in seconds for the duration of the `AWAKE_ACTIVE` state, set for the activation command. After this time the bot will return to `AWAKE_PASSIVE` and new intents will be ignored. Defaults to `15000`
-- `LANGUAGE_CODE` - Sets the default language for the application. Defaults to `en-US`
+- `DEFAULT_LANGUAGE_CODE` - Sets the default language for the application. Defaults to `en-US`
 - `GOOGLE_CONFIG_FILE` - The file containing the Service Account with access to Google Speech APIs and Dialogflow
 - `OTL_EXPORTER_PROMETHEUS_PORT` - Sets Prometheus port. Defaults to `9090`
 - `OTL_EXPORTER_PROMETHEUS_ENDPOINT` - Sets Prometheus endpoint. Defaults to `/metrics`
 - `OTL_EXPORTER_JAEGER_URL` - If set, it will send traces to Jaeger
 - `OTL_EXPORTER_GCP_ENABLED` - If set, it will send traces to GCP
 - `OTL_EXPORTER_ZIPKIN_URL` - If set, it will send traces to Zipkin
-- `INIT_ENDPOINT` - Optional endpoint to obtain the project's configuration dynamically
-- `INIT_ENDPOINT_USERNAME` - Optional username for the init endpoint
-- `INIT_ENDPOINT_PASSWORD` - Optional password for the init endpoint
-- `TRANSFER_MEDIA` - Optional media to play while transfering
-- `TRANSFER_MEDIA_BUSY` - Optional media to play if callee is busy
-- `TRANSFER_MEDIA_NOANSWER` - Optional media to play if callee does not answer
-- `TRANSFER_MESSAGE` -  Optional message to play while transfering
-- `TRANSFER_MESSAGE_BUSY` - Optional message to play if callee is busy
-- `TRANSFER_MESSAGE_NOANSWER` - Optional message to play if callee does not answer
 
 ## Exposed Ports
 

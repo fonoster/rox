@@ -18,11 +18,11 @@
  */
 import logger from '@fonoster/logger'
 import dialogflow, { SessionsClient } from '@google-cloud/dialogflow-cx'
-import { Effect } from '../@types/cerebro'
-import { DialogFlowCXConfig, Intents, Intent } from '../@types/intents'
+import { DialogFlowCXConfig, IntentsEngine, Intent } from './types'
 import { transformPayloadToEffect } from './df_utils'
+import { Effect } from '../cerebro/types'
 
-export default class DialogFlowCX implements Intents {
+export default class DialogFlowCX implements IntentsEngine {
   sessionClient: SessionsClient
   sessionPath: any
   config: DialogFlowCXConfig
@@ -33,23 +33,16 @@ export default class DialogFlowCX implements Intents {
   constructor(config: DialogFlowCXConfig) {
     const uuid = require('uuid')
     const sessionId = uuid.v4()
-    const credentials = require(config.keyFilename)
-
-    let c = {
-      apiEndpoint: `${config.location}-dialogflow.googleapis.com`,
-      credentials: {
-        private_key: credentials.private_key,
-        client_email: credentials.client_email,
-      }
-    }
-
-    // Create a new session
-    this.sessionClient = new dialogflow.SessionsClient(c)
     this.projectId = config.projectId
     this.location = config.location
     this.config = config
     this.sessionId = sessionId
     this.agent = config.agent
+    // Create a new session
+    this.sessionClient = new dialogflow.SessionsClient({
+      apiEndpoint: `${config.location}-dialogflow.googleapis.com`,
+      credentials: config.credentials
+    })
   }
 
   setProjectId(id: string) {

@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Effect } from "../cerebro";
+import { Effect } from "../cerebro/types";
 
 export interface Intent {
   ref: string
@@ -25,7 +25,7 @@ export interface Intent {
   allRequiredParamsPresent: boolean
 }
 
-export interface Intents {
+export interface IntentsEngine {
   setProjectId: (id: string) => void
   findIntent: (text: string, payload?: Record<string, unknown>) => Promise<Intent>
   findIntentWithEvent?: (name: string, payload?: Record<string, unknown>) => Promise<Intent>
@@ -33,15 +33,16 @@ export interface Intents {
 
 export interface DialogFlowESConfig {
   projectId: string
-  keyFilename: string
   languageCode: string
   platform: string
+  credentials: Record<string, string>
 }
 
 export interface DialogFlowCXConfig {
   projectId: string
-  keyFilename: string
   languageCode: string
   location: string
   agent: string
+  platform: string
+  credentials: Record<string, string>
 }

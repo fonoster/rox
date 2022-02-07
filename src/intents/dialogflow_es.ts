@@ -18,12 +18,12 @@
  */
 import logger from '@fonoster/logger'
 import * as dialogflow from '@google-cloud/dialogflow'
-import { Effect } from '../@types/cerebro'
-import { Intents, Intent, DialogFlowESConfig } from '../@types/intents'
+import { IntentsEngine, Intent, DialogFlowESConfig } from './types'
 import { transformPayloadToEffect } from './df_utils'
 import { struct } from 'pb-util'
+import { Effect } from '../cerebro/types'
 
-export default class DialogFlow implements Intents {
+export default class DialogFlow implements IntentsEngine {
   sessionClient: dialogflow.v2beta1.SessionsClient
   sessionPath: any
   config: DialogFlowESConfig
@@ -31,20 +31,13 @@ export default class DialogFlow implements Intents {
   projectId: string
   constructor(config: DialogFlowESConfig) {
     const uuid = require('uuid')
-    const credentials = require(config.keyFilename)
-
-    let c = {
-      credentials: {
-        private_key: credentials.private_key,
-        client_email: credentials.client_email,
-      }
-    }
-
-    // Create a new session
-    this.sessionClient = new dialogflow.v2beta1.SessionsClient(c)
     this.sessionId = uuid.v4()
     this.config = config
     this.projectId = config.projectId
+    // Create a new session
+    this.sessionClient = new dialogflow.v2beta1.SessionsClient({
+      credentials: config.credentials
+    })
     logger.verbose(
       `@rox/intents created new dialogflow/es session [projectId=${this.projectId}, sessionId=${this.sessionId}]`
     )

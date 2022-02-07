@@ -18,7 +18,6 @@
  */
 import WebSocket = require('ws')
 import logger from '@fonoster/logger'
-
 import { EventsClient } from './emitter'
 
 // Events server
