@@ -18,12 +18,12 @@
     "version": "oclif-dev readme && git add README.md"
   },
   "dependencies": {
-    "@fonoster/apps": "^0.3.1",
-    "@fonoster/googleasr": "^0.3.1",
-    "@fonoster/googletts": "^0.3.1",
-    "@fonoster/logger": "^0.3.1",
-    "@fonoster/secrets": "^0.3.1",
-    "@fonoster/voice": "^0.3.1",
+    "@fonoster/apps": "^0.3.2",
+    "@fonoster/googleasr": "^0.3.2",
+    "@fonoster/googletts": "^0.3.2",
+    "@fonoster/logger": "^0.3.2",
+    "@fonoster/secrets": "^0.3.2",
+    "@fonoster/voice": "^0.3.2",
     "@google-cloud/dialogflow": "^4.3.1",
     "@google-cloud/dialogflow-cx": "^2.13.0",
     "@google-cloud/opentelemetry-cloud-trace-exporter": "^1.0.0",
