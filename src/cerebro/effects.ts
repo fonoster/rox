@@ -53,8 +53,12 @@ export class EffectsManager {
       await this.run(e)
     }
 
-    logger.verbose(`@rox/cerebro/effects invoking after effects callback`)
-    affterEffectsCallback()
+    if (intent.effects.find(e => e.type === 'transfer' || e.type === 'hangup') ) {
+      logger.verbose(`@rox/cerebro/effects ignored after effects callback`)
+    } else {
+      logger.verbose(`@rox/cerebro/effects invoking after effects callback`)
+      affterEffectsCallback()
+    }
   }
 
   async run(effect: Effect) {

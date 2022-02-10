@@ -46,6 +46,7 @@ export class Cerebro {
   lastIntent: any
   effects: EffectsManager
   interactionTimeout: number
+  isRunningEffects: boolean;
   constructor(config: CerebroConfig) {
     this.voiceResponse = config.voiceResponse
     this.voiceRequest = config.voiceRequest
@@ -72,6 +73,7 @@ export class Cerebro {
 
   // Subscribe to events
   async wake() {
+    this.isRunningEffects = false
     this.status = CerebroStatus.AWAKE_PASSIVE
 
     /*const readable = new Stream.Readable({
@@ -92,7 +94,10 @@ export class Cerebro {
     this.stream = await this.voiceResponse.sgather()
 
     this.stream.on('transcript', async data => {
-      if (data.isFinal) {
+      logger.verbose(
+        `@rox/cerebro transcript [isRunningEffects = ${this.isRunningEffects}]`
+      )
+      if (data.isFinal && !this.isRunningEffects) {
         const intent = await this.intents.findIntent(data.transcript,
           {
             telephony: {
@@ -116,11 +121,13 @@ export class Cerebro {
                 this.startActiveTimer()
               }
             }
+            this.isRunningEffects = true
           },
-          () => {
+          async() => {
             if (!this.config.activationIntent && this.config.interactionTimeout != -1) {
-              this.resetInteractionTimer()
+              this.startInteractionTimer()
             }
+            this.isRunningEffects = false
           }
         )
 
@@ -180,9 +187,13 @@ export class Cerebro {
 
   // Checks if the person has spoken
   startInteractionTimer(): void {
-    logger.verbose("@rox/cerebro started interaction timer")
+    // Perhaps we also want to reset the timer here
     this.interactionTimer = setTimeout(async () => {
-      logger.verbose("@rox/cerebro triggered interaction timeout")
+      logger.verbose(`@rox/cerebro triggered interaction timeout (ID: ${this.interactionTimer}), status=${this.status}`)
+      if (this.status === CerebroStatus.SLEEP) {
+        logger.verbose(`@rox/cerebro bot is asleep [ignoring effects]`)
+        return
+      }
       const intent = await this.intents.findIntent("\"\"",
         {
           telephony: {
@@ -192,26 +203,23 @@ export class Cerebro {
 
       this.effects.invokeEffects(intent,
         this.status,
-        () => { 
+        async() => { 
           // Before effects callback
           this.stopInteractiontimer()
+          this.isRunningEffects = true
         },
-        () => {
+        async() => {
           // After effects callback
-          this.resetInteractionTimer()
+          this.startInteractionTimer()
+          this.isRunningEffects = false
         }
       )
     }, this.interactionTimeout)
-  }
-
-  resetInteractionTimer(): void {
-    logger.verbose("@rox/cerebro is reseting interaction timer")
-    clearTimeout(this.interactionTimer)
-    this.startInteractionTimer()
+    logger.verbose(`@rox/cerebro started interaction timer (ID: ${this.interactionTimer})`)
   }
 
   stopInteractiontimer(): void {
-    logger.verbose("@rox/cerebro stopping interaction timer")
+    logger.verbose(`@rox/cerebro stopping interaction timer (ID: ${this.interactionTimer})`)
     clearTimeout(this.interactionTimer)
   }
 }
