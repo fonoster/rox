@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import logger from '@fonoster/logger'
+import logger, { ulogger, ULogType } from '@fonoster/logger'
 import Apps from '@fonoster/apps'
 import Secrets from '@fonoster/secrets'
 import { VoiceRequest, VoiceResponse, VoiceServer } from '@fonoster/voice'
@@ -58,6 +58,7 @@ export function voice(config: VoiceConfig) {
       callCounter?.add(1)
 
       try {
+        if (!voiceRequest.appRef) throw new Error("invalid voice request: missing appRef")
         // If set, we overwrite the configuration with the values obtain from the webhook
         const serviceCredentials = {
           accessKeyId: voiceRequest.accessKeyId,
@@ -68,8 +69,8 @@ export function voice(config: VoiceConfig) {
         const app = await apps.getApp(voiceRequest.appRef)
         // TODO: We also need to obtain and the secrets for the Speech API.
         const ieSecret = await secrets.getSecret(app.intentsEngineConfig.secretName)
-        const intentsEngine = 
-          getIntentsEngine(app) (JSON.parse(ieSecret.secret))
+        const intentsEngine =
+          getIntentsEngine(app)(JSON.parse(ieSecret.secret))
         intentsEngine?.setProjectId(app.intentsEngineConfig.projectId)
 
         const voiceConfig = {
@@ -116,7 +117,12 @@ export function voice(config: VoiceConfig) {
         // Open for bussiness
         await cerebro.wake()
       } catch (e) {
-        logger.error('@fonoster/rox unexpected error: ' + e)
+        ulogger({
+          accessKeyId: voiceRequest.accessKeyId,
+          eventType: ULogType.APP,
+          level: "error",
+          message: (e as Error).message
+        })
       }
     }
   )
