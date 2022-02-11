@@ -34,6 +34,11 @@ export class EffectsManager {
   async invokeEffects(intent: Intent,
     status: CerebroStatus, beforeEffectsCallback: Function, affterEffectsCallback: Function) {
     
+    if (status === CerebroStatus.SLEEP) {
+      logger.verbose(`@rox/cerebro/effects ignoring effects for sleeping brain`)  
+      return
+    }
+
     logger.verbose(`@rox/cerebro/effects invoking before effects callback`)
     beforeEffectsCallback()
     
@@ -62,25 +67,31 @@ export class EffectsManager {
   }
 
   async run(effect: Effect) {
-    switch (effect.type) {
-      case 'say':
-        await this.voice.say(effect.parameters['response'] as string, this.config.voiceConfig)
-        break
-      case 'hangup':
-        await this.voice.hangup()
-        break
-      case 'transfer':
-        // TODO: Add record effect
-        await this.transferEffect(this.voice, effect)
-        break
-      case 'send_data':
-        // Only send if client support events
-        if (this.config.eventsClient) {
-          this.config.eventsClient.send(effect.parameters as any)
-        }
-        break
-      default:
-        throw new Error(`@rox/cerebro/effects received unknown effect ${effect.type}`)
+    try {
+      switch (effect.type) {
+        case 'say':
+          await this.voice.say(effect.parameters['response'] as string, this.config.voiceConfig)
+          break
+        case 'hangup':
+          await this.voice.hangup()
+          break
+        case 'transfer':
+          // TODO: Add record effect
+          await this.transferEffect(this.voice, effect)
+          break
+        case 'send_data':
+          // Only send if client support events
+          if (this.config.eventsClient) {
+            this.config.eventsClient.send(effect.parameters as any)
+          }
+          break
+        default:
+          throw new Error(`@rox/cerebro/effects received unknown effect ${effect.type}`)
+      }
+    } catch(e) {
+      if ((e as any)?.response?.status !== 404) {
+        logger.error(e)
+      }
     }
   }
 

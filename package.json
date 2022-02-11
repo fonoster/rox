@@ -11,7 +11,7 @@
   "scripts": {
     "build": "tsc --build ./tsconfig.json",
     "update:webhook": "API_CONFIG_FILE=.config/fonoster.json node .scripts/update_webhook.js",
-    "start": ".scripts/start_voice.sh",
+    "start": "NODE_OPTIONS=--unhandled-rejections=strict .scripts/start_voice.sh",
     "posttest": "eslint . --ext .ts --config .eslintrc",
     "prepack": "rm -rf lib && tsc -b && oclif-dev readme",
     "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
