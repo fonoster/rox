@@ -115,6 +115,13 @@ export default class DialogFlow implements Intents {
     if (responses[0].queryResult.fulfillmentMessages) {
       const messages = responses[0].queryResult.fulfillmentMessages.filter(f => f.platform === this.config.platform)
       effects = this.getEffects(messages as Record<string, any>[])
+
+      if (responses[0].queryResult.intent.endInteraction) {
+        effects.push({
+          type: "hangup",
+          parameters: {}
+        })
+      }
     } else if (responses[0].queryResult.fulfillmentText) {
       effects = [{
         type: "say",
@@ -126,6 +133,7 @@ export default class DialogFlow implements Intents {
 
     return {
       ref: responses[0].queryResult.intent.displayName || "unknown",
+      endInteraction: responses[0].queryResult.intent.endInteraction || false,
       effects,
       confidence: responses[0].queryResult.intentDetectionConfidence || 0,
       allRequiredParamsPresent: responses[0].queryResult.allRequiredParamsPresent ? true : false

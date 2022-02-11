@@ -23,6 +23,7 @@ export interface Intent {
   effects: Effect[]
   confidence: number
   allRequiredParamsPresent: boolean
+  endInteraction?: boolean
 }
 
 export interface Intents {
