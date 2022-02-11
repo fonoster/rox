@@ -76,17 +76,6 @@ export class Cerebro {
     this.isRunningEffects = false
     this.status = CerebroStatus.AWAKE_PASSIVE
 
-    /*const readable = new Stream.Readable({
-      // The read logic is omitted since the data is pushed to the socket
-      // outside of the script's control. However, the read() function
-      // must be defined.
-      read() { },
-    })
-
-    this.voiceResponse.on('ReceivingMedia', (data: any) => {
-      readable.push(data)
-    })*/
-
     this.voiceResponse.on('error', (error: Error) => {
       this.cerebroEvents.emit('error', error)
     })

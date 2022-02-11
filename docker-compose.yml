@@ -43,6 +43,7 @@ services:
       - TRANSFER_MESSAGE
       - TRANSFER_MESSAGE_BUSY
       - TRANSFER_MESSAGE_NOANSWER
+      - NODE_OPTIONS
     volumes:
       - ${CONFIG}/google.json:/home/fonoster/.fonoster/google.json
     networks:
