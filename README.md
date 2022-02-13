@@ -49,8 +49,6 @@ To allow for seamless integration between Dialogflow and Rox, we introduced the 
 
 You can set multiple responses in Dialogflow. The Effects will run in sequence.
 
-> We also provide compatibility to Dialogflow Phone Gateway. To activate the compatibility you need to pass the environment variable `INTENTS_ENGINE_PLATFORM=TELEPHONY`.
-
 <table>
 <tr>
 <td> Effect ID </td> <td> Description </td> <td> Payload Example </td>

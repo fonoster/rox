@@ -4,7 +4,6 @@ WELCOME_INTENT_TRIGGER="WELCOME" \
 TTS_ENGINE="google" \
 ASR_ENGINE="google" \
 INTENTS_ENGINE="dialogflow.es" \
-INTENTS_ENGINE_PLATFORM="TELEPHONY" \
 TTS_VOICE="en-US-Wavenet-F" \
 OTL_EXPORTER_ZIPKIN_URL="http://localhost:9412/api/v2/spans" \
 OTL_EXPORTER_JAEGER_URL="http://localhost:14268/api/traces" \

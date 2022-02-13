@@ -23,14 +23,17 @@ import { IntentsEngine } from "./types"
 
 export function getIntentsEngine(app: App) {
   return function getEngine(credentials: Record<string, string>): IntentsEngine {
+    const platform = app.intentsEngineConfig.emulateTelephonyPlatform
+      ? "TELEPHONY"
+      : "PLATFORM_UNSPECIFIED"
+
     if ("location" in app.intentsEngineConfig) {
       return new DialogFlowCX({
         credentials,
         projectId: app.intentsEngineConfig.projectId,
         agent: app.intentsEngineConfig.agent,
         location: app.intentsEngineConfig.location,
-        // FIXME
-        platform: "TELEPHONY",
+        platform,
         languageCode: "en-US",
       })
     }
@@ -38,8 +41,7 @@ export function getIntentsEngine(app: App) {
     return new DialogFlowES({
       credentials,
       projectId: app.intentsEngineConfig.projectId,
-      // FIXME
-      platform: "TELEPHONY",
+      platform,
       languageCode: "en-US",
     })
   }
