@@ -14,7 +14,6 @@ services:
       - 3001:3001
       - 9090:9090
     environment:
-      - ENABLE_EVENTS
       - DEFAULT_LANGUAGE_CODE
       - OTL_EXPORTER_ZIPKIN_URL
       - OTL_EXPORTER_JAEGER_URL

@@ -146,7 +146,6 @@ You can set multiple responses in Dialogflow. The Effects will run in sequence.
 
 Environment variables are used in the entry point script to render configuration templates. You can specify the values of these variables during `docker run`, `docker-compose up`, or in Kubernetes manifests in the `env` array.
 
-- `ENABLE_EVENTS` - If set to `true` it will send events to WS clients subscribed to events. Defaults to `false`
 - `DEFAULT_LANGUAGE_CODE` - Sets the default language for the application. Defaults to `en-US`
 - `GOOGLE_CONFIG_FILE` - The file containing the Service Account with access to Google Speech APIs and Dialogflow
 - `OTL_EXPORTER_PROMETHEUS_PORT` - Sets Prometheus port. Defaults to `9090`
@@ -168,7 +167,7 @@ Environment variables are used in the entry point script to render configuration
 ## TODO
 
 - Add authentication to secure the events port
-- Include a `--log-level` flag
+- Include a `--log-level` flag (You can enable logs using the env LOGS_LEVEL)
 - Include a `--app-port` so we can change the default voice application port
 - Include a `--events-port` so we can change the default events port
 
