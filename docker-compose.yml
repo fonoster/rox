@@ -20,6 +20,7 @@ services:
       - OTL_EXPORTER_PROMETHEUS_PORT
       - OTL_EXPORTER_GCP_ENABLED
       - GOOGLE_CONFIG_FILE
+      - LOGS_LEVEL
     volumes:
       - ${CONFIG}/google.json:/home/fonoster/.fonoster/google.json
     networks:
