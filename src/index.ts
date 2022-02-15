@@ -25,6 +25,7 @@ import logger from '@fonoster/logger'
 import ngrok from 'ngrok'
 import merge from 'deepmerge'
 import { getConfigFromEnv, getConfigFromFlags } from './config'
+import process from 'process'
 
 class Rox extends Command {
   static description = 'starts a new Rox AI instance'
@@ -53,6 +54,20 @@ class Rox extends Command {
       getConfigFromEnv(),
       getConfigFromFlags(flags),
     ]) as ServerConfig
+
+    process.on('uncaughtException', (error, origin) => {
+      logger.error('----- Uncaught exception -----')
+      logger.error(error)
+      logger.error('----- Exception origin -----')
+      logger.error(origin)
+    })
+    
+    process.on('unhandledRejection', (reason, promise) => {
+      logger.error('----- Unhandled Rejection at -----')
+      logger.error(promise)
+      logger.error('----- Reason -----')
+      logger.error(reason)
+    })
 
     const googleCredentials = {
       keyFilename: config.googleConfigFile,
