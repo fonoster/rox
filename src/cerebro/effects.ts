@@ -21,7 +21,7 @@ import { PlaybackControl, VoiceResponse } from '@fonoster/voice'
 import { CerebroStatus, Effect, EffectsManagerConfig } from '../@types/cerebro'
 import { Intent } from '../@types/intents'
 import { nanoid } from 'nanoid'
-import { playBusyAndHangup, playNoAnswerAndHangup, playTransfering } from './helper'
+import { playBusy, playNoAnswer, playTransfering } from './helper'
 
 export class EffectsManager {
   voice: VoiceResponse
@@ -113,12 +113,14 @@ export class EffectsManager {
 
     stream.on('busy', async() => {
       await moveForward()
-      await playBusyAndHangup(this.voice, playbackId, this.config)
+      await playBusy(this.voice, playbackId, this.config)
+      await this.voice.hangup()
     })
 
     stream.on('noanswer', async() => {
       await moveForward()
-      await playNoAnswerAndHangup(this.voice, playbackId, this.config)
+      await playNoAnswer(this.voice, playbackId, this.config)
+      await this.voice.hangup()
     })
 
     while(stay) {

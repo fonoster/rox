@@ -53,7 +53,7 @@ export const playTransfering = async (voice: VoiceResponse,
     message: config.transferMessage
   })
 
-export const playBusyAndHangup = async (voice: VoiceResponse,
+export const playBusy = async (voice: VoiceResponse,
   playbackId: string,
   config: EffectsManagerConfig) =>
   await playOrSay({
@@ -64,7 +64,7 @@ export const playBusyAndHangup = async (voice: VoiceResponse,
     message: config.transferMessageBusy
   })
 
-export const playNoAnswerAndHangup = async (voice: VoiceResponse,
+export const playNoAnswer = async (voice: VoiceResponse,
   playbackId: string,
   config: EffectsManagerConfig) =>
   await playOrSay({
