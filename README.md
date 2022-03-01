@@ -1,4 +1,4 @@
-## 🤖 Rox AI: A connector between for Dialogflow ES/CX 
+## 🤖 Rox AI: A connector for Dialogflow ES/CX 
 
 ![publish to docker](https://github.com/fonoster/rox/workflows/publish%20to%20docker%20hub/badge.svg)
 
