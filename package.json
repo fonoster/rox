@@ -13,7 +13,7 @@
     "update:webhook": "API_CONFIG_FILE=.config/fonoster.json node .scripts/update_webhook.js",
     "start": ".scripts/start_voice.sh",
     "posttest": "eslint . --ext .ts --config .eslintrc",
-    "prepack": "rm -rf lib && tsc -b && oclif-dev readme",
+    "prepack": "npm install && rimraf lib && tsc -b && oclif-dev readme",
     "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif-dev readme && git add README.md"
   },

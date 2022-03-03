@@ -1,12 +1,24 @@
-FROM fonoster/base
+##
+## Build and pack the service
+##
+FROM fonoster/base as builder
+
 COPY . /scripts
-RUN apk add --no-cache --update bash tini nodejs npm python3 make cmake g++; \
-  chown -R fonoster /scripts; \
-  npm install; \
-  npm build; \
-  ./install.sh; \
-  apk --no-cache add curl
+RUN ./install.sh
+
+##
+## Runner
+##
+FROM fonoster/base as runner
+
+COPY --from=builder /scripts/fonoster-* .
+
+RUN apk add --no-cache --update git tini npm nodejs npm python3 make g++ \
+  && npm install -g fonoster-*.tgz \
+  && apk del npm git python3 make g++
+
 USER fonoster
+
 EXPOSE 3000/tcp
 EXPOSE 3001/tcp
 
