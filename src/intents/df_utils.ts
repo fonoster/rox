@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Effect } from "../@types/cerebro"
+import { Effect } from "../cerebro/types";
 
 function deserializePayload(object: Record<string, any>): any {
   let outputMessage = Array.isArray(object) ? [] : {};

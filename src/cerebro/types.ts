@@ -17,20 +17,43 @@
  * limitations under the License.
  */
 import { VoiceResponse } from '@fonoster/voice'
-import { EventsClient } from '../../events/emitter'
+import { VoiceRequest } from '@fonoster/voice/dist/types'
+import { EventsClient } from '../events/emitter'
+import { IntentsEngine } from '../intents/types'
+
+export enum CerebroStatus {
+  SLEEP,
+  AWAKE_ACTIVE,
+  AWAKE_PASSIVE
+}
+
+export interface CerebroConfig {
+  voiceRequest: VoiceRequest
+  voiceResponse: VoiceResponse
+  activationTimeout?: number
+  activationIntentId?: string
+  intentsEngine: IntentsEngine
+  voiceConfig: Record<string, string>
+  eventsClient: EventsClient | null
+  transfer?: Transfer
+}
+
+export interface Transfer {
+  media?: string
+  mediaNoAnswer?: string
+  mediaBusy?: string
+  message?: string
+  messageNoAnswer?: string
+  messageBusy?: string
+}
 
 export interface EffectsManagerConfig {
   eventsClient: EventsClient | null
   voice: VoiceResponse
-  voiceConfig: Record<string,unknown>
-  activationIntent?: string
+  voiceConfig: Record<string, unknown>
+  activationIntentId?: string
   playbackId: string
-  transferMedia?: string
-  transferMediaNoAnswer?: string
-  transferMediaBusy?: string
-  transferMessage?: string
-  transferMessageNoAnswer?: string
-  transferMessageBusy?: string
+  transfer?: Transfer
 }
 
 export interface Effect {

@@ -18,19 +18,14 @@
  */
 import logger from '@fonoster/logger'
 import Events from 'events'
-import Stream from 'stream'
 import { EffectsManager } from './effects'
-import { Intents } from '../@types/intents'
+import { IntentsEngine } from '../intents/types'
 import {
-  PlaybackControl,
   SGatherStream,
   VoiceRequest,
   VoiceResponse,
 } from '@fonoster/voice'
-import {
-  CerebroConfig,
-  CerebroStatus
-} from '../@types/cerebro'
+import { CerebroConfig, CerebroStatus } from './types'
 
 export class Cerebro {
   voiceResponse: VoiceResponse
@@ -39,7 +34,7 @@ export class Cerebro {
   status: CerebroStatus
   activationTimeout: number
   activeTimer: NodeJS.Timer
-  intents: Intents
+  intentsEngine: IntentsEngine
   stream: SGatherStream
   config: CerebroConfig
   lastIntent: any
@@ -50,19 +45,14 @@ export class Cerebro {
     this.cerebroEvents = new Events()
     this.status = CerebroStatus.SLEEP
     this.activationTimeout = config.activationTimeout || 15000
-    this.intents = config.intents
+    this.intentsEngine = config.intentsEngine
     this.effects = new EffectsManager({
-      playbackId: config.playbackId,
+      playbackId: config.voiceConfig.playbackId,
       eventsClient: config.eventsClient,
       voice: config.voiceResponse,
       voiceConfig: config.voiceConfig,
-      activationIntent: config.activationIntent,
-      transferMedia: config.transferMedia,
-      transferMediaBusy: config.transferMediaBusy,
-      transferMediaNoAnswer: config.transferMediaNoAnswer,
-      transferMessage: config.transferMessage,
-      transferMessageNoAnswer: config.transferMessageNoAnswer,
-      transferMessageBusy: config.transferMessageBusy,
+      activationIntentId: config.activationIntentId,
+      transfer: config.transfer
     })
     this.config = config
   }
@@ -70,17 +60,6 @@ export class Cerebro {
   // Subscribe to events
   async wake() {
     this.status = CerebroStatus.AWAKE_PASSIVE
-
-    const readable = new Stream.Readable({
-      // The read logic is omitted since the data is pushed to the socket
-      // outside of the script's control. However, the read() function
-      // must be defined.
-      read() { },
-    })
-
-    this.voiceResponse.on('ReceivingMedia', (data: any) => {
-      readable.push(data)
-    })
 
     this.voiceResponse.on('error', (error: Error) => {
       this.cerebroEvents.emit('error', error)
@@ -90,7 +69,7 @@ export class Cerebro {
 
     this.stream.on('transcript', async data => {
       if (data.isFinal) {
-        const intent = await this.intents.findIntent(data.transcript, 
+        const intent = await this.intentsEngine.findIntent(data.transcript,
           {
             telephony: {
               caller_id: this.voiceRequest.callerNumber
@@ -105,7 +84,7 @@ export class Cerebro {
           this.status,
           async () => {
             await this.stopPlayback()
-            if (this.config.activationIntent) {
+            if (this.config.activationIntentId) {
               if (this.status === CerebroStatus.AWAKE_ACTIVE) {
                 this.resetActiveTimer()
               } else {
@@ -144,18 +123,19 @@ export class Cerebro {
   }
 
   async stopPlayback() {
-    if (this.config.playbackId) {
+    const { playbackId } = this.config.voiceConfig
+    if (playbackId) {
       try {
-        const playbackControl: PlaybackControl = this.voiceResponse.playback(
-          this.config.playbackId
+        const playbackControl = this.voiceResponse.playback(
+          playbackId
         )
 
         logger.verbose(
-          `@rox/cerebro stoping playback [playbackId = ${this.config.playbackId}]`
+          `@rox/cerebro stoping playback [playbackId = ${playbackId}]`
         )
         await playbackControl.stop();
-      } catch (e) { 
-         logger.error(`@rox/cerebro e => [${e}]`)
+      } catch (e) {
+        logger.error(`@rox/cerebro e => [${e}]`)
       }
     }
   }

@@ -4,7 +4,7 @@
  *
  * This file is part of Rox AI
  *
- * Licensed under the MIT License (the "License");
+ * Licensed under the MIT License (the "License")
  * you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -16,5 +16,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from './cerebro'
-export * from './effects'
+import GoogleASR from "@fonoster/googleasr"
+import GoogleTTS from "@fonoster/googletts"
+
+export interface ServerConfig {
+  defaultLanguageCode: string
+  googleConfigFile: string
+  otlExporterJaegerUrl?: string
+  otlExporterZipkinUrl?: string
+  otlExporterPrometheusEndpoint?: string
+  otlExporterPrometheusPort?: number
+  otlExporterGCPEnabled?: boolean
+  enableEventsServer: boolean
+}
+
+export interface VoiceConfig {
+  serverConfig: ServerConfig
+  asr: GoogleASR
+  tts: GoogleTTS
+}

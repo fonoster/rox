@@ -1,7 +1,8 @@
-node_modules
-dist
+.nyc_output
 .config
-tsconfig.tsbuildinfo
+.nyc_output
 .env
+dist
+node_modules
+tsconfig.tsbuildinfo
 google.json
-intent_test.js

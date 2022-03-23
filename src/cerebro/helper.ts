@@ -17,8 +17,8 @@
  * limitations under the License.
  */
 import { VoiceResponse } from '@fonoster/voice'
-import { EffectsManagerConfig } from '../@types/cerebro'
 import { SayOptions } from '@fonoster/voice/dist/say/types'
+import { EffectsManagerConfig } from './types'
 
 const playOrSay = async (param: {
   voice: VoiceResponse,
@@ -49,8 +49,8 @@ export const playTransfering = async (voice: VoiceResponse,
     voice,
     voiceConfig: config.voiceConfig,
     playbackId,
-    media: config.transferMedia,
-    message: config.transferMessage
+    media: config.transfer?.media,
+    message: config.transfer?.message
   })
 
 export const playBusyAndHangup = async (voice: VoiceResponse,
@@ -60,8 +60,8 @@ export const playBusyAndHangup = async (voice: VoiceResponse,
     voice,
     voiceConfig: config.voiceConfig,
     playbackId,
-    media: config.transferMediaBusy,
-    message: config.transferMessageBusy
+    media: config.transfer?.mediaBusy,
+    message: config.transfer?.messageBusy
   })
 
 export const playNoAnswerAndHangup = async (voice: VoiceResponse,
@@ -71,6 +71,6 @@ export const playNoAnswerAndHangup = async (voice: VoiceResponse,
     voice,
     voiceConfig: config.voiceConfig,
     playbackId,
-    media: config.transferMediaNoAnswer,
-    message: config.transferMessageNoAnswer
+    media: config.transfer?.mediaNoAnswer,
+    message: config.transfer?.messageNoAnswer
   })

@@ -16,30 +16,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Intents } from "../@types/intents"
-import { RoxConfig } from "../@types/rox"
+import { App } from "@fonoster/apps/dist/client/types"
 import DialogFlowCX from "./dialogflow_cx"
 import DialogFlowES from "./dialogflow_es"
+import { IntentsEngine } from "./types"
 
-export function getIntentsEngine(roxConfig: RoxConfig) {
-  const googleConfig = require(roxConfig.googleConfigFile)
+export function getIntentsEngine(app: App) {
+  return function getEngine(credentials: Record<string, string>): IntentsEngine {
+    const platform = app.intentsEngineConfig.emulateTelephonyPlatform
+      ? "TELEPHONY"
+      : "PLATFORM_UNSPECIFIED"
 
-  return function getEngine(): Intents {
-    if (roxConfig.intentsEngine === "dialogflow.cx") {
+    if ("location" in app.intentsEngineConfig) {
       return new DialogFlowCX({
-        projectId: roxConfig.intentsEngineProjectId || googleConfig.project_id,
-        keyFilename: roxConfig.googleConfigFile,
-        languageCode: roxConfig.languageCode,
-        agent: roxConfig.intentsEngineAgent as string,
-        location: roxConfig.intentsEngineLocation as string
+        credentials,
+        projectId: app.intentsEngineConfig.projectId,
+        agent: app.intentsEngineConfig.agent,
+        location: app.intentsEngineConfig.location,
+        platform,
+        languageCode: "en-US",
       })
     }
 
     return new DialogFlowES({
-      projectId: roxConfig.intentsEngineProjectId || googleConfig.project_id,
-      keyFilename: roxConfig.googleConfigFile,
-      languageCode: roxConfig.languageCode,
-      platform: roxConfig.intentsEnginePlatform
+      credentials,
+      projectId: app.intentsEngineConfig.projectId,
+      platform,
+      languageCode: "en-US",
     })
   }
 }
