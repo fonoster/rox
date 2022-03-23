@@ -40,7 +40,8 @@ docker pull fonoster/rox:%%VERSION%%
 The following is a basic example of using this image.
 
 ```
-docker run -it -p 3000:3000 fonoster/rox
+docker run -v $(pwd)/google.json:/home/fonoster/.fonoster/google.json \
+  -it -p 3000:3000 fonoster/rox:0.3.0
 ```
 
 ## Specs for Dialogflow backend
@@ -162,7 +163,7 @@ Environment variables are used in the entry point script to render configuration
 
 ## Volumes
 
-- `/etc/rox/google.json` - This must exist if `INTENTS_ENGINE=dialogflow`, or `ASR_ENGINE=google`, or `TTS_ENGINE=google`
+- `/home/fonoster/.fonoster/google.json` - This must exist if `INTENTS_ENGINE=dialogflow`, or `ASR_ENGINE=google`, or `TTS_ENGINE=google`
 
 ## TODO
 
