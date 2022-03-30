@@ -94,5 +94,3 @@ class Rox extends Command {
 }
 
 export = Rox
-
-

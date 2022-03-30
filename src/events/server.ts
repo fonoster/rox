@@ -34,13 +34,13 @@ export class EventsServer {
 
   start() {
     this.wss.on('connection', ws => {
-      logger.verbose('incoming client connection')
+      logger.verbose('received a new client connection')
       ws.on('message', data => {
         // Once we receive the first and only message from client we
         // save the client in the clientConnections map
         const clientId = JSON.parse(data.toString()).clientId
         this.clientConnections.set(clientId, ws)
-        logger.verbose(`added clientId: ${clientId} to connection list`)
+        logger.verbose('added clientId to list of connections', { clientId })
       })
 
       ws.send(
@@ -51,7 +51,7 @@ export class EventsServer {
       )
     })
 
-    logger.info(`starting events server on port ${this.port}`)
+    logger.verbose('starting events server', { port: this.port })
   }
 
   getConnection(clientId: string): EventsClient | null {

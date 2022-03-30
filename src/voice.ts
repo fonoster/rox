@@ -52,7 +52,21 @@ export function voice(config: VoiceConfig) {
 
   voiceServer.listen(
     async (voiceRequest: VoiceRequest, voiceResponse: VoiceResponse) => {
-      logger.verbose('request:' + JSON.stringify(voiceRequest, null, ' '))
+      logger.verbose('received voice request', voiceRequest)
+      ulogger({
+        accessKeyId: voiceRequest.accessKeyId,
+        eventType: ULogType.APP,
+        level: "info",
+        message: 'received voice request',
+        body: {
+          sessionId: voiceRequest.sessionId,
+          callerId: voiceRequest.callerId,
+          number: voiceRequest.number,
+          callerNumber: voiceRequest.number,
+          appRef: voiceRequest.appRef,
+          dialbackEnpoint: voiceRequest.dialbackEnpoint
+        }
+      })
 
       // Sending metrics out to Prometheus
       callCounter?.add(1)
@@ -95,7 +109,14 @@ export function voice(config: VoiceConfig) {
           if (response.effects.length > 0) {
             await voiceResponse.say(response.effects[0].parameters['response'] as string, voiceConfig)
           } else {
-            logger.warn(`@rox/voice no effects found for welcome intent: trigger '${app.intentsEngineConfig.welcomeIntentId}'`)
+            logger.warn('no effects found for welcome intent; please add the effect in your backend', { trigger: app.intentsEngineConfig.welcomeIntentId })
+            ulogger({
+              accessKeyId: voiceRequest.accessKeyId,
+              eventType: ULogType.APP,
+              level: "warn",
+              message: 'no effects found for welcome intent; please add the effect at your intents engine (e.g Dialogflow)',
+              body: { trigger: app.intentsEngineConfig.welcomeIntentId }
+            })
           }
         }
 

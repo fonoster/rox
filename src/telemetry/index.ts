@@ -78,7 +78,8 @@ export function getMeterProvider(config: RoxMetricConfig): MeterProvider | undef
   // Register the exporter
   return new MeterProvider({
     exporter: new PrometheusExporter(options, () => {
-      logger.info(`prometheus scrape endpoint: http://localhost:${config.prometheusPort}${config.prometheusEndpoint}`)
+      logger.info('starting prometheus scrape process',
+        { endpoint: `http://localhost:${config.prometheusPort}${config.prometheusEndpoint}` })
     }),
     interval: 1000,
   })

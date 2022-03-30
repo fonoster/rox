@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import logger from '@fonoster/logger'
+import logger, { ulogger, ULogType } from '@fonoster/logger'
 import Events from 'events'
 import { EffectsManager } from './effects'
 import { IntentsEngine } from '../intents/types'
@@ -63,6 +63,12 @@ export class Cerebro {
 
     this.voiceResponse.on('error', (error: Error) => {
       this.cerebroEvents.emit('error', error)
+      ulogger({
+        accessKeyId: this.voiceRequest.accessKeyId,
+        eventType: ULogType.APP,
+        level: "error",
+        message: (error as Error).message,
+      })
     })
 
     this.stream = await this.voiceResponse.sgather()
@@ -77,7 +83,11 @@ export class Cerebro {
           })
 
         logger.verbose(
-          `@rox/cerebro intent [text = '${data.transcript}', ref: ${intent.ref}, confidence: ${intent.confidence}}]`
+          'cerebro received new transcription from user', {
+            text: data.transcript, 
+            ref: intent.ref, 
+            confidence: intent.confidence
+          }
         )
 
         await this.effects.invokeEffects(intent,
@@ -101,7 +111,7 @@ export class Cerebro {
 
   // Unsubscribe from events
   async sleep() {
-    logger.verbose('@rox/cerebro is going to sleep')
+    logger.verbose('cerebro timeout and is going to sleep')
     await this.voiceResponse.closeMediaPipe()
     this.stream.close()
     this.status = CerebroStatus.SLEEP
@@ -111,13 +121,13 @@ export class Cerebro {
     this.status = CerebroStatus.AWAKE_ACTIVE
     this.activeTimer = setTimeout(() => {
       this.status = CerebroStatus.AWAKE_PASSIVE
-      logger.verbose("@rox/cerebro awake [status = passive]")
+      logger.verbose('cerebro changed awake status', { status: this.status})
     }, this.activationTimeout)
-    logger.verbose("@rox/cerebro awake [status = active]")
+    logger.verbose('cerebro changed awake status', { status: this.status})
   }
 
   resetActiveTimer(): void {
-    logger.verbose("@rox/cerebro reseting awake status")
+    logger.verbose('cerebro is reseting awake status')
     clearTimeout(this.activeTimer)
     this.startActiveTimer()
   }
@@ -130,12 +140,16 @@ export class Cerebro {
           playbackId
         )
 
-        logger.verbose(
-          `@rox/cerebro stoping playback [playbackId = ${playbackId}]`
-        )
+        logger.verbose('cerebro is stoping playback', { playbackId })
+
         await playbackControl.stop();
       } catch (e) {
-        logger.error(`@rox/cerebro e => [${e}]`)
+        ulogger({
+          accessKeyId: this.voiceRequest.accessKeyId,
+          eventType: ULogType.APP,
+          level: "error",
+          message: (e as Error).message,
+        })
       }
     }
   }

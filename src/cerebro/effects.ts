@@ -35,18 +35,18 @@ export class EffectsManager {
     status: CerebroStatus, activateCallback: Function) {
     activateCallback()
     if (this.config.activationIntentId === intent.ref) {
-      logger.verbose("@rox/cerebro/effects fired activation intent")
+      logger.verbose('fired activation intent')
       return;
     } else if (this.config.activationIntentId
       && status != CerebroStatus.AWAKE_ACTIVE) {
-      logger.verbose("@rox/cerebro/effects got an intent but cerebro is not awake")
+      logger.verbose('received an intent but cerebro is not awake')
       // If we have activation intent cerebro needs and active status
       // before we can have any effects
       return
     }
 
     for (let e of intent.effects) {
-      logger.verbose(`@rox/cerebro/effects running effect [type = ${e.type}]`)
+      logger.verbose('effects running effect', { type: e.type })
       await this.run(e)
     }
   }
@@ -70,7 +70,7 @@ export class EffectsManager {
         }
         break
       default:
-        throw new Error(`@rox/cerebro/effects received unknown effect ${effect.type}`)
+        throw new Error(`effects received unknown effect ${effect.type}`)
     }
   }
 
@@ -79,9 +79,9 @@ export class EffectsManager {
     const stream = await this.voice.dial(effect.parameters['destination'] as string)
     const playbackId: string = nanoid()
     const control: PlaybackControl = this.voice.playback(playbackId)
-    
+
     let stay = true
-    const moveForward = async() => { 
+    const moveForward = async () => {
       stay = false
       await control.stop()
     }
@@ -90,17 +90,17 @@ export class EffectsManager {
       moveForward()
     })
 
-    stream.on('busy', async() => {
+    stream.on('busy', async () => {
       await moveForward()
       await playBusyAndHangup(this.voice, playbackId, this.config)
     })
 
-    stream.on('noanswer', async() => {
+    stream.on('noanswer', async () => {
       await moveForward()
       await playNoAnswerAndHangup(this.voice, playbackId, this.config)
     })
 
-    while(stay) {
+    while (stay) {
       await playTransfering(this.voice, playbackId, this.config)
     }
   }
