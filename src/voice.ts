@@ -52,21 +52,7 @@ export function voice(config: VoiceConfig) {
 
   voiceServer.listen(
     async (voiceRequest: VoiceRequest, voiceResponse: VoiceResponse) => {
-      logger.verbose('received voice request', voiceRequest)
-      ulogger({
-        accessKeyId: voiceRequest.accessKeyId,
-        eventType: ULogType.APP,
-        level: "info",
-        message: 'received voice request',
-        body: {
-          sessionId: voiceRequest.sessionId,
-          callerId: voiceRequest.callerId,
-          number: voiceRequest.number,
-          callerNumber: voiceRequest.number,
-          appRef: voiceRequest.appRef,
-          dialbackEnpoint: voiceRequest.dialbackEnpoint
-        }
-      })
+      logger.verbose(`new request [sessionId: ${voiceRequest.sessionId}]`, {voiceRequest})
 
       // Sending metrics out to Prometheus
       callCounter?.add(1)
@@ -81,6 +67,9 @@ export function voice(config: VoiceConfig) {
         const apps = new Apps(serviceCredentials)
         const secrets = new Secrets(serviceCredentials)
         const app = await apps.getApp(voiceRequest.appRef)
+
+        logger.verbose(`requested app [ref: ${app.ref}]`, { app })
+
         // TODO: We also need to obtain and the secrets for the Speech API.
         const ieSecret = await secrets.getSecret(app.intentsEngineConfig.secretName)
         const intentsEngine =
@@ -109,14 +98,7 @@ export function voice(config: VoiceConfig) {
           if (response.effects.length > 0) {
             await voiceResponse.say(response.effects[0].parameters['response'] as string, voiceConfig)
           } else {
-            logger.warn('no effects found for welcome intent; please add the effect in your backend', { trigger: app.intentsEngineConfig.welcomeIntentId })
-            ulogger({
-              accessKeyId: voiceRequest.accessKeyId,
-              eventType: ULogType.APP,
-              level: "warn",
-              message: 'no effects found for welcome intent; please add the effect at your intents engine (e.g Dialogflow)',
-              body: { trigger: app.intentsEngineConfig.welcomeIntentId }
-            })
+            logger.warn(`@rox/voice no effects found for welcome intent: trigger '${app.intentsEngineConfig.welcomeIntentId}'`)
           }
         }
 
@@ -132,7 +114,8 @@ export function voice(config: VoiceConfig) {
           intentsEngine,
           activationIntentId: app.activationIntentId,
           activationTimeout: app.activationTimeout,
-          transfer: app.transferConfig
+          transfer: app.transferConfig,
+          alternativeLanguageCode: app.speechConfig.languageCode
         })
 
         // Open for bussiness
