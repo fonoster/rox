@@ -43,6 +43,10 @@ export default class DialogFlowCX implements IntentsEngine {
       apiEndpoint: `${config.location}-dialogflow.googleapis.com`,
       credentials: config.credentials
     })
+    logger.verbose(
+      'created new dialogflow/cx session',
+      { projectId: this.projectId, sessionId: this.sessionId }
+    )
   }
 
   setProjectId(id: string) {
@@ -72,14 +76,12 @@ export default class DialogFlowCX implements IntentsEngine {
 
     const responses = await this.sessionClient.detectIntent(request)
 
-    logger.silly(
-      `@rox/intents got speech [intent response => ${JSON.stringify(responses, null, ' ')}]`
-    )
+    logger.silly('got speech from api',  { text: JSON.stringify(responses[0]) })
 
     if (!responses
       || !responses[0].queryResult
       || !responses[0].queryResult.responseMessages) {
-      throw new Error("@rox/intents unexpect null intent")
+      throw new Error("got unexpect null intent")
     }
 
     const effects: Effect[] = this

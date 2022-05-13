@@ -39,7 +39,8 @@ export default class DialogFlow implements IntentsEngine {
       credentials: config.credentials
     })
     logger.verbose(
-      `@rox/intents created new dialogflow/es session [projectId=${this.projectId}, sessionId=${this.sessionId}]`
+      'created new dialogflow/es session',
+      { projectId: this.projectId, sessionId: this.sessionId }
     )
   }
 
@@ -93,14 +94,12 @@ export default class DialogFlow implements IntentsEngine {
 
     const responses = await this.sessionClient.detectIntent(request)
 
-    logger.silly(
-      `@rox/intents got speech [text=${JSON.stringify(responses[0], null, ' ')}]`
-    )
+    logger.silly('got speech from api',  { text: JSON.stringify(responses[0]) })
 
     if (!responses
       || !responses[0].queryResult
       || !responses[0].queryResult.intent) {
-      throw new Error("@rox/intents unexpect null intent")
+      throw new Error("got unexpect null intent")
     }
 
     let effects: Effect[] = []
