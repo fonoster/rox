@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Fonoster Inc (https://fonoster.com)
+ * Copyright (C) 2022 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
  *
  * This file is part of Rox AI
@@ -17,17 +17,14 @@
  * limitations under the License.
  */
 import dotenv from 'dotenv'
-import path from 'path'
 import { ServerConfig } from './types'
 import { getEnvOrBool, getEnvOrDefault, removeEmpty } from './util'
 
 export const getConfigFromEnv = (): ServerConfig => {
   // Load parameters from the environment
   dotenv.config()
-  const defaultConfigPath = path.join(require("os").homedir(), ".fonoster", "google.json")
   return removeEmpty({
     defaultLanguageCode: process.env.DEFAULT_LANGUAGE_CODE,
-    googleConfigFile: process.env.GOOGLE_CONFIG_FILE || defaultConfigPath,
     otlExporterJaegerUrl: process.env.OTL_EXPORTER_JAEGER_URL,
     otlExporterZipkinUrl: process.env.OTL_EXPORTER_ZIPKIN_URL,
     otlExporterPrometheusEndpoint: process.env.OTL_EXPORTER_PROMETHEUS_ENDPOINT,
@@ -38,7 +35,6 @@ export const getConfigFromEnv = (): ServerConfig => {
 
 export const getConfigFromFlags = (flags: any): ServerConfig => removeEmpty({
   defaultLanguageCode: flags["default-language-code"],
-  googleConfigFile: flags["google-config-file"],
   otlExporterJaegerUrl: flags["otl-exporter-jaeger-url"],
   otlExporterZipkinUrl: flags["otl-exporter-zipkin-url"],
   otlExporterPrometheusEndpoint: flags["otl-exporter-promethus-endpoint"],

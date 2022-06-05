@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * Copyright (C) 2021 by Fonoster Inc (https://fonoster.com)
+ * Copyright (C) 2022 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
  *
  * This file is part of Rox AI
@@ -20,35 +20,35 @@
 import logger, { ulogger, ULogType } from '@fonoster/logger'
 import Apps from '@fonoster/apps'
 import Secrets from '@fonoster/secrets'
+import GoogleTTS from '@fonoster/googletts'
+import GoogleASR from '@fonoster/googleasr'
 import { VoiceRequest, VoiceResponse, VoiceServer } from '@fonoster/voice'
 import { Cerebro } from './cerebro'
 import { eventsServer } from './events/server'
 import { nanoid } from 'nanoid'
-import { VoiceConfig } from './types'
 import { getSpanExporters, getMeterProvider } from './telemetry'
 import { getIntentsEngine } from './intents/engines'
+import { ServerConfig } from './types'
 const { version } = require('../package.json')
 
-export function voice(config: VoiceConfig) {
+export function voice(config: ServerConfig) {
   logger.info(`rox ai ${version}`)
   const meterProvider = getMeterProvider({
-    prometheusPort: config.serverConfig.otlExporterPrometheusPort,
-    prometheusEndpoint: config.serverConfig.otlExporterPrometheusEndpoint,
+    prometheusPort: config.otlExporterPrometheusPort,
+    prometheusEndpoint: config.otlExporterPrometheusEndpoint,
   })
   const meter = meterProvider?.getMeter("rox_metrics")
   const callCounter = meter?.createCounter("call_counter")
   const voiceServer = new VoiceServer({
     otlSpanExporters: getSpanExporters({
-      jaegerUrl: config.serverConfig.otlExporterJaegerUrl,
-      zipkinUrl: config.serverConfig.otlExporterZipkinUrl,
-      gcpEnabled: config.serverConfig.otlExporterGCPEnabled,
-      gcpKeyfile: config.serverConfig.googleConfigFile
+      jaegerUrl: config.otlExporterJaegerUrl,
+      zipkinUrl: config.otlExporterZipkinUrl,
+      gcpEnabled: config.otlExporterGCPEnabled,
+      gcpKeyfile: config.googleConfigFile
     })
   })
-  voiceServer.use(config.asr)
-  voiceServer.use(config.tts)
 
-  if (config.serverConfig.enableEventsServer) eventsServer.start()
+  if (config.enableEventsServer) eventsServer.start()
 
   voiceServer.listen(
     async (voiceRequest: VoiceRequest, voiceResponse: VoiceResponse) => {
@@ -91,6 +91,22 @@ export function voice(config: VoiceConfig) {
           name: app.speechConfig.voice,
           playbackId: nanoid()
         }
+
+        const speechSecret = await secrets.getSecret(app.speechConfig.secretName)
+        const speechCredentials = {
+          private_key: JSON.parse(speechSecret.secret).private_key,
+          client_email: JSON.parse(speechSecret.secret).client_email,
+        }
+
+        voiceResponse.use(new GoogleTTS({
+          credentials: speechCredentials,
+          languageCode: config.defaultLanguageCode,
+        } as any))
+
+        voiceResponse.use(new GoogleASR({
+          credentials: speechCredentials,
+          languageCode: config.defaultLanguageCode,
+        } as any))
 
         await voiceResponse.answer()
 

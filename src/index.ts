@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Fonoster Inc (https://fonoster.com)
+ * Copyright (C) 2022 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
  *
  * This file is part of Rox AI
@@ -16,8 +16,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import GoogleASR from '@fonoster/googleasr'
-import GoogleTTS from '@fonoster/googletts'
 import { Command, flags } from '@oclif/command'
 import { ServerConfig } from './types'
 import { voice } from './voice'
@@ -69,14 +67,7 @@ class Rox extends Command {
       logger.error(reason)
     })
 
-    const googleCredentials = {
-      keyFilename: config.googleConfigFile,
-      languageCode: config.defaultLanguageCode,
-    }
-    const asr = new GoogleASR(googleCredentials)
-    const tts = new GoogleTTS(googleCredentials)
-
-    voice({serverConfig: config, asr, tts})
+    voice(config)
 
     if (flags["with-ngrok"]) {
       try {
