@@ -181,4 +181,4 @@ See also the list of contributors who [participated](https://github.com/fonoster
 
 ## License
 
-Copyright (C) 2021 by Fonoster Inc. MIT License (see [LICENSE](https://github.com/fonoster/rox/blob/main/LICENSE) for details).
+Copyright (C) 2022 by Fonoster Inc. MIT License (see [LICENSE](https://github.com/fonoster/rox/blob/main/LICENSE) for details).

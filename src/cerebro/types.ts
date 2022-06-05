@@ -36,6 +36,7 @@ export interface CerebroConfig {
   voiceConfig: Record<string, string>
   eventsClient: EventsClient | null
   transfer?: Transfer
+  alternativeLanguageCode?: string
 }
 
 export interface Transfer {

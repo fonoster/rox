@@ -57,7 +57,7 @@ export class Cerebro {
     this.config = config
   }
 
-  // Subscribe to events
+  // Subscribe to events 
   async wake() {
     this.status = CerebroStatus.AWAKE_PASSIVE
 
@@ -71,7 +71,13 @@ export class Cerebro {
       })
     })
 
-    this.stream = await this.voiceResponse.sgather()
+    const speechConfig = { source: "speech,dtmf" } as any
+    if (this.config.alternativeLanguageCode) {
+      speechConfig.model = "command_and_search"
+      speechConfig.alternativeLanguageCodes = [this.config.alternativeLanguageCode]
+    }
+
+    this.stream = await this.voiceResponse.sgather(speechConfig as any)
 
     this.stream.on('transcript', async data => {
       if (data.isFinal) {
