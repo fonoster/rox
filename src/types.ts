@@ -24,5 +24,5 @@ export interface ServerConfig {
   otlExporterPrometheusEndpoint?: string
   otlExporterPrometheusPort?: number
   otlExporterGCPEnabled?: boolean
-  enableEventsServer: boolean
+  eventsServerEnabled: boolean
 }

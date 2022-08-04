@@ -31,7 +31,7 @@ class Rox extends Command {
     version: flags.version({ char: 'v', description: 'show rox version' }),
     help: flags.help({ char: 'h', description: 'show this help' }),
     "with-ngrok": flags.boolean({ char: 'g', description: 'open a tunnel with ngrok' }),
-    "enable-events": flags.boolean({ char: 'e', description: 'starts events socket' }),
+    "events-server-enabled": flags.boolean({ char: 'e', description: 'starts events socket' }),
     "ngrok-authtoken": flags.string({ description: 'ngrok authentication token' }),
     "default-language-code": flags.string({ description: 'default language' }),
     "otl-exporter-jaeger-url": flags.string({ description: 'if set will send telemetry to Jaeger' }),

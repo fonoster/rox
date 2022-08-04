@@ -48,7 +48,9 @@ export function voice(config: ServerConfig) {
     })
   })
 
-  if (config.enableEventsServer) eventsServer.start()
+  if (config.eventsServerEnabled) eventsServer.start()
+
+  logger.verbose("events server enabled = " + config.eventsServerEnabled)
 
   voiceServer.listen(
     async (voiceRequest: VoiceRequest, voiceResponse: VoiceResponse) => {
@@ -70,7 +72,6 @@ export function voice(config: ServerConfig) {
 
         logger.verbose(`requested app [ref: ${app.ref}]`, { app })
 
-        // TODO: We also need to obtain and the secrets for the Speech API.
         const ieSecret = await secrets.getSecret(app.intentsEngineConfig.secretName)
         const intentsEngine =
           getIntentsEngine(app)(JSON.parse(ieSecret.secret))
@@ -114,7 +115,7 @@ export function voice(config: ServerConfig) {
           if (response.effects.length > 0) {
             await voiceResponse.say(response.effects[0].parameters['response'] as string, voiceConfig)
           } else {
-            logger.warn(`@rox/voice no effects found for welcome intent: trigger '${app.intentsEngineConfig.welcomeIntentId}'`)
+            logger.warn(`no effects found for welcome intent: trigger '${app.intentsEngineConfig.welcomeIntentId}'`)
           }
         }
 

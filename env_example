@@ -1,3 +1,6 @@
-# This must be a full path
-GOOGLE_CONFIG_FILE=/path/to/google.json
-
+# Example of enviroment variables
+# See the README for additional environment variables
+EVENTS_SERVER_ENABLED=true
+OTL_EXPORTER_ZIPKIN_URL=http://localhost:9412/api/v2/spans
+OTL_EXPORTER_JAEGER_URL=http://localhost:14268/api/traces
+LOGS_LEVEL=verbose

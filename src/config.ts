@@ -24,6 +24,7 @@ export const getConfigFromEnv = (): ServerConfig => {
   // Load parameters from the environment
   dotenv.config()
   return removeEmpty({
+    eventsServerEnabled: process.env.EVENTS_SERVER_ENABLED === "true",
     defaultLanguageCode: process.env.DEFAULT_LANGUAGE_CODE,
     otlExporterJaegerUrl: process.env.OTL_EXPORTER_JAEGER_URL,
     otlExporterZipkinUrl: process.env.OTL_EXPORTER_ZIPKIN_URL,
@@ -34,6 +35,7 @@ export const getConfigFromEnv = (): ServerConfig => {
 }
 
 export const getConfigFromFlags = (flags: any): ServerConfig => removeEmpty({
+  eventsServerEnabled: flags["events-server-enabled"],
   defaultLanguageCode: flags["default-language-code"],
   otlExporterJaegerUrl: flags["otl-exporter-jaeger-url"],
   otlExporterZipkinUrl: flags["otl-exporter-zipkin-url"],
