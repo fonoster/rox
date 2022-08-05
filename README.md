@@ -165,10 +165,10 @@ Environment variables are used in the entry point script to render configuration
 
 ## TODO
 
-- Add authentication to secure the events port
-- Include a `--log-level` flag (You can enable logs using the env LOGS_LEVEL)
-- Include a `--app-port` so we can change the default voice application port
-- Include a `--events-port` so we can change the default events port
+- [ ] Add authentication to secure the events port
+- [ ] Include a `--log-level` flag (You can enable logs using the env LOGS_LEVEL)
+- [ ] Include a `--app-port` so we can change the default voice application port
+- [ ] Include a `--events-port` so we can change the default events port
 
 ## Contributing
 
