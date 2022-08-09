@@ -119,7 +119,12 @@ export function voice(config: ServerConfig) {
           }
         }
 
-        const eventsClient = app.enableEvents
+        // TODO: Add eventsEnabled option to the WebUI
+        //const eventsClient = app.eventsEnabled && config.eventsServerEnabled
+        //  ? eventsServer.getConnection(voiceRequest.callerNumber)
+        //  : null
+
+        const eventsClient = config.eventsServerEnabled
           ? eventsServer.getConnection(voiceRequest.callerNumber)
           : null
 
