@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Fonoster Inc (https://fonoster.com)
+ * Copyright (C) 2022 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
  *
  * This file is part of Rox AI
@@ -21,6 +21,7 @@ import dialogflow, { SessionsClient } from '@google-cloud/dialogflow-cx'
 import { DialogFlowCXConfig, IntentsEngine, Intent } from './types'
 import { transformPayloadToEffect } from './df_utils'
 import { Effect } from '../cerebro/types'
+import uuid = require('uuid')
 
 export default class DialogFlowCX implements IntentsEngine {
   sessionClient: SessionsClient
@@ -31,7 +32,6 @@ export default class DialogFlowCX implements IntentsEngine {
   agent: string
   sessionId: string
   constructor(config: DialogFlowCXConfig) {
-    const uuid = require('uuid')
     const sessionId = uuid.v4()
     this.projectId = config.projectId
     this.location = config.location

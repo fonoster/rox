@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Fonoster Inc (https://fonoster.com)
+ * Copyright (C) 2022 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
  *
  * This file is part of Rox AI
@@ -16,9 +16,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import GoogleASR from "@fonoster/googleasr"
-import GoogleTTS from "@fonoster/googletts"
-
 export interface ServerConfig {
   defaultLanguageCode: string
   googleConfigFile: string
@@ -27,11 +24,5 @@ export interface ServerConfig {
   otlExporterPrometheusEndpoint?: string
   otlExporterPrometheusPort?: number
   otlExporterGCPEnabled?: boolean
-  enableEventsServer: boolean
-}
-
-export interface VoiceConfig {
-  serverConfig: ServerConfig
-  asr: GoogleASR
-  tts: GoogleTTS
+  eventsServerEnabled: boolean
 }

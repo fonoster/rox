@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Fonoster Inc (https://fonoster.com)
+ * Copyright (C) 2022 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
  *
  * This file is part of Rox AI
@@ -22,6 +22,7 @@ import { IntentsEngine, Intent, DialogFlowESConfig } from './types'
 import { transformPayloadToEffect } from './df_utils'
 import { struct } from 'pb-util'
 import { Effect } from '../cerebro/types'
+import uuid = require('uuid')
 
 export default class DialogFlow implements IntentsEngine {
   sessionClient: dialogflow.v2beta1.SessionsClient
@@ -30,7 +31,6 @@ export default class DialogFlow implements IntentsEngine {
   sessionId: string
   projectId: string
   constructor(config: DialogFlowESConfig) {
-    const uuid = require('uuid')
     this.sessionId = uuid.v4()
     this.config = config
     this.projectId = config.projectId

@@ -38,8 +38,7 @@ docker pull fonoster/rox:%%VERSION%%
 The following is a basic example of using this image.
 
 ```
-docker run -v $(pwd)/google.json:/home/fonoster/.fonoster/google.json \
-  -it -p 3000:3000 fonoster/rox:0.3.0
+docker run -it -p 3000:3000 fonoster/rox:latest
 ```
 
 ## Specs for Dialogflow backend
@@ -146,12 +145,12 @@ You can set multiple responses in Dialogflow. The Effects will run in sequence.
 Environment variables are used in the entry point script to render configuration templates. You can specify the values of these variables during `docker run`, `docker-compose up`, or in Kubernetes manifests in the `env` array.
 
 - `DEFAULT_LANGUAGE_CODE` - Sets the default language for the application. Defaults to `en-US`
-- `GOOGLE_CONFIG_FILE` - The file containing the Service Account with access to Google Speech APIs and Dialogflow
 - `OTL_EXPORTER_PROMETHEUS_PORT` - Sets Prometheus port. Defaults to `9090`
 - `OTL_EXPORTER_PROMETHEUS_ENDPOINT` - Sets Prometheus endpoint. Defaults to `/metrics`
 - `OTL_EXPORTER_JAEGER_URL` - If set, it will send traces to Jaeger
 - `OTL_EXPORTER_GCP_ENABLED` - If set, it will send traces to GCP
 - `OTL_EXPORTER_ZIPKIN_URL` - If set, it will send traces to Zipkin
+- `EVENTS_SERVER_ENABLED` - Activates the Events Server for socket connection. Defaults to `false`
 
 ## Exposed Ports
 
@@ -161,7 +160,7 @@ Environment variables are used in the entry point script to render configuration
 
 ## Volumes
 
-- `/home/fonoster/.fonoster/google.json` - This must exist if `INTENTS_ENGINE=dialogflow`, or `ASR_ENGINE=google`, or `TTS_ENGINE=google`
+- None
 
 ## TODO
 
