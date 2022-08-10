@@ -102,7 +102,7 @@ export class Cerebro {
           this.status,
           async () => {
             await this.stopPlayback()
-            if (this.config.activationIntentId) {
+            if (this.config.activationIntentId === intent.ref) {
               sendClientEvent(this.config.eventsClient, {
                 eventName: CLIENT_EVENTS.RECOGNIZING
               })
