@@ -73,9 +73,13 @@ export class EffectsManager {
       case 'send_data':
         // Only send if client support events
         sendClientEvent(this.config.eventsClient, {
+          eventName: CLIENT_EVENTS.RECOGNIZING_FINISHED
+        })
+        sendClientEvent(this.config.eventsClient, {
           eventName: CLIENT_EVENTS.INTENT,
           intent: effect.parameters as any
         })
+
         break
       default:
         throw new Error(`effects received unknown effect ${effect.type}`)

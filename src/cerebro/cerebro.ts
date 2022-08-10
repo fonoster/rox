@@ -103,6 +103,10 @@ export class Cerebro {
           async () => {
             await this.stopPlayback()
             if (this.config.activationIntentId) {
+              sendClientEvent(this.config.eventsClient, {
+                eventName: CLIENT_EVENTS.RECOGNIZING
+              })
+        
               if (this.status === CerebroStatus.AWAKE_ACTIVE) {
                 this.resetActiveTimer()
               } else {
@@ -127,11 +131,6 @@ export class Cerebro {
 
   startActiveTimer(): void {
     this.status = CerebroStatus.AWAKE_ACTIVE
-
-    sendClientEvent(this.config.eventsClient, {
-      eventName: CLIENT_EVENTS.RECOGNIZING
-    })
-
     this.activeTimer = setTimeout(() => {
       this.status = CerebroStatus.AWAKE_PASSIVE
 
