@@ -22,6 +22,8 @@ import { Intent } from '../intents/types'
 import { nanoid } from 'nanoid'
 import { playBusyAndHangup, playNoAnswerAndHangup, playTransfering } from './helper'
 import { EffectsManagerConfig, CerebroStatus, Effect } from './types'
+import { sendClientEvent } from '../util'
+import { CLIENT_EVENTS } from '../events/types'
 
 export class EffectsManager {
   voice: VoiceResponse
@@ -58,6 +60,11 @@ export class EffectsManager {
         break
       case 'hangup':
         await this.voice.hangup()
+
+        sendClientEvent(this.config.eventsClient, {
+          eventName: CLIENT_EVENTS.HANGUP
+        })
+  
         break
       case 'transfer':
         // TODO: Add record effect
@@ -65,9 +72,10 @@ export class EffectsManager {
         break
       case 'send_data':
         // Only send if client support events
-        if (this.config.eventsClient) {
-          this.config.eventsClient.send(effect.parameters as any)
-        }
+        sendClientEvent(this.config.eventsClient, {
+          eventName: CLIENT_EVENTS.INTENT,
+          intent: effect.parameters as any
+        })
         break
       default:
         throw new Error(`effects received unknown effect ${effect.type}`)

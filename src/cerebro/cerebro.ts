@@ -26,6 +26,8 @@ import {
   VoiceResponse,
 } from '@fonoster/voice'
 import { CerebroConfig, CerebroStatus } from './types'
+import { sendClientEvent } from '../util'
+import { CLIENT_EVENTS } from '../events/types'
 
 export class Cerebro {
   voiceResponse: VoiceResponse
@@ -125,8 +127,18 @@ export class Cerebro {
 
   startActiveTimer(): void {
     this.status = CerebroStatus.AWAKE_ACTIVE
+
+    sendClientEvent(this.config.eventsClient, {
+      eventName: CLIENT_EVENTS.RECOGNIZING
+    })
+
     this.activeTimer = setTimeout(() => {
       this.status = CerebroStatus.AWAKE_PASSIVE
+
+      sendClientEvent(this.config.eventsClient, {
+        eventName: CLIENT_EVENTS.RECOGNIZING_FINISHED
+      })
+
       logger.verbose('cerebro changed awake status', { status: this.status})
     }, this.activationTimeout)
     logger.verbose('cerebro changed awake status', { status: this.status})

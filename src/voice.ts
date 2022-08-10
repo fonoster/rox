@@ -29,6 +29,8 @@ import { nanoid } from 'nanoid'
 import { getSpanExporters, getMeterProvider } from './telemetry'
 import { getIntentsEngine } from './intents/engines'
 import { ServerConfig } from './types'
+import { sendClientEvent } from './util'
+import { CLIENT_EVENTS } from './events/types'
 const { version } = require('../package.json')
 
 export function voice(config: ServerConfig) {
@@ -127,6 +129,10 @@ export function voice(config: ServerConfig) {
         const eventsClient = config.eventsServerEnabled
           ? eventsServer.getConnection(voiceRequest.callerNumber)
           : null
+
+        sendClientEvent(eventsClient, {
+          eventName: CLIENT_EVENTS.ANSWERED
+        })
 
         const cerebro = new Cerebro({
           voiceRequest,
