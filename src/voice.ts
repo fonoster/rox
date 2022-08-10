@@ -102,6 +102,14 @@ export function voice(config: ServerConfig) {
 
         await voiceResponse.answer()
 
+        const eventsClient = config.eventsServerEnabled
+        ? eventsServer.getConnection(voiceRequest.callerNumber)
+        : null
+
+        sendClientEvent(eventsClient, {
+          eventName: CLIENT_EVENTS.ANSWERED
+        })
+
         if (app.initialDtmf)
           await voiceResponse.dtmf({ dtmf: app.initialDtmf })
 
@@ -125,14 +133,6 @@ export function voice(config: ServerConfig) {
         //const eventsClient = app.eventsEnabled && config.eventsServerEnabled
         //  ? eventsServer.getConnection(voiceRequest.callerNumber)
         //  : null
-
-        const eventsClient = config.eventsServerEnabled
-          ? eventsServer.getConnection(voiceRequest.callerNumber)
-          : null
-
-        sendClientEvent(eventsClient, {
-          eventName: CLIENT_EVENTS.ANSWERED
-        })
 
         const cerebro = new Cerebro({
           voiceRequest,
