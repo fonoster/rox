@@ -29,6 +29,8 @@ import { nanoid } from 'nanoid'
 import { getSpanExporters, getMeterProvider } from './telemetry'
 import { getIntentsEngine } from './intents/engines'
 import { ServerConfig } from './types'
+import { sendClientEvent } from './util'
+import { CLIENT_EVENTS } from './events/types'
 const { version } = require('../package.json')
 
 export function voice(config: ServerConfig) {
@@ -100,6 +102,14 @@ export function voice(config: ServerConfig) {
 
         await voiceResponse.answer()
 
+        const eventsClient = config.eventsServerEnabled
+        ? eventsServer.getConnection(voiceRequest.callerNumber)
+        : null
+
+        sendClientEvent(eventsClient, {
+          eventName: CLIENT_EVENTS.ANSWERED
+        })
+
         if (app.initialDtmf)
           await voiceResponse.dtmf({ dtmf: app.initialDtmf })
 
@@ -119,9 +129,10 @@ export function voice(config: ServerConfig) {
           }
         }
 
-        const eventsClient = app.enableEvents
-          ? eventsServer.getConnection(voiceRequest.callerNumber)
-          : null
+        // TODO: Add eventsEnabled option to the WebUI
+        //const eventsClient = app.eventsEnabled && config.eventsServerEnabled
+        //  ? eventsServer.getConnection(voiceRequest.callerNumber)
+        //  : null
 
         const cerebro = new Cerebro({
           voiceRequest,

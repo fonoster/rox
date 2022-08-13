@@ -16,6 +16,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { EventsClient } from "./events/emitter"
+import { ClientEvent } from "./events/types"
+
 export const getEnvOrDefault = (envName: string, def: number) =>
   process.env[envName]
     ? parseInt(process.env[envName] || "")
@@ -33,4 +36,10 @@ export const removeEmpty = (obj) => {
     else if (obj[key] !== undefined) newObj[key] = obj[key]
   })
   return newObj
+}
+
+export const sendClientEvent = (eventsClient: EventsClient | null, event: ClientEvent) => {
+  if (eventsClient) {
+    eventsClient.send(event)
+  }
 }

@@ -16,6 +16,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+export enum CLIENT_EVENTS {
+  RECOGNIZING = "RECOGNIZING",
+  ANSWERED = "ANSWERED",
+  RECOGNIZING_FINISHED = "RECOGNIZING_FINISHED",
+  INTENT = "INTENT",
+  HANGUP = "HANGUP"
+}
+
 export interface EventEmitter {
-  send(payload?: Record<string, string>): void
+  send(payload?: ClientEvent): void
+}
+
+export interface Intent  {
+  icon?: string
+  title: string
+  description: string
+  transcript: string
+} 
+
+export interface ClientEvent {
+  eventName: CLIENT_EVENTS
+  intent?: Intent
 }

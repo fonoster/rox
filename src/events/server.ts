@@ -45,7 +45,7 @@ export class EventsServer {
 
       ws.send(
         JSON.stringify({
-          name: 'CONNECTED',
+          name: 'connected',
           payload: {},
         })
       )

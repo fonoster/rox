@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 import WebSocket = require('ws')
-import { EventEmitter } from './types'
+import { EventEmitter, ClientEvent } from './types'
 
 export class EventsClient implements EventEmitter {
   ws: WebSocket
@@ -25,9 +25,9 @@ export class EventsClient implements EventEmitter {
     this.ws = ws
   }
 
-  send(message: Record<string, string>) {
+  send(event: ClientEvent) {
     this.ws.send(
-      JSON.stringify(message)
+      JSON.stringify(event)
     )
   }
 }
