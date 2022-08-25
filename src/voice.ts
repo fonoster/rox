@@ -102,7 +102,7 @@ export function voice(config: ServerConfig) {
 
         await voiceResponse.answer()
 
-        const eventsClient = config.eventsServerEnabled
+        const eventsClient = app.enableEvents && config.eventsServerEnabled
         ? eventsServer.getConnection(voiceRequest.callerNumber)
         : null
 
@@ -128,11 +128,6 @@ export function voice(config: ServerConfig) {
             logger.warn(`no effects found for welcome intent: trigger '${app.intentsEngineConfig.welcomeIntentId}'`)
           }
         }
-
-        // TODO: Add eventsEnabled option to the WebUI
-        //const eventsClient = app.eventsEnabled && config.eventsServerEnabled
-        //  ? eventsServer.getConnection(voiceRequest.callerNumber)
-        //  : null
 
         const cerebro = new Cerebro({
           voiceRequest,
