@@ -54,6 +54,14 @@ class Rox extends Command {
     ]) as ServerConfig
 
     process.on('uncaughtException', (error, origin) => {
+      const isPortInUse = error && error['code'] === 'EADDRINUSE'
+
+      if (isPortInUse) {
+        logger.error("Port 3000 is already in use. Please stop the process that is using it.")
+
+        process.exit(1)
+      }
+
       logger.error('----- Uncaught exception -----')
       logger.error(error)
       logger.error('----- Exception origin -----')
