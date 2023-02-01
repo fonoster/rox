@@ -1,6 +1,12 @@
-# Example of enviroment variables
+# Example of environment variables
 # See the README for additional environment variables
 EVENTS_SERVER_ENABLED=true
 OTL_EXPORTER_ZIPKIN_URL=http://localhost:9412/api/v2/spans
 OTL_EXPORTER_JAEGER_URL=http://localhost:14268/api/traces
 LOGS_LEVEL=verbose
+
+FILE_RETENTION_POLICY_ENABLED=true
+FILE_RETENTION_POLICY_DIRECTORY=
+FILE_RETENTION_POLICY_CRON_EXPRESSION="0 0 * * *"
+FILE_RETENTION_POLICY_MAX_AGE=24
+FILE_RETENTION_POLICY_EXTENSION=".sln24"
