@@ -24,6 +24,7 @@ import ngrok from 'ngrok'
 import merge from 'deepmerge'
 import { getConfigFromEnv, getConfigFromFlags } from './config'
 import process from 'process'
+import { startFileRetentionPolicy } from './file-retention'
 
 class Rox extends Command {
   static description = 'starts a new Rox AI instance'
@@ -40,6 +41,10 @@ class Rox extends Command {
     "otl-exporter-prometheus-endpoint": flags.string({ description: 'sets Prometheus endpoint. Defaults to "/metrics"' }),
     "otl-exporter-gcp-enabled": flags.boolean({ char: 'g', description: 'if set it will send telemetry to GCP' }),
     "google-config-file": flags.string({ description: 'config file with google credentials' }),
+    "file-retention-policy-enabled": flags.boolean({ description: 'enable file retention policy' }),
+    "file-retention-policy-directory": flags.string({ description: 'directory where the file retention policy will be executed' }),
+    "file-retention-policy-cron-expression": flags.string({ description: 'cron expression to run the file retention policy' }),
+    "file-retention-policy-max-age": flags.integer({ description: 'max age of files to be deleted in hours' }),
   }
 
   async run() {
@@ -76,6 +81,8 @@ class Rox extends Command {
     })
 
     voice(config)
+
+    startFileRetentionPolicy(config)
 
     if (flags["with-ngrok"]) {
       try {
