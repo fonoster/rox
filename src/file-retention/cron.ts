@@ -18,5 +18,5 @@ export const startFileRetentionPolicy = (config: ServerConfig) => {
     return
   }
 
-  logger.warn("Precaution: File retention policy is disabled, all files will be kept forever in the server");
+  logger.warn("file retention policy is disabled, all files will be kept forever in the server");
 };
