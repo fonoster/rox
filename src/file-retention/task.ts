@@ -11,7 +11,7 @@ export type FileRetentionPolicyConfig = {
 
 export const runFileRetentionPolicy = (config: FileRetentionPolicyConfig) => {
   logger.verbose(
-    "Running file retention policy in directory: " + config.filesDirectory
+    "running file retention policy in directory: " + config.filesDirectory
   );
 
   fs.readdir(config.filesDirectory, (err, files) => {
@@ -21,7 +21,7 @@ export const runFileRetentionPolicy = (config: FileRetentionPolicyConfig) => {
       (file) => path.extname(file) === config.fileExtension
     );
 
-    logger.verbose("Found " + ttsFiles.length + " files to be deleted");
+    logger.verbose("found " + ttsFiles.length + " files to be deleted");
 
     for (const file of ttsFiles) {
       const filePath = path.join(config.filesDirectory, file);
@@ -33,10 +33,10 @@ export const runFileRetentionPolicy = (config: FileRetentionPolicyConfig) => {
 
         if (diff > config.maxFileAge) {
           logger.verbose(
-            "File " + file + " was last accessed " + diff + " hours ago"
+            "file " + file + " was last accessed " + diff + " hours ago"
           );
 
-          logger.verbose("Deleting file " + file);
+          logger.verbose("deleting file " + file);
 
           fs.unlink(filePath, (err) => {
             if (err) throw err;
