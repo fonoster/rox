@@ -138,7 +138,7 @@ You can set multiple responses in Dialogflow. The Effects will run in sequence.
 </tr>
 </table>
 
-> Notes: The parameter `type` is set to map in the example, but you can send anything that makes send to the client. If the parameter `allRequiredParamsPresent` is set to true, the fulfillmentText will take precedence over the custom effects.
+> Notes: The parameter `type` is set to map in the example, but you can send anything that makes sense to the client. If the parameter `allRequiredParamsPresent` is set to true, the fulfillmentText will take precedence over the custom effects.
 
 ## Environment Variables
 
