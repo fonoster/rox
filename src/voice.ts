@@ -93,6 +93,7 @@ export function voice(config: ServerConfig) {
         voiceResponse.use(new GoogleTTS({
           credentials: speechCredentials,
           languageCode: config.defaultLanguageCode,
+          path: config.fileRetentionPolicyDirectory
         } as any))
 
         voiceResponse.use(new GoogleASR({
