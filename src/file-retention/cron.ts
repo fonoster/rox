@@ -5,7 +5,7 @@ import { runFileRetentionPolicy } from "./task";
 
 export const startFileRetentionPolicy = (config: ServerConfig) => {
   if (config.fileRetentionPolicyEnabled) {
-    logger.info("File retention policy enabled");
+    logger.info("file retention policy enabled");
 
     cron.schedule(config.fileRetentionPolicyCronExpression, () =>
       runFileRetentionPolicy({
