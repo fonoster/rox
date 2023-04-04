@@ -1,29 +1,18 @@
-version: '3.7'
-
-networks:
-  fonoster:
+version: '3.8'
 
 services:
   rox:
-    build:
-      context: .  
     image: fonoster/rox:latest
-    restart: ${RESTART_POLICY}
     ports:
       - 3000:3000
       - 3001:3001
-      - 9090:9090
     environment:
-      - DEFAULT_LANGUAGE_CODE
-      - OTL_EXPORTER_ZIPKIN_URL
-      - OTL_EXPORTER_JAEGER_URL
-      - OTL_EXPORTER_PROMETHEUS_PORT
-      - OTL_EXPORTER_GCP_ENABLED
-      - EVENTS_SERVER_ENABLED
-      - LOGS_LEVEL
-    volumes:
-      - ${CONFIG}/google.json:/home/fonoster/.fonoster/google.json
-    networks:
-      fonoster:
-        aliases: 
-          - ${ROX_HOST}
+      LOGS_LEVEL: verbose
+
+  ngrok:
+    image: wernight/ngrok:latest
+    ports:
+      - 4040:4040
+    environment:
+      NGROK_PROTOCOL: http
+      NGROK_PORT: rox:3000
