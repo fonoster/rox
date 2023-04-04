@@ -1,6 +1,6 @@
 ## 🤖 Rox AI: A connector for Dialogflow ES/CX 
 
-![publish to docker](https://github.com/fonoster/rox/workflows/publish%20to%20docker%20hub/badge.svg)
+<a href="https://gitpod.io/#https://github.com/fonoster/rox"> <img src="https://img.shields.io/badge/Contribute%20with-Gitpod-908a85?logo=gitpod" alt="Contribute with Gitpod" /> ![publish to docker](https://github.com/fonoster/rox/workflows/publish%20to%20docker%20hub/badge.svg)
 
 This repository contains a dockerized distribution of Rox AI. Also, see [Fonoster](https://github.com/fonoster/fonoster).
 
@@ -40,6 +40,12 @@ The following is a basic example of using this image.
 ```
 docker run -it -p 3000:3000 fonoster/rox:latest
 ```
+
+## Deploying in development mode with Gitpod
+
+One-click interactive deployment will familiarize you with the server in development mode.
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/fonoster/rox)
 
 ## Specs for Dialogflow backend
 
@@ -181,4 +187,4 @@ See also the list of contributors who [participated](https://github.com/fonoster
 
 ## License
 
-Copyright (C) 2022 by Fonoster Inc. MIT License (see [LICENSE](https://github.com/fonoster/rox/blob/main/LICENSE) for details).
+Copyright (C) 2023 by Fonoster Inc. MIT License (see [LICENSE](https://github.com/fonoster/rox/blob/main/LICENSE) for details).
