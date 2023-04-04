@@ -21,8 +21,6 @@ services:
       - OTL_EXPORTER_GCP_ENABLED
       - EVENTS_SERVER_ENABLED
       - LOGS_LEVEL
-    volumes:
-      - ${CONFIG}/google.json:/home/fonoster/.fonoster/google.json
     networks:
       fonoster:
         aliases: 
