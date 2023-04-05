@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 by Fonoster Inc (https://fonoster.com)
+ * Copyright (C) 2023 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
  *
  * This file is part of Rox AI
@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Effect } from "../cerebro/types";
+import { Effect } from "../cerebro/types"
 
 export interface Intent {
   ref: string
@@ -27,8 +27,14 @@ export interface Intent {
 
 export interface IntentsEngine {
   setProjectId: (id: string) => void
-  findIntent: (text: string, payload?: Record<string, unknown>) => Promise<Intent>
-  findIntentWithEvent?: (name: string, payload?: Record<string, unknown>) => Promise<Intent>
+  findIntent: (
+    text: string,
+    payload?: Record<string, unknown>
+  ) => Promise<Intent>
+  findIntentWithEvent?: (
+    name: string,
+    payload?: Record<string, unknown>
+  ) => Promise<Intent>
 }
 
 export interface DialogFlowESConfig {

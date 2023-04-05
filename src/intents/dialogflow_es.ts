@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 by Fonoster Inc (https://fonoster.com)
+ * Copyright (C) 2023 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
  *
  * This file is part of Rox AI
@@ -16,13 +16,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import logger from '@fonoster/logger'
-import * as dialogflow from '@google-cloud/dialogflow'
-import { IntentsEngine, Intent, DialogFlowESConfig } from './types'
-import { transformPayloadToEffect } from './df_utils'
-import { struct } from 'pb-util'
-import { Effect } from '../cerebro/types'
-import uuid = require('uuid')
+import * as dialogflow from "@google-cloud/dialogflow"
+import { IntentsEngine, Intent, DialogFlowESConfig } from "./types"
+import { transformPayloadToEffect } from "./df_utils"
+import { struct } from "pb-util"
+import { Effect } from "../cerebro/types"
+import logger from "@fonoster/logger"
+import uuid = require("uuid")
 
 export default class DialogFlow implements IntentsEngine {
   sessionClient: dialogflow.v2beta1.SessionsClient
@@ -38,10 +38,10 @@ export default class DialogFlow implements IntentsEngine {
     this.sessionClient = new dialogflow.v2beta1.SessionsClient({
       credentials: config.credentials
     })
-    logger.verbose(
-      'created new dialogflow/es session',
-      { projectId: this.projectId, sessionId: this.sessionId }
-    )
+    logger.verbose("created new dialogflow/es session", {
+      projectId: this.projectId,
+      sessionId: this.sessionId
+    })
   }
 
   setProjectId(projectId: string) {
@@ -53,9 +53,9 @@ export default class DialogFlow implements IntentsEngine {
       queryInput: {
         event: {
           name: name.toUpperCase(),
-          languageCode: this.config.languageCode,
-        },
-      },
+          languageCode: this.config.languageCode
+        }
+      }
     }
 
     return this.detect(request, payload)
@@ -71,14 +71,17 @@ export default class DialogFlow implements IntentsEngine {
         text: {
           text: txt,
           languageCode: this.config.languageCode
-        },
-      },
+        }
+      }
     }
 
     return this.detect(request, payload)
   }
 
-  private async detect(request: Record<string, unknown>, payload?: Record<string, unknown>): Promise<Intent> {
+  private async detect(
+    request: Record<string, unknown>,
+    payload?: Record<string, unknown>
+  ): Promise<Intent> {
     const sessionPath = this.sessionClient.projectAgentSessionPath(
       this.projectId,
       this.sessionId
@@ -94,38 +97,47 @@ export default class DialogFlow implements IntentsEngine {
 
     const responses = await this.sessionClient.detectIntent(request)
 
-    logger.silly('got speech from api',  { text: JSON.stringify(responses[0]) })
+    logger.silly("got speech from api", { text: JSON.stringify(responses[0]) })
 
-    if (!responses
-      || !responses[0].queryResult
-      || !responses[0].queryResult.intent) {
+    if (
+      !responses ||
+      !responses[0].queryResult ||
+      !responses[0].queryResult.intent
+    ) {
       throw new Error("got unexpect null intent")
     }
 
     let effects: Effect[] = []
 
     if (responses[0].queryResult.fulfillmentMessages) {
-      const messages = responses[0].queryResult.fulfillmentMessages.filter(f => f.platform === this.config.platform)
+      const messages = responses[0].queryResult.fulfillmentMessages.filter(
+        (f) => f.platform === this.config.platform
+      )
       effects = this.getEffects(messages as Record<string, any>[])
     } else if (responses[0].queryResult.fulfillmentText) {
-      effects = [{
-        type: "say",
-        parameters: {
-          response: responses[0].queryResult.fulfillmentText
+      effects = [
+        {
+          type: "say",
+          parameters: {
+            response: responses[0].queryResult.fulfillmentText
+          }
         }
-      }]
+      ]
     }
 
     return {
       ref: responses[0].queryResult.intent.displayName || "unknown",
       effects,
       confidence: responses[0].queryResult.intentDetectionConfidence || 0,
-      allRequiredParamsPresent: responses[0].queryResult.allRequiredParamsPresent ? true : false
+      allRequiredParamsPresent: responses[0].queryResult
+        .allRequiredParamsPresent
+        ? true
+        : false
     }
   }
 
   private getEffects(fulfillmentMessages: Record<string, any>[]): Effect[] {
-    const effects = new Array()
+    const effects = []
     for (const f of fulfillmentMessages) {
       if (f.payload) {
         effects.push(transformPayloadToEffect(f.payload))
@@ -133,7 +145,9 @@ export default class DialogFlow implements IntentsEngine {
         effects.push({
           type: "say",
           parameters: {
-            response: f.telephonySynthesizeSpeech.text || f.telephonySynthesizeSpeech.ssml
+            response:
+              f.telephonySynthesizeSpeech.text ||
+              f.telephonySynthesizeSpeech.ssml
           }
         })
       } else if (f.telephonyTransferCall) {

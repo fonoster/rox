@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 by Fonoster Inc (https://fonoster.com)
+ * Copyright (C) 2023 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
  *
  * This file is part of Rox AI
@@ -16,8 +16,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import WebSocket = require('ws')
-import { EventEmitter, ClientEvent } from './types'
+import { EventEmitter, ClientEvent } from "./types"
+import WebSocket = require("ws")
 
 export class EventsClient implements EventEmitter {
   ws: WebSocket
@@ -26,8 +26,6 @@ export class EventsClient implements EventEmitter {
   }
 
   send(event: ClientEvent) {
-    this.ws.send(
-      JSON.stringify(event)
-    )
+    this.ws.send(JSON.stringify(event))
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 by Fonoster Inc (https://fonoster.com)
+ * Copyright (C) 2023 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
  *
  * This file is part of Rox AI
@@ -16,9 +16,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import WebSocket = require('ws')
-import logger from '@fonoster/logger'
-import { EventsClient } from './emitter'
+import { EventsClient } from "./emitter"
+import WebSocket = require("ws")
+import logger from "@fonoster/logger"
 
 // Events server
 export class EventsServer {
@@ -33,25 +33,25 @@ export class EventsServer {
   }
 
   start() {
-    this.wss.on('connection', ws => {
-      logger.verbose('received a new client connection')
-      ws.on('message', data => {
+    this.wss.on("connection", (ws) => {
+      logger.verbose("received a new client connection")
+      ws.on("message", (data) => {
         // Once we receive the first and only message from client we
         // save the client in the clientConnections map
         const clientId = JSON.parse(data.toString()).clientId
         this.clientConnections.set(clientId, ws)
-        logger.verbose('added clientId to list of connections', { clientId })
+        logger.verbose("added clientId to list of connections", { clientId })
       })
 
       ws.send(
         JSON.stringify({
-          name: 'connected',
-          payload: {},
+          name: "connected",
+          payload: {}
         })
       )
     })
 
-    logger.verbose('starting events server', { port: this.port })
+    logger.verbose("starting events server", { port: this.port })
   }
 
   getConnection(clientId: string): EventsClient | null {
@@ -69,4 +69,3 @@ export class EventsServer {
 
 // Starting events server
 export const eventsServer = new EventsServer(new Map())
-

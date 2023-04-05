@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 by Fonoster Inc (https://fonoster.com)
+ * Copyright (C) 2023 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
  *
  * This file is part of Rox AI
@@ -16,23 +16,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Effect } from "../cerebro/types";
+import { Effect } from "../cerebro/types"
 
 function deserializePayload(object: Record<string, any>): any {
-  let outputMessage = Array.isArray(object) ? [] : {};
+  const outputMessage = Array.isArray(object) ? [] : {}
   Object.entries(object).forEach(([key, value]) => {
-    if (value.kind == 'structValue') {
-      outputMessage[key] = deserializePayload(value.structValue.fields);
-    } else if (value.kind == 'listValue') {
-      outputMessage[key] = deserializePayload(value.listValue.values);
-    } else if (value.kind == 'stringValue') {
-      outputMessage[key] = value.stringValue;
-    } else if (value.kind == 'boolValue') {
-      outputMessage[key] = value.boolValue;
+    if (value.kind == "structValue") {
+      outputMessage[key] = deserializePayload(value.structValue.fields)
+    } else if (value.kind == "listValue") {
+      outputMessage[key] = deserializePayload(value.listValue.values)
+    } else if (value.kind == "stringValue") {
+      outputMessage[key] = value.stringValue
+    } else if (value.kind == "boolValue") {
+      outputMessage[key] = value.boolValue
     } else {
-      outputMessage[key] = value;
+      outputMessage[key] = value
     }
-  });
+  })
   return outputMessage as any
 }
 
@@ -42,9 +42,10 @@ export function getRamdomValue(values: Record<string, string>[]) {
 
 export function transformPayloadToEffect(payload: Record<string, any>): Effect {
   const o = deserializePayload(payload.fields)
-  const parameters = o.effect === 'say'
-    ? { response: getRamdomValue(o.parameters.responses) }
-    : o.parameters
+  const parameters =
+    o.effect === "say"
+      ? { response: getRamdomValue(o.parameters.responses) }
+      : o.parameters
   return {
     type: o.effect,
     parameters

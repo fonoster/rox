@@ -1,8 +1,8 @@
 /*
- * Copyright (C) 2023 by Fonoster Inc (https://fonoster.com)
- * http://github.com/fonoster/rox
+ * Copyright (C) <%= YEAR %> by Fonoster Inc (https://fonoster.com)
+ * http://github.com/fonoster
  *
- * This file is part of Rox AI
+ * This file is part of nodejs-voiceapp
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with
@@ -16,5 +16,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./cerebro"
-export * from "./effects"

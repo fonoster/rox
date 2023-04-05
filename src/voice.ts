@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * Copyright (C) 2022 by Fonoster Inc (https://fonoster.com)
+ * Copyright (C) 2023 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
  *
  * This file is part of Rox AI
@@ -17,27 +17,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import logger, { ulogger, ULogType } from '@fonoster/logger'
-import Apps from '@fonoster/apps'
-import Secrets from '@fonoster/secrets'
-import GoogleTTS from '@fonoster/googletts'
-import GoogleASR from '@fonoster/googleasr'
-import { VoiceRequest, VoiceResponse, VoiceServer } from '@fonoster/voice'
-import { Cerebro } from './cerebro'
-import { eventsServer } from './events/server'
-import { nanoid } from 'nanoid'
-import { getSpanExporters, getMeterProvider } from './telemetry'
-import { getIntentsEngine } from './intents/engines'
-import { ServerConfig } from './types'
-import { sendClientEvent } from './util'
-import { CLIENT_EVENTS } from './events/types'
-const { version } = require('../package.json')
+import { VoiceRequest, VoiceResponse, VoiceServer } from "@fonoster/voice"
+import { Cerebro } from "./cerebro"
+import { eventsServer } from "./events/server"
+import { nanoid } from "nanoid"
+import { getSpanExporters, getMeterProvider } from "./telemetry"
+import { getIntentsEngine } from "./intents/engines"
+import { ServerConfig } from "./types"
+import { sendClientEvent } from "./util"
+import { CLIENT_EVENTS } from "./events/types"
+import logger, { ulogger, ULogType } from "@fonoster/logger"
+import Apps from "@fonoster/apps"
+import Secrets from "@fonoster/secrets"
+import GoogleTTS from "@fonoster/googletts"
+import GoogleASR from "@fonoster/googleasr"
+
+const { version } = require("../package.json")
 
 export function voice(config: ServerConfig) {
   logger.info(`rox ai ${version}`)
   const meterProvider = getMeterProvider({
     prometheusPort: config.otlExporterPrometheusPort,
-    prometheusEndpoint: config.otlExporterPrometheusEndpoint,
+    prometheusEndpoint: config.otlExporterPrometheusEndpoint
   })
   const meter = meterProvider?.getMeter("rox_metrics")
   const callCounter = meter?.createCounter("call_counter")
@@ -56,13 +57,16 @@ export function voice(config: ServerConfig) {
 
   voiceServer.listen(
     async (voiceRequest: VoiceRequest, voiceResponse: VoiceResponse) => {
-      logger.verbose(`new request [sessionId: ${voiceRequest.sessionId}]`, {voiceRequest})
+      logger.verbose(`new request [sessionId: ${voiceRequest.sessionId}]`, {
+        voiceRequest
+      })
 
       // Sending metrics out to Prometheus
       callCounter?.add(1)
 
       try {
-        if (!voiceRequest.appRef) throw new Error("invalid voice request: missing appRef")
+        if (!voiceRequest.appRef)
+          throw new Error("invalid voice request: missing appRef")
         // If set, we overwrite the configuration with the values obtain from the webhook
         const serviceCredentials = {
           accessKeyId: voiceRequest.accessKeyId,
@@ -74,9 +78,10 @@ export function voice(config: ServerConfig) {
 
         logger.verbose(`requested app [ref: ${app.ref}]`, { app })
 
-        const ieSecret = await secrets.getSecret(app.intentsEngineConfig.secretName)
-        const intentsEngine =
-          getIntentsEngine(app)(JSON.parse(ieSecret.secret))
+        const ieSecret = await secrets.getSecret(
+          app.intentsEngineConfig.secretName
+        )
+        const intentsEngine = getIntentsEngine(app)(JSON.parse(ieSecret.secret))
         intentsEngine?.setProjectId(app.intentsEngineConfig.projectId)
 
         const voiceConfig = {
@@ -84,37 +89,46 @@ export function voice(config: ServerConfig) {
           playbackId: nanoid()
         }
 
-        const speechSecret = await secrets.getSecret(app.speechConfig.secretName)
+        const speechSecret = await secrets.getSecret(
+          app.speechConfig.secretName
+        )
         const speechCredentials = {
           private_key: JSON.parse(speechSecret.secret).private_key,
-          client_email: JSON.parse(speechSecret.secret).client_email,
+          client_email: JSON.parse(speechSecret.secret).client_email
         }
 
-        voiceResponse.use(new GoogleTTS({
-          credentials: speechCredentials,
-          languageCode: config.defaultLanguageCode,
-          path: config.fileRetentionPolicyDirectory
-        } as any))
+        voiceResponse.use(
+          new GoogleTTS({
+            credentials: speechCredentials,
+            languageCode: config.defaultLanguageCode,
+            path: config.fileRetentionPolicyDirectory
+          } as any)
+        )
 
-        voiceResponse.use(new GoogleASR({
-          credentials: speechCredentials,
-          languageCode: config.defaultLanguageCode,
-        } as any))
+        voiceResponse.use(
+          new GoogleASR({
+            credentials: speechCredentials,
+            languageCode: config.defaultLanguageCode
+          } as any)
+        )
 
         await voiceResponse.answer()
 
-        const eventsClient = app.enableEvents && config.eventsServerEnabled
-        ? eventsServer.getConnection(voiceRequest.callerNumber)
-        : null
+        const eventsClient =
+          app.enableEvents && config.eventsServerEnabled
+            ? eventsServer.getConnection(voiceRequest.callerNumber)
+            : null
 
         sendClientEvent(eventsClient, {
           eventName: CLIENT_EVENTS.ANSWERED
         })
 
-        if (app.initialDtmf)
-          await voiceResponse.dtmf({ dtmf: app.initialDtmf })
+        if (app.initialDtmf) await voiceResponse.dtmf({ dtmf: app.initialDtmf })
 
-        if (app.intentsEngineConfig.welcomeIntentId && intentsEngine.findIntentWithEvent) {
+        if (
+          app.intentsEngineConfig.welcomeIntentId &&
+          intentsEngine.findIntentWithEvent
+        ) {
           const response = await intentsEngine.findIntentWithEvent(
             app.intentsEngineConfig.welcomeIntentId,
             {
@@ -124,9 +138,14 @@ export function voice(config: ServerConfig) {
             }
           )
           if (response.effects.length > 0) {
-            await voiceResponse.say(response.effects[0].parameters['response'] as string, voiceConfig)
+            await voiceResponse.say(
+              response.effects[0].parameters["response"] as string,
+              voiceConfig
+            )
           } else {
-            logger.warn(`no effects found for welcome intent: trigger '${app.intentsEngineConfig.welcomeIntentId}'`)
+            logger.warn(
+              `no effects found for welcome intent: trigger '${app.intentsEngineConfig.welcomeIntentId}'`
+            )
           }
         }
 

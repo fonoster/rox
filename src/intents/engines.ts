@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 by Fonoster Inc (https://fonoster.com)
+ * Copyright (C) 2023 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
  *
  * This file is part of Rox AI
@@ -17,12 +17,14 @@
  * limitations under the License.
  */
 import { App } from "@fonoster/apps/dist/client/types"
+import { IntentsEngine } from "./types"
 import DialogFlowCX from "./dialogflow_cx"
 import DialogFlowES from "./dialogflow_es"
-import { IntentsEngine } from "./types"
 
 export function getIntentsEngine(app: App) {
-  return function getEngine(credentials: Record<string, string>): IntentsEngine {
+  return function getEngine(
+    credentials: Record<string, string>
+  ): IntentsEngine {
     const platform = app.intentsEngineConfig.emulateTelephonyPlatform
       ? "TELEPHONY"
       : "PLATFORM_UNSPECIFIED"
@@ -34,7 +36,7 @@ export function getIntentsEngine(app: App) {
         agent: app.intentsEngineConfig.agent,
         location: app.intentsEngineConfig.location,
         platform,
-        languageCode: "en-US",
+        languageCode: "en-US"
       })
     }
 
@@ -42,7 +44,7 @@ export function getIntentsEngine(app: App) {
       credentials,
       projectId: app.intentsEngineConfig.projectId,
       platform,
-      languageCode: "en-US",
+      languageCode: "en-US"
     })
   }
 }

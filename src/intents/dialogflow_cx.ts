@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 by Fonoster Inc (https://fonoster.com)
+ * Copyright (C) 2023 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
  *
  * This file is part of Rox AI
@@ -16,12 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import logger from '@fonoster/logger'
-import dialogflow, { SessionsClient } from '@google-cloud/dialogflow-cx'
-import { DialogFlowCXConfig, IntentsEngine, Intent } from './types'
-import { transformPayloadToEffect } from './df_utils'
-import { Effect } from '../cerebro/types'
-import uuid = require('uuid')
+import logger from "@fonoster/logger"
+import dialogflow, { SessionsClient } from "@google-cloud/dialogflow-cx"
+import { DialogFlowCXConfig, IntentsEngine, Intent } from "./types"
+import { transformPayloadToEffect } from "./df_utils"
+import { Effect } from "../cerebro/types"
+import uuid = require("uuid")
 
 export default class DialogFlowCX implements IntentsEngine {
   sessionClient: SessionsClient
@@ -43,20 +43,17 @@ export default class DialogFlowCX implements IntentsEngine {
       apiEndpoint: `${config.location}-dialogflow.googleapis.com`,
       credentials: config.credentials
     })
-    logger.verbose(
-      'created new dialogflow/cx session',
-      { projectId: this.projectId, sessionId: this.sessionId }
-    )
+    logger.verbose("created new dialogflow/cx session", {
+      projectId: this.projectId,
+      sessionId: this.sessionId
+    })
   }
 
   setProjectId(id: string) {
     this.projectId = id
   }
 
-  async findIntent(
-    txt: string
-  ): Promise<Intent> {
-
+  async findIntent(txt: string): Promise<Intent> {
     const sessionPath = this.sessionClient.projectLocationAgentSessionPath(
       this.projectId,
       this.location,
@@ -68,25 +65,27 @@ export default class DialogFlowCX implements IntentsEngine {
       session: sessionPath,
       queryInput: {
         text: {
-          text: txt,
+          text: txt
         },
-        languageCode: this.config.languageCode,
-      },
+        languageCode: this.config.languageCode
+      }
     }
 
     const responses = await this.sessionClient.detectIntent(request)
 
-    logger.silly('got speech from api',  { text: JSON.stringify(responses[0]) })
+    logger.silly("got speech from api", { text: JSON.stringify(responses[0]) })
 
-    if (!responses
-      || !responses[0].queryResult
-      || !responses[0].queryResult.responseMessages) {
+    if (
+      !responses ||
+      !responses[0].queryResult ||
+      !responses[0].queryResult.responseMessages
+    ) {
       throw new Error("got unexpect null intent")
     }
 
-    const effects: Effect[] = this
-      .getEffects(
-        responses[0].queryResult.responseMessages as Record<string, any>[])
+    const effects: Effect[] = this.getEffects(
+      responses[0].queryResult.responseMessages as Record<string, any>[]
+    )
 
     const ref = responses[0].queryResult.intent
       ? responses[0].queryResult.intent.displayName || "unknown"
@@ -101,7 +100,7 @@ export default class DialogFlowCX implements IntentsEngine {
   }
 
   private getEffects(responseMessages: Record<string, any>[]): Effect[] {
-    const effects = new Array()
+    const effects = []
     for (const r of responseMessages) {
       if (r.message === "text") {
         effects.push({

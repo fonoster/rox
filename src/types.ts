@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 by Fonoster Inc (https://fonoster.com)
+ * Copyright (C) 2023 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
  *
  * This file is part of Rox AI
@@ -27,32 +27,32 @@ export interface ServerConfig {
   eventsServerEnabled: boolean
   /**
    * Enable file retention policy
-   * 
+   *
    * @default true
    */
   fileRetentionPolicyEnabled?: boolean
   /**
    * Directory where the file retention policy will be executed
-   * 
+   *
    * @default os.tmpdir()
    */
   fileRetentionPolicyDirectory: string
   /**
    * Cron expression to run the file retention policy
-   * 
+   *
    * @default 0 0 * * *
    * @see https://crontab.guru/#0_0_*_*_*
    */
   fileRetentionPolicyCronExpression: string
   /**
    * Max age in hours to keep files
-   * 
+   *
    * @default 24
    */
   fileRetentionPolicyMaxAge: number
   /**
    * File extension to be deleted
-   * 
+   *
    * @default .sln24
    */
   fileRetentionPolicyExtension: string

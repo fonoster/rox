@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 by Fonoster Inc (https://fonoster.com)
+ * Copyright (C) 2023 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
  *
  * This file is part of Rox AI
@@ -16,14 +16,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import logger from '@fonoster/logger'
-import { PlaybackControl, VoiceResponse } from '@fonoster/voice'
-import { Intent } from '../intents/types'
-import { nanoid } from 'nanoid'
-import { playBusyAndHangup, playNoAnswerAndHangup, playTransfering } from './helper'
-import { EffectsManagerConfig, CerebroStatus, Effect } from './types'
-import { sendClientEvent } from '../util'
-import { CLIENT_EVENTS } from '../events/types'
+import { PlaybackControl, VoiceResponse } from "@fonoster/voice"
+import { Intent } from "../intents/types"
+import { nanoid } from "nanoid"
+import {
+  playBusyAndHangup,
+  playNoAnswerAndHangup,
+  playTransfering
+} from "./helper"
+import { EffectsManagerConfig, CerebroStatus, Effect } from "./types"
+import { sendClientEvent } from "../util"
+import { CLIENT_EVENTS } from "../events/types"
+import logger from "@fonoster/logger"
 
 export class EffectsManager {
   voice: VoiceResponse
@@ -33,44 +37,52 @@ export class EffectsManager {
     this.config = config
   }
 
-  async invokeEffects(intent: Intent,
-    status: CerebroStatus, activateCallback: Function) {
+  async invokeEffects(
+    intent: Intent,
+    status: CerebroStatus,
+    activateCallback: Function
+  ) {
     activateCallback()
     if (this.config.activationIntentId === intent.ref) {
-      logger.verbose('fired activation intent')
-      return;
-    } else if (this.config.activationIntentId
-      && status != CerebroStatus.AWAKE_ACTIVE) {
-      logger.verbose('received an intent but cerebro is not awake')
+      logger.verbose("fired activation intent")
+      return
+    } else if (
+      this.config.activationIntentId &&
+      status != CerebroStatus.AWAKE_ACTIVE
+    ) {
+      logger.verbose("received an intent but cerebro is not awake")
       // If we have activation intent cerebro needs and active status
       // before we can have any effects
       return
     }
 
-    for (let e of intent.effects) {
-      logger.verbose('effects running effect', { type: e.type })
+    for (const e of intent.effects) {
+      logger.verbose("effects running effect", { type: e.type })
       await this.run(e)
     }
   }
 
   async run(effect: Effect) {
     switch (effect.type) {
-      case 'say':
-        await this.voice.say(effect.parameters['response'] as string, this.config.voiceConfig)
+      case "say":
+        await this.voice.say(
+          effect.parameters["response"] as string,
+          this.config.voiceConfig
+        )
         break
-      case 'hangup':
+      case "hangup":
         await this.voice.hangup()
 
         sendClientEvent(this.config.eventsClient, {
           eventName: CLIENT_EVENTS.HANGUP
         })
-  
+
         break
-      case 'transfer':
+      case "transfer":
         // TODO: Add record effect
         await this.transferEffect(this.voice, effect)
         break
-      case 'send_data':
+      case "send_data":
         // Only send if client support events
         sendClientEvent(this.config.eventsClient, {
           eventName: CLIENT_EVENTS.RECOGNIZING_FINISHED
@@ -88,7 +100,9 @@ export class EffectsManager {
 
   async transferEffect(voice: VoiceResponse, effect: Effect) {
     await this.voice.closeMediaPipe()
-    const stream = await this.voice.dial(effect.parameters['destination'] as string)
+    const stream = await this.voice.dial(
+      effect.parameters["destination"] as string
+    )
     const playbackId: string = nanoid()
     const control: PlaybackControl = this.voice.playback(playbackId)
 
@@ -98,16 +112,16 @@ export class EffectsManager {
       await control.stop()
     }
 
-    stream.on('answer', () => {
+    stream.on("answer", () => {
       moveForward()
     })
 
-    stream.on('busy', async () => {
+    stream.on("busy", async () => {
       await moveForward()
       await playBusyAndHangup(this.voice, playbackId, this.config)
     })
 
-    stream.on('noanswer', async () => {
+    stream.on("noanswer", async () => {
       await moveForward()
       await playNoAnswerAndHangup(this.voice, playbackId, this.config)
     })

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 by Fonoster Inc (https://fonoster.com)
+ * Copyright (C) 2023 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
  *
  * This file is part of Rox AI
@@ -16,10 +16,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import dotenv from 'dotenv'
-import { ServerConfig } from './types'
-import { getEnvOrBool, getEnvOrDefault, removeEmpty } from './util'
-import os from 'os'
+import { ServerConfig } from "./types"
+import { getEnvOrBool, getEnvOrDefault, removeEmpty } from "./util"
+import dotenv from "dotenv"
+import os from "os"
 
 export const getConfigFromEnv = (): ServerConfig => {
   // Load parameters from the environment
@@ -30,27 +30,38 @@ export const getConfigFromEnv = (): ServerConfig => {
     otlExporterJaegerUrl: process.env.OTL_EXPORTER_JAEGER_URL,
     otlExporterZipkinUrl: process.env.OTL_EXPORTER_ZIPKIN_URL,
     otlExporterPrometheusEndpoint: process.env.OTL_EXPORTER_PROMETHEUS_ENDPOINT,
-    otlExporterPrometheusPort: getEnvOrDefault("OTL_EXPORTER_PROMETHEUS_PORT", 9090),
+    otlExporterPrometheusPort: getEnvOrDefault(
+      "OTL_EXPORTER_PROMETHEUS_PORT",
+      9090
+    ),
     otlExporterGCPEnabled: getEnvOrBool("OTL_EXPORTER_GCP_ENABLED"),
     fileRetentionPolicyEnabled: getEnvOrBool("FILE_RETENTION_POLICY_ENABLED"),
-    fileRetentionPolicyDirectory: process.env.FILE_RETENTION_POLICY_DIRECTORY || os.tmpdir(),
-    fileRetentionPolicyCronExpression: process.env.FILE_RETENTION_POLICY_CRON_EXPRESSION || "0 0 * * *",
-    fileRetentionPolicyMaxAge: getEnvOrDefault("FILE_RETENTION_POLICY_MAX_AGE", 24),
-    fileRetentionPolicyExtension: process.env.FILE_RETENTION_POLICY_EXTENSION || ".sln24"
+    fileRetentionPolicyDirectory:
+      process.env.FILE_RETENTION_POLICY_DIRECTORY || os.tmpdir(),
+    fileRetentionPolicyCronExpression:
+      process.env.FILE_RETENTION_POLICY_CRON_EXPRESSION || "0 0 * * *",
+    fileRetentionPolicyMaxAge: getEnvOrDefault(
+      "FILE_RETENTION_POLICY_MAX_AGE",
+      24
+    ),
+    fileRetentionPolicyExtension:
+      process.env.FILE_RETENTION_POLICY_EXTENSION || ".sln24"
   }) as ServerConfig
 }
 
-export const getConfigFromFlags = (flags: any): ServerConfig => removeEmpty({
-  eventsServerEnabled: flags["events-server-enabled"],
-  defaultLanguageCode: flags["default-language-code"],
-  otlExporterJaegerUrl: flags["otl-exporter-jaeger-url"],
-  otlExporterZipkinUrl: flags["otl-exporter-zipkin-url"],
-  otlExporterPrometheusEndpoint: flags["otl-exporter-promethus-endpoint"],
-  otlExporterPrometheusPort: flags["otl-exporter-promethus-port"],
-  otlExporterGCPEnabled: flags["otl-exporter-gcp-enabled"],
-  fileRetentionPolicyEnabled: flags["file-retention-policy-enabled"],
-  fileRetentionPolicyDirectory: flags["file-retention-policy-directory"],
-  fileRetentionPolicyCronExpression: flags["file-retention-policy-cron-expression"],
-  fileRetentionPolicyMaxAge: flags["file-retention-policy-max-age"],
-  fileRetentionPolicyExtension: flags["file-retention-policy-extension"]
-}) as ServerConfig
+export const getConfigFromFlags = (flags: any): ServerConfig =>
+  removeEmpty({
+    eventsServerEnabled: flags["events-server-enabled"],
+    defaultLanguageCode: flags["default-language-code"],
+    otlExporterJaegerUrl: flags["otl-exporter-jaeger-url"],
+    otlExporterZipkinUrl: flags["otl-exporter-zipkin-url"],
+    otlExporterPrometheusEndpoint: flags["otl-exporter-promethus-endpoint"],
+    otlExporterPrometheusPort: flags["otl-exporter-promethus-port"],
+    otlExporterGCPEnabled: flags["otl-exporter-gcp-enabled"],
+    fileRetentionPolicyEnabled: flags["file-retention-policy-enabled"],
+    fileRetentionPolicyDirectory: flags["file-retention-policy-directory"],
+    fileRetentionPolicyCronExpression:
+      flags["file-retention-policy-cron-expression"],
+    fileRetentionPolicyMaxAge: flags["file-retention-policy-max-age"],
+    fileRetentionPolicyExtension: flags["file-retention-policy-extension"]
+  }) as ServerConfig
