@@ -100,7 +100,7 @@ export default class DialogFlowCX implements IntentsEngine {
   }
 
   private getEffects(responseMessages: Record<string, any>[]): Effect[] {
-    const effects = []
+    const effects: Effect[] = []
     for (const r of responseMessages) {
       if (r.message === "text") {
         effects.push({

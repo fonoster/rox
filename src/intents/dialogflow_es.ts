@@ -137,7 +137,7 @@ export default class DialogFlow implements IntentsEngine {
   }
 
   private getEffects(fulfillmentMessages: Record<string, any>[]): Effect[] {
-    const effects = []
+    const effects: Effect[] = []
     for (const f of fulfillmentMessages) {
       if (f.payload) {
         effects.push(transformPayloadToEffect(f.payload))
