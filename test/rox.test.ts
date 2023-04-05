@@ -17,5 +17,5 @@
  * limitations under the License.
  */
 describe("@fonoster/rox", () => {
-  it("needs tests");
-});
+  it("needs tests")
+})
