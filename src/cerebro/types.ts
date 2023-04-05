@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 by Fonoster Inc (https://fonoster.com)
+ * Copyright (C) 2023 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
  *
  * This file is part of Rox AI
@@ -16,10 +16,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { VoiceResponse } from '@fonoster/voice'
-import { VoiceRequest } from '@fonoster/voice/dist/types'
-import { EventsClient } from '../events/emitter'
-import { IntentsEngine } from '../intents/types'
+import { VoiceResponse } from "@fonoster/voice"
+import { VoiceRequest } from "@fonoster/voice/dist/types"
+import { EventsClient } from "../events/emitter"
+import { IntentsEngine } from "../intents/types"
 
 export enum CerebroStatus {
   SLEEP,
@@ -58,9 +58,6 @@ export interface EffectsManagerConfig {
 }
 
 export interface Effect {
-  type: 'say'
-  | 'hangup'
-  | 'send_data'
-  | 'transfer'
+  type: "say" | "hangup" | "send_data" | "transfer"
   parameters: Record<string, unknown>
 }

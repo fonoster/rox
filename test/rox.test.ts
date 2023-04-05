@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2023 by Fonoster Inc (https://fonoster.com)
- * http://github.com/fonoster/rox
+ * http://github.com/fonoster/fonoster
  *
  * This file is part of Rox AI
  *
@@ -16,26 +16,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export enum CLIENT_EVENTS {
-  RECOGNIZING = "RECOGNIZING",
-  ANSWERED = "ANSWERED",
-  RECOGNIZING_FINISHED = "RECOGNIZING_FINISHED",
-  INTENT = "INTENT",
-  HANGUP = "HANGUP"
-}
-
-export interface EventEmitter {
-  send(payload?: ClientEvent): void
-}
-
-export interface Intent {
-  icon?: string
-  title: string
-  description: string
-  transcript: string
-}
-
-export interface ClientEvent {
-  eventName: CLIENT_EVENTS
-  intent?: Intent
-}
+describe("@fonoster/rox", () => {
+  it("needs tests")
+})

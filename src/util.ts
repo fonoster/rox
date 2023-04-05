@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 by Fonoster Inc (https://fonoster.com)
+ * Copyright (C) 2023 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
  *
  * This file is part of Rox AI
@@ -20,9 +20,7 @@ import { EventsClient } from "./events/emitter"
 import { ClientEvent } from "./events/types"
 
 export const getEnvOrDefault = (envName: string, def: number) =>
-  process.env[envName]
-    ? parseInt(process.env[envName] || "")
-    : def
+  process.env[envName] ? parseInt(process.env[envName] || "") : def
 
 export const getEnvOrBool = (envName: string) =>
   process.env[envName]
@@ -30,7 +28,7 @@ export const getEnvOrBool = (envName: string) =>
     : false
 
 export const removeEmpty = (obj) => {
-  let newObj = {}
+  const newObj = {}
   Object.keys(obj).forEach((key) => {
     if (obj[key] === Object(obj[key])) newObj[key] = removeEmpty(obj[key])
     else if (obj[key] !== undefined) newObj[key] = obj[key]
@@ -38,7 +36,10 @@ export const removeEmpty = (obj) => {
   return newObj
 }
 
-export const sendClientEvent = (eventsClient: EventsClient | null, event: ClientEvent) => {
+export const sendClientEvent = (
+  eventsClient: EventsClient | null,
+  event: ClientEvent
+) => {
   if (eventsClient) {
     eventsClient.send(event)
   }

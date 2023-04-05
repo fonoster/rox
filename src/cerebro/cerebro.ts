@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 by Fonoster Inc (https://fonoster.com)
+ * Copyright (C) 2023 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
  *
  * This file is part of Rox AI
@@ -16,18 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import logger, { ulogger, ULogType } from '@fonoster/logger'
-import Events from 'events'
-import { EffectsManager } from './effects'
-import { IntentsEngine } from '../intents/types'
-import {
-  SGatherStream,
-  VoiceRequest,
-  VoiceResponse,
-} from '@fonoster/voice'
-import { CerebroConfig, CerebroStatus } from './types'
-import { sendClientEvent } from '../util'
-import { CLIENT_EVENTS } from '../events/types'
+import { EffectsManager } from "./effects"
+import { IntentsEngine } from "../intents/types"
+import { SGatherStream, VoiceRequest, VoiceResponse } from "@fonoster/voice"
+import { CerebroConfig, CerebroStatus } from "./types"
+import { sendClientEvent } from "../util"
+import { CLIENT_EVENTS } from "../events/types"
+import logger, { ulogger, ULogType } from "@fonoster/logger"
+import Events from "events"
 
 export class Cerebro {
   voiceResponse: VoiceResponse
@@ -59,61 +55,58 @@ export class Cerebro {
     this.config = config
   }
 
-  // Subscribe to events 
+  // Subscribe to events
   async wake() {
     this.status = CerebroStatus.AWAKE_PASSIVE
 
-    this.voiceResponse.on('error', (error: Error) => {
-      this.cerebroEvents.emit('error', error)
+    this.voiceResponse.on("error", (error: Error) => {
+      this.cerebroEvents.emit("error", error)
       ulogger({
         accessKeyId: this.voiceRequest.accessKeyId,
         eventType: ULogType.APP,
         level: "error",
-        message: (error as Error).message,
+        message: (error as Error).message
       })
     })
 
     const speechConfig = { source: "speech,dtmf" } as any
     if (this.config.alternativeLanguageCode) {
       speechConfig.model = "command_and_search"
-      speechConfig.alternativeLanguageCodes = [this.config.alternativeLanguageCode]
+      speechConfig.alternativeLanguageCodes = [
+        this.config.alternativeLanguageCode
+      ]
     }
 
     this.stream = await this.voiceResponse.sgather(speechConfig as any)
 
-    this.stream.on('transcript', async data => {
+    this.stream.on("transcript", async (data) => {
       if (data.isFinal) {
-        const intent = await this.intentsEngine.findIntent(data.transcript,
-          {
-            telephony: {
-              caller_id: this.voiceRequest.callerNumber
-            }
-          })
-
-        logger.verbose(
-          'cerebro received new transcription from user', {
-            text: data.transcript, 
-            ref: intent.ref, 
-            confidence: intent.confidence
+        const intent = await this.intentsEngine.findIntent(data.transcript, {
+          telephony: {
+            caller_id: this.voiceRequest.callerNumber
           }
-        )
+        })
 
-        await this.effects.invokeEffects(intent,
-          this.status,
-          async () => {
-            await this.stopPlayback()
-            if (this.config.activationIntentId === intent.ref) {
-              sendClientEvent(this.config.eventsClient, {
-                eventName: CLIENT_EVENTS.RECOGNIZING
-              })
-        
-              if (this.status === CerebroStatus.AWAKE_ACTIVE) {
-                this.resetActiveTimer()
-              } else {
-                this.startActiveTimer()
-              }
+        logger.verbose("cerebro received new transcription from user", {
+          text: data.transcript,
+          ref: intent.ref,
+          confidence: intent.confidence
+        })
+
+        await this.effects.invokeEffects(intent, this.status, async () => {
+          await this.stopPlayback()
+          if (this.config.activationIntentId === intent.ref) {
+            sendClientEvent(this.config.eventsClient, {
+              eventName: CLIENT_EVENTS.RECOGNIZING
+            })
+
+            if (this.status === CerebroStatus.AWAKE_ACTIVE) {
+              this.resetActiveTimer()
+            } else {
+              this.startActiveTimer()
             }
-          })
+          }
+        })
 
         // Need to save this to avoid duplicate intents
         this.lastIntent = intent
@@ -123,7 +116,7 @@ export class Cerebro {
 
   // Unsubscribe from events
   async sleep() {
-    logger.verbose('cerebro timeout and is going to sleep')
+    logger.verbose("cerebro timeout and is going to sleep")
     await this.voiceResponse.closeMediaPipe()
     this.stream.close()
     this.status = CerebroStatus.SLEEP
@@ -138,13 +131,13 @@ export class Cerebro {
         eventName: CLIENT_EVENTS.RECOGNIZING_FINISHED
       })
 
-      logger.verbose('cerebro changed awake status', { status: this.status})
+      logger.verbose("cerebro changed awake status", { status: this.status })
     }, this.activationTimeout)
-    logger.verbose('cerebro changed awake status', { status: this.status})
+    logger.verbose("cerebro changed awake status", { status: this.status })
   }
 
   resetActiveTimer(): void {
-    logger.verbose('cerebro is reseting awake status')
+    logger.verbose("cerebro is reseting awake status")
     clearTimeout(this.activeTimer)
     this.startActiveTimer()
   }
@@ -153,19 +146,17 @@ export class Cerebro {
     const { playbackId } = this.config.voiceConfig
     if (playbackId) {
       try {
-        const playbackControl = this.voiceResponse.playback(
-          playbackId
-        )
+        const playbackControl = this.voiceResponse.playback(playbackId)
 
-        logger.verbose('cerebro is stoping playback', { playbackId })
+        logger.verbose("cerebro is stoping playback", { playbackId })
 
-        await playbackControl.stop();
+        await playbackControl.stop()
       } catch (e) {
         ulogger({
           accessKeyId: this.voiceRequest.accessKeyId,
           eventType: ULogType.APP,
           level: "error",
-          message: (e as Error).message,
+          message: (e as Error).message
         })
       }
     }

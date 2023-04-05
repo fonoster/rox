@@ -1,0 +1,11 @@
+dist
+node_modules/*
+src/cerebro/*
+src/events/*
+src/file-retention/*
+src/intents/*
+src/telemetry/*
+src/config.ts
+src/index.ts
+src/types.ts
+src/voice.ts

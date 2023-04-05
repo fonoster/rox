@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 by Fonoster Inc (https://fonoster.com)
+ * Copyright (C) 2023 by Fonoster Inc (https://fonoster.com)
  * http://github.com/fonoster/rox
  *
  * This file is part of Rox AI
@@ -16,19 +16,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { VoiceResponse } from '@fonoster/voice'
-import { SayOptions } from '@fonoster/voice/dist/say/types'
-import { EffectsManagerConfig } from './types'
+import { VoiceResponse } from "@fonoster/voice"
+import { SayOptions } from "@fonoster/voice/dist/say/types"
+import { EffectsManagerConfig } from "./types"
 
 const playOrSay = async (param: {
-  voice: VoiceResponse,
-  voiceConfig: Record<string, unknown>,
-  playbackId: string,
-  media?: string,
+  voice: VoiceResponse
+  voiceConfig: Record<string, unknown>
+  playbackId: string
+  media?: string
   message?: string
 }) => {
   if (param.media) {
-    await param.voice.play('sound:' + param.media, {
+    await param.voice.play("sound:" + param.media, {
       playbackId: param.playbackId
     })
   }
@@ -42,9 +42,11 @@ const playOrSay = async (param: {
   }
 }
 
-export const playTransfering = async (voice: VoiceResponse,
+export const playTransfering = async (
+  voice: VoiceResponse,
   playbackId: string,
-  config: EffectsManagerConfig) =>
+  config: EffectsManagerConfig
+) =>
   await playOrSay({
     voice,
     voiceConfig: config.voiceConfig,
@@ -53,9 +55,11 @@ export const playTransfering = async (voice: VoiceResponse,
     message: config.transfer?.message
   })
 
-export const playBusyAndHangup = async (voice: VoiceResponse,
+export const playBusyAndHangup = async (
+  voice: VoiceResponse,
   playbackId: string,
-  config: EffectsManagerConfig) =>
+  config: EffectsManagerConfig
+) =>
   await playOrSay({
     voice,
     voiceConfig: config.voiceConfig,
@@ -64,9 +68,11 @@ export const playBusyAndHangup = async (voice: VoiceResponse,
     message: config.transfer?.messageBusy
   })
 
-export const playNoAnswerAndHangup = async (voice: VoiceResponse,
+export const playNoAnswerAndHangup = async (
+  voice: VoiceResponse,
   playbackId: string,
-  config: EffectsManagerConfig) =>
+  config: EffectsManagerConfig
+) =>
   await playOrSay({
     voice,
     voiceConfig: config.voiceConfig,
