@@ -13,7 +13,7 @@ FROM fonoster/base as runner
 
 COPY --from=builder /scripts/fonoster-* .
 
-RUN apk add --no-cache --update git tini npm nodejs python3 make g++ \
+RUN apk add --no-cache --update curl git tini npm nodejs python3 make g++ \
   && npm install -g fonoster-*.tgz \
   && apk del npm git python3 make g++
 
